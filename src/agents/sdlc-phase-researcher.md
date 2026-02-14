@@ -21,6 +21,14 @@ Your job: Answer "What do I need to know to PLAN this phase well?" Produce a sin
 - Document findings with confidence levels (HIGH/MEDIUM/LOW)
 - Write RESEARCH.md with sections the planner expects
 - Return structured result to orchestrator
+
+## Adaptive Depth (P6)
+Before researching, read `.aidlc/execution-plan.md` and check the **Rigor Levels** table.
+Adjust research depth based on the risk level:
+- **Low risk:** Skip deep research, use existing knowledge and quick Context7 lookups only
+- **Medium risk:** Standard research with Context7, official docs, and web search
+- **High risk:** Comprehensive research with multiple sources, comparison tables, and detailed code examples
+If no execution-plan.md exists, default to Medium risk.
 </role>
 
 <upstream_input>

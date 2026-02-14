@@ -294,13 +294,15 @@ Display banner:
 
 **This is the core Inception deliverable.**
 
-Apply DDD principles (Principle #3) to decompose requirements into parallel-deliverable units:
+Apply the structured DDD decomposition protocol (see `__SDLC_REFS__/ddd-decomposition.md`):
 
-1. **Identify bounded contexts** from requirements and domain analysis
-2. **Group requirements** into units by bounded context
-3. **Define interfaces** between units (what each provides/depends on)
-4. **Size each unit** in estimated bolts (1-5 bolts each, Principle #7)
-5. **Map acceptance criteria** from requirements to unit-level checks
+1. **Identify bounded contexts** from requirements and domain analysis — each context has its own language, rules, and data
+2. **Map domain events** for each bounded context — list events, identify ownership, map flows between contexts
+3. **Define aggregates** within each bounded context — identify aggregate roots, consistency boundaries, invariants
+4. **Derive units** from aggregates — each unit maps to one or more aggregates with clear acceptance criteria and `traces_to: [REQ-IDs]`
+5. **Validate coverage** — every REQ-ID must appear in at least one unit, every unit must trace back to at least one requirement
+
+Do NOT just "apply DDD principles" generically — follow these 5 steps explicitly.
 
 **AI proposes, human refines (Principle #2):**
 
@@ -326,6 +328,8 @@ Dependencies: None / {UNIT-IDs}
 **Parallelizable:** {which units can run simultaneously}
 **Critical path:** UNIT-{X} → UNIT-{Y} → UNIT-{Z}
 ```
+
+**Mob Elaboration opportunity:** If team members are available, consider running a Mob Elaboration session to refine unit boundaries collaboratively. This is especially valuable when domain expertise is distributed across team members.
 
 Use AskUserQuestion:
 - header: "Units"
@@ -450,7 +454,7 @@ All evidence items satisfied.
 
 Use AskUserQuestion:
 - header: "Gate"
-- question: "Do you approve the Requirements Approved gate? This confirms the WHAT and WHY."
+- question: "Do you approve the Requirements Approved gate? This confirms the WHAT and WHY. (Expected approver: Product Owner)"
 - options:
   - "Approve gate" — Requirements are clear, proceed to decomposition review
   - "Reject gate" — Something needs to change before proceeding
@@ -490,7 +494,7 @@ Critical path: {UNIT-X} → {UNIT-Y} → {UNIT-Z}
 
 Use AskUserQuestion:
 - header: "Exit Gate"
-- question: "Do you approve the Inception Exit gate? This allows Construction to begin."
+- question: "Do you approve the Inception Exit gate? This allows Construction to begin. (Expected approvers: Product Owner + Tech Lead)"
 - options:
   - "Approve — begin Construction" — All clear, let's build
   - "Reject — more Inception work needed" — Not ready yet

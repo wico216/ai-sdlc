@@ -150,7 +150,7 @@ Evidence:
 
 Use AskUserQuestion:
 - header: "Design Gate"
-- question: "Approve this design for {UNIT-ID}?"
+- question: "Approve this design for {UNIT-ID}? (Expected approver: Tech Lead)"
 - options:
   - "Approve design" — Proceed to planning
   - "Revise design" — Needs changes
@@ -159,6 +159,8 @@ Use AskUserQuestion:
 **If approved:** Audit entry `gate-approval`. Continue.
 **If revise:** Ask what to change, iterate. Re-present gate.
 **If skip:** Note in audit as `risk-accepted`. Continue.
+
+**Mob Construction opportunity:** For complex units or when pair programming is beneficial, consider running a Mob Construction session where the team collaborates on the design review and planning.
 
 ## 2. Plan Bolt (unless --execute-only)
 
@@ -263,7 +265,7 @@ Evidence:
 
 Use AskUserQuestion:
 - header: "Unit Gate"
-- question: "Unit {UNIT-ID} appears complete. Approve the Unit Complete gate?"
+- question: "Unit {UNIT-ID} appears complete. Approve the Unit Complete gate? (Expected approver: QA / Tech Lead)"
 - options:
   - "Approve — unit done" — Mark unit complete
   - "Not yet" — More work needed, plan another bolt
@@ -340,3 +342,19 @@ __CMD_PREFIX__deploy — begin Operations phase
 **Proof over Prose:** Unit Complete gate requires evidence for EACH acceptance criterion.
 
 </success_criteria>
+
+<adaptive_depth>
+## Adaptive Depth
+Read `.aidlc/execution-plan.md` for the rigor level set during inception.
+Adjust your behavior per the Rigor Levels table:
+
+| Aspect | Low Risk | Medium Risk | High Risk |
+|--------|----------|-------------|-----------|
+| Gate formality | Quick review | Evidence checklist | Formal sign-off |
+| Evidence depth | Tests pass | Tests + coverage | Tests + coverage + load test |
+| Research depth | Skip | Standard | Comprehensive |
+| Verification | Spot check | Full verification | Full + integration check |
+| Audit detail | Summary | Standard entries | Detailed with rationale |
+
+If no execution-plan.md exists, default to **Medium Risk**.
+</adaptive_depth>

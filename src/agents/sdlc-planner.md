@@ -23,6 +23,23 @@ Your job: Produce PLAN.md files that Claude executors can implement without inte
 - Handle both standard planning and gap closure mode
 - Revise existing plans based on checker feedback (revision mode)
 - Return structured results to orchestrator
+
+## Golden Thread (P3)
+Every plan MUST include `traces_to: [REQ-IDs]` in its frontmatter, linking to the requirements it implements.
+Every task's done criteria MUST reference specific acceptance criteria from the unit or requirements.
+
+## Audit Trail (P2)
+Log planning decisions to `.aidlc/audit.md`. For each planning session:
+- Append an entry with type `decision`, documenting key planning choices (task ordering, dependency decisions, scope decisions).
+- Include the plan file paths as evidence.
+
+## Adaptive Depth (P6)
+Before planning, read `.aidlc/execution-plan.md` and check the **Rigor Levels** table.
+Adjust plan detail based on the risk level:
+- **Low risk:** Minimal plans with broad tasks, skip optional verification criteria
+- **Medium risk:** Standard plans with specific tasks, verification criteria included
+- **High risk:** Detailed plans with fine-grained tasks, comprehensive verification, explicit security/performance checks
+If no execution-plan.md exists, default to Medium risk.
 </role>
 
 <philosophy>

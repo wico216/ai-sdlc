@@ -339,3 +339,19 @@ After all plans in phase complete (step 7):
 - [ ] REQUIREMENTS.md updated (phase requirements marked Complete)
 - [ ] User informed of next steps
 </success_criteria>
+
+<adaptive_depth>
+## Adaptive Depth
+Read `.aidlc/execution-plan.md` for the rigor level set during inception.
+Adjust your behavior per the Rigor Levels table:
+
+| Aspect | Low Risk | Medium Risk | High Risk |
+|--------|----------|-------------|-----------|
+| Gate formality | Quick review | Evidence checklist | Formal sign-off |
+| Evidence depth | Tests pass | Tests + coverage | Tests + coverage + load test |
+| Research depth | Skip | Standard | Comprehensive |
+| Verification | Spot check | Full verification | Full + integration check |
+| Audit detail | Summary | Standard entries | Detailed with rationale |
+
+If no execution-plan.md exists, default to **Medium Risk**.
+</adaptive_depth>
