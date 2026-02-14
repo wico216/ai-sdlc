@@ -1,0 +1,53 @@
+---
+description: DDD-based unit decomposition protocol for AI-SDLC inception phase.
+globs:
+  - .aidlc/units/**
+  - .aidlc/REQUIREMENTS.md
+---
+
+# DDD Unit Decomposition Protocol
+
+When decomposing requirements into units during Inception, follow this structured 5-step protocol. Do NOT just "apply DDD principles" — follow these steps explicitly.
+
+## Step 1: Identify Bounded Contexts
+
+Read REQUIREMENTS.md and identify distinct business domains:
+- Each bounded context has its own language, rules, and data
+- Look for natural seams where terminology or ownership changes
+- Document context boundaries explicitly
+
+## Step 2: Map Domain Events
+
+For each bounded context:
+- List events that happen (past tense: "OrderPlaced", "PaymentProcessed")
+- Identify which context owns each event
+- Map event flows between contexts
+
+## Step 3: Define Aggregates
+
+Within each bounded context:
+- Identify aggregate roots (entities that own consistency boundaries)
+- Define what data belongs together (must be consistent)
+- Establish invariants (rules that must always be true)
+
+## Step 4: Derive Units
+
+Transform aggregates into implementable units:
+- Each unit maps to one or more aggregates
+- Units have clear acceptance criteria derived from invariants
+- Units specify `traces_to: [REQ-IDs]` for traceability
+- Units are ordered by dependency (core entities first, then features that depend on them)
+
+## Step 5: Validate Coverage
+
+- Every REQ-ID from REQUIREMENTS.md must appear in at least one unit's `traces_to`
+- Every unit must trace back to at least one requirement
+- Coverage gaps are flagged, not silently ignored
+
+## Output
+
+Each unit gets a file in `.aidlc/units/unit-{N}-{name}.md` with:
+- Name, description, bounded context
+- `traces_to: [REQ-IDs]`
+- Acceptance criteria (testable, specific)
+- Dependencies on other units

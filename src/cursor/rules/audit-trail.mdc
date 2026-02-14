@@ -1,0 +1,35 @@
+---
+description: Audit trail logging protocol for AI-SDLC agents. Ensures decisions and deviations are tracked.
+globs:
+  - .aidlc/audit.md
+  - .aidlc/**/*.md
+---
+
+# Audit Trail Protocol
+
+When performing AI-SDLC work, maintain an append-only audit trail in `.aidlc/audit.md`.
+
+## What to Log
+
+- **Gate decisions**: Approval or rejection with evidence summary
+- **Deviations**: Any departure from the plan (auto-fixes, scope changes, blocked tasks)
+- **Verification results**: Pass/fail with evidence links
+- **Plan decisions**: Why tasks were ordered, grouped, or deferred
+
+## Entry Format
+
+```markdown
+### Entry [N] — [YYYY-MM-DD HH:MM]
+**Type:** [gate|deviation|verification|decision]
+**Context:** [phase/unit/task]
+**Description:** [what happened]
+**Evidence:** [links or inline proof]
+**Actor:** [AI|Human]
+```
+
+## Rules
+
+- Never delete or modify existing entries
+- Always append at the end
+- Include timestamps
+- Be specific — "verified" is not enough, say what was verified and how

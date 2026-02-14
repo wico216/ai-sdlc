@@ -1,0 +1,44 @@
+---
+description: Testing patterns and verification strategies for AI-SDLC construction phase.
+globs:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/tests/**"
+  - "**/__tests__/**"
+---
+
+# Testing Patterns
+
+## Three-Level Verification
+
+AI-SDLC uses three levels of verification for all deliverables:
+
+### Level 1: Existence
+- Does the artifact exist?
+- Is it in the right location?
+- Does it have the expected structure?
+
+### Level 2: Substantive
+- Is it real implementation, not stubs or placeholders?
+- Does it handle edge cases?
+- Are there actual tests that pass?
+
+### Level 3: Wired
+- Is it connected to the rest of the system?
+- Can it be reached through normal user flows?
+- Does it work with real data?
+
+## Test Strategy Per Risk Level
+
+From `.aidlc/execution-plan.md` rigor levels:
+
+- **Low risk:** Unit tests for core logic. Manual smoke test.
+- **Medium risk:** Unit tests + integration tests. Automated test suite passes.
+- **High risk:** Full test pyramid. Load testing evidence. Security scan.
+
+## Evidence Requirements
+
+When presenting gate evidence:
+- Link to passing test runs (not just "tests pass")
+- Show coverage for critical paths
+- Include any known limitations

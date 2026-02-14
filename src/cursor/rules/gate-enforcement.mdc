@@ -1,0 +1,20 @@
+---
+description: Enforces AI-SDLC gate checking before execution. Prevents gate bypass.
+alwaysApply: true
+---
+
+# Gate Enforcement
+
+Before executing code in a Construction phase:
+
+1. Check `.aidlc/audit.md` for required gate approvals
+2. If executing a unit and no Design Approved gate exists → WARN the user
+3. If all units complete and no PRODUCTION READY gate exists → WARN before deployment
+
+Gate bypass is the user's choice, but they must explicitly acknowledge it.
+
+When presenting a gate:
+- State the expected approver role (Product Owner, Tech Lead, QA, Operations)
+- Present evidence as a checklist
+- Ask for explicit approval
+- Log result in `.aidlc/audit.md`
