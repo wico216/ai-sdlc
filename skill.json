@@ -1,0 +1,37 @@
+{
+  "name": "ai-sdlc",
+  "version": "VERSION_FROM_FILE",
+  "description": "AI-native Software Development Lifecycle framework. Three phases, five gates, proof over prose.",
+  "homepage": "https://github.com/wico216/ai-sdlc",
+  "license": "MIT",
+  "authors": ["wico216"],
+  "keywords": ["sdlc", "ai-sdlc", "development-lifecycle", "project-management", "ddd"],
+  "install": {
+    "script": "./install.sh"
+  },
+  "components": {
+    "skills": [
+      {
+        "path": "src/shared",
+        "name": "ai-sdlc",
+        "description": "Core AI-SDLC methodology references, templates, and workflows"
+      }
+    ],
+    "commands": {
+      "source": "src/shared/commands/",
+      "claude": "src/claude/commands/",
+      "cursor": "src/cursor/commands/"
+    },
+    "agents": {
+      "shared": "src/agents/",
+      "cursor": "src/cursor/agents/"
+    },
+    "rules": {
+      "cursor": "src/cursor/rules/"
+    },
+    "hooks": {
+      "claude": "src/claude/hooks/",
+      "cursor": "src/cursor/hooks/"
+    }
+  }
+}

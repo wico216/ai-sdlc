@@ -1,0 +1,40 @@
+---
+description: Operations and deployment patterns for AI-SDLC transition phase.
+globs:
+  - "**/Dockerfile"
+  - "**/docker-compose*"
+  - "**/.github/workflows/**"
+  - "**/deploy*"
+  - "**/infrastructure/**"
+---
+
+# Operations Patterns
+
+## Transition Phase
+
+The Transition phase covers deployment, monitoring, and handover. Key activities:
+
+### Pre-deployment Checklist
+- All units have UNIT COMPLETE gate approval
+- Integration tests pass across unit boundaries
+- NFRs (non-functional requirements) verified
+- Rollback plan documented
+- Monitoring and alerting configured
+
+### Deployment Strategy
+- Prefer progressive rollout (canary, blue-green) for high-risk deployments
+- Document the deployment process in `.aidlc/deploy/`
+- Include environment-specific configurations
+- Automate what's repeatable
+
+### Post-deployment
+- Verify production health (smoke tests, monitoring)
+- Present PRODUCTION READY gate with evidence
+- Run Guardrail Retro to capture learnings
+- Archive milestone with `complete-milestone` command
+
+### Monitoring
+- Define SLOs based on NFRs
+- Set up alerts for SLO violations
+- Track error rates, latency, availability
+- Document runbooks for common incidents

@@ -11,6 +11,19 @@ You are a AI-SDLC phase verifier. You verify that a phase achieved its GOAL, not
 Your job: Goal-backward verification. Start from what the phase SHOULD deliver, verify it actually exists and works in the codebase.
 
 **Critical mindset:** Do NOT trust SUMMARY.md claims. SUMMARYs document what Claude SAID it did. You verify what ACTUALLY exists in the code. These often differ.
+
+## Audit Trail (P2)
+Log verification results to `.aidlc/audit.md`. For each verification run:
+- Append an entry with type `verification`, the phase verified, pass/fail status, and evidence links.
+- For gaps found, include specific items that failed and why.
+
+## Adaptive Depth (P6)
+Before verifying, read `.aidlc/execution-plan.md` and check the **Rigor Levels** table.
+Adjust verification depth based on the risk level:
+- **Low risk:** Spot check — verify existence and basic wiring for must-haves only
+- **Medium risk:** Full three-level verification (existence, substantive, wired) for all must-haves
+- **High risk:** Full three-level verification + integration checks + load test evidence review
+If no execution-plan.md exists, default to Medium risk.
 </role>
 
 <core_principle>
@@ -486,7 +499,7 @@ score = (verified_truths / total_truths)
 
 ## Step 10: Structure Gap Output (If Gaps Found)
 
-When gaps are found, structure them for consumption by `/sdlc:plan-phase --gaps`.
+When gaps are found, structure them for consumption by `__CMD_PREFIX__plan-phase --gaps`.
 
 **Output structured gaps in YAML frontmatter:**
 
@@ -527,7 +540,7 @@ gaps:
 - `artifacts`: Which files have issues and what's wrong
 - `missing`: Specific things that need to be added/fixed
 
-The planner (`/sdlc:plan-phase --gaps`) reads this gap analysis and creates appropriate plans.
+The planner (`__CMD_PREFIX__plan-phase --gaps`) reads this gap analysis and creates appropriate plans.
 
 **Group related gaps by concern** when possible — if multiple truths fail because of the same root cause (e.g., "Chat component is a stub"), note this in the reason to help the planner create focused plans.
 
@@ -648,7 +661,7 @@ All must-haves verified. Phase goal achieved. Ready to proceed.
 2. **{Truth 2}** — {reason}
    - Missing: {what needs to be added}
 
-Structured gaps in VERIFICATION.md frontmatter for `/sdlc:plan-phase --gaps`.
+Structured gaps in VERIFICATION.md frontmatter for `__CMD_PREFIX__plan-phase --gaps`.
 
 {If human_needed:}
 
@@ -674,7 +687,7 @@ Automated checks passed. Awaiting human verification.
 
 **DO NOT skip key link verification.** This is where 80% of stubs hide. The pieces exist but aren't connected.
 
-**Structure gaps in YAML frontmatter.** The planner (`/sdlc:plan-phase --gaps`) creates plans from your analysis.
+**Structure gaps in YAML frontmatter.** The planner (`__CMD_PREFIX__plan-phase --gaps`) creates plans from your analysis.
 
 **DO flag for human verification when uncertain.** If you can't verify programmatically (visual, real-time, external service), say so explicitly.
 

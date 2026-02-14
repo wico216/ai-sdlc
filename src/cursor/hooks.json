@@ -1,0 +1,22 @@
+{
+  "hooks": [
+    {
+      "event": "sessionStart",
+      "type": "command",
+      "command": "node ~/.cursor/hooks/sdlc-session-start.js",
+      "description": "[ai-sdlc] Framework status on session start"
+    },
+    {
+      "event": "stop",
+      "type": "command",
+      "command": "node ~/.cursor/hooks/sdlc-status.js",
+      "description": "[ai-sdlc] Show current phase on completion"
+    },
+    {
+      "event": "afterFileEdit",
+      "type": "command",
+      "command": "node ~/.cursor/hooks/sdlc-audit-watch.js",
+      "description": "[ai-sdlc] Track audit trail modifications"
+    }
+  ]
+}

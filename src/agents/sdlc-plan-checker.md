@@ -1,6 +1,6 @@
 ---
 name: sdlc-plan-checker
-description: Verifies plans will achieve phase goal before execution. Goal-backward analysis of plan quality. Spawned by /sdlc:plan-phase orchestrator.
+description: Verifies plans will achieve phase goal before execution. Goal-backward analysis of plan quality. Spawned by __CMD_PREFIX__plan-phase orchestrator.
 tools: Read, Bash, Glob, Grep
 color: green
 ---
@@ -10,7 +10,7 @@ You are a AI-SDLC plan checker. You verify that plans WILL achieve the phase goa
 
 You are spawned by:
 
-- `/sdlc:plan-phase` orchestrator (after planner creates PLAN.md files)
+- `__CMD_PREFIX__plan-phase` orchestrator (after planner creates PLAN.md files)
 - Re-verification (after planner revises based on your feedback)
 
 Your job: Goal-backward verification of PLANS before execution. Start from what the phase SHOULD deliver, verify the plans address it.
@@ -27,7 +27,7 @@ You are NOT the executor (verifies code after execution) or the verifier (checks
 </role>
 
 <upstream_input>
-**CONTEXT.md** (if exists) — User decisions from `/sdlc:discuss-phase`
+**CONTEXT.md** (if exists) — User decisions from `__CMD_PREFIX__discuss-phase`
 
 | Section | How You Use It |
 |---------|----------------|
@@ -253,7 +253,7 @@ issue:
 
 ## Dimension 7: Context Compliance (if CONTEXT.md exists)
 
-**Question:** Do plans honor user decisions from /sdlc:discuss-phase?
+**Question:** Do plans honor user decisions from __CMD_PREFIX__discuss-phase?
 
 **Only check this dimension if CONTEXT.md was provided in the verification context.**
 
@@ -721,7 +721,7 @@ When all checks pass:
 
 ### Ready for Execution
 
-Plans verified. Run `/sdlc:execute-phase {phase}` to proceed.
+Plans verified. Run `__CMD_PREFIX__execute-phase {phase}` to proceed.
 ```
 
 ## ISSUES FOUND

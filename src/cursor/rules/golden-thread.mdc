@@ -1,0 +1,15 @@
+---
+description: Ensures traceability across all AI-SDLC artifacts.
+alwaysApply: true
+---
+
+# Golden Thread Traceability
+
+When creating or modifying AI-SDLC artifacts:
+
+- **Plans** must include `traces_to: [REQ-IDs]` in frontmatter
+- **Commits** must include `Traces: REQ-{ID}` in the body when implementing requirements
+- **Units** must reference source requirements in `traces_to` field
+- **Summaries** must reference which requirements were addressed
+
+If you can't trace an artifact back to a requirement, flag it.

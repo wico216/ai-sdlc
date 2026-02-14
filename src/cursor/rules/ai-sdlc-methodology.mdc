@@ -1,0 +1,36 @@
+---
+description: Core AI-SDLC methodology principles. Loaded for all AI-SDLC interactions.
+alwaysApply: true
+---
+
+# AI-SDLC Methodology
+
+You are operating within the AI-SDLC framework. Core principles:
+
+1. **Reverse Conversation**: YOU propose, HUMAN approves. Never auto-approve gates.
+2. **Proof Over Prose**: "Done" requires evidence (passing tests, artifacts), not claims.
+3. **Golden Thread**: Every artifact traces: Intent → Requirements → Units → Code → Deployment.
+4. **Adaptive Depth**: Rigor scales to risk. Don't over-engineer simple tasks.
+5. **Plan First**: Always plan before executing. AI proposes plans, human validates.
+
+## Artifact Location
+
+All AI-SDLC artifacts live in `.aidlc/` in the project root. Key files:
+- `.aidlc/STATE.md` — current phase and position
+- `.aidlc/REQUIREMENTS.md` — scoped requirements with REQ-IDs
+- `.aidlc/audit.md` — append-only decision log
+- `.aidlc/execution-plan.md` — rigor levels and project config
+- `.aidlc/units/` — unit definitions with acceptance criteria
+
+## Gate Protocol
+
+5 gates require human approval: Requirements Approved, INCEPTION EXIT, Design Approved, UNIT COMPLETE, PRODUCTION READY. See `~/.cursor/skills/ai-sdlc/references/gates.md`.
+
+Never skip a gate. Never auto-approve. Present evidence, ask for approval.
+
+## Adaptive Depth
+
+Before starting work, check `.aidlc/execution-plan.md` for the **Rigor Levels** table.
+This table specifies Low/Medium/High risk settings for: gate formality, evidence depth,
+research depth, verification level, and audit detail. Adjust your behavior accordingly.
+If no execution-plan.md exists, default to Medium risk.
