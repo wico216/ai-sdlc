@@ -342,6 +342,21 @@ Validate built features through conversational UAT.
 
 Usage: `/sdlc:verify-work 3`
 
+### Guardrail Retro
+
+**`/sdlc:retro [unit-id or 'milestone']`**
+Review what AI did well/poorly and improve for next time.
+
+- Analyzes audit trail, gate results, rework cycles, risk register
+- Identifies effective vs. missing guardrails
+- Asks for human observations (data alone isn't enough)
+- Produces concrete improvement actions for next unit
+- Optionally updates risk register with new risks
+
+Usage: `/sdlc:retro UNIT-001`
+Usage: `/sdlc:retro milestone`
+Usage: `/sdlc:retro` (retro on most recently completed unit)
+
 ### Milestone Auditing
 
 **`/sdlc:audit-milestone [version]`**

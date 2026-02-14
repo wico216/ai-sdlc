@@ -300,12 +300,14 @@ If NOT all criteria met:
 ## ▶ Next
 
 {If unit complete:}
+/sdlc:retro {UNIT-ID} — run Guardrail Retro (recommended)
 /sdlc:bolt {next-UNIT-ID} — start next unit
 
 {If more bolts needed:}
 /sdlc:bolt {UNIT-ID} --skip-design-gate — continue this unit
 
 {If all units complete:}
+/sdlc:retro {UNIT-ID} — run Guardrail Retro before moving on
 /sdlc:deploy — begin Operations phase
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -108,6 +108,7 @@ Output: Milestone archived (roadmap + requirements), PROJECT.md evolved, git tag
    - Ask about pushing tag
 
 8. **Offer next steps:**
+   - `/sdlc:retro milestone` — run Guardrail Retro on this milestone (recommended)
    - `/sdlc:new-milestone` — start next milestone (questioning → research → requirements → roadmap)
 
 </process>
