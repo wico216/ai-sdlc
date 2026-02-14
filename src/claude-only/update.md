@@ -15,7 +15,7 @@ Uses the GitHub API to check for new releases against the locally installed vers
 Read installed version:
 
 ```bash
-cat __SDLC_HOME__/VERSION 2>/dev/null
+cat ~/.claude/ai-sdlc/VERSION 2>/dev/null
 ```
 
 **If VERSION file missing:**
@@ -167,7 +167,7 @@ Capture output. If install fails, show error and STOP.
 Clear the update cache so statusline indicator disappears:
 
 ```bash
-rm -f __CLAUDE_HOME__/cache/sdlc-update-check.json
+rm -f ~/.claude/cache/sdlc-update-check.json
 ```
 </step>
 
