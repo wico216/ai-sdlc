@@ -11,7 +11,7 @@ Instantly restore full project context so "Where were we?" has an immediate, com
 </purpose>
 
 <required_reading>
-@__SDLC_HOME__/references/continuation-format.md
+@__SDLC_REFS__/continuation-format.md
 </required_reading>
 
 <process>
@@ -27,7 +27,7 @@ ls .aidlc/PROJECT.md 2>/dev/null && echo "Project file exists"
 
 **If STATE.md exists:** Proceed to load_state
 **If only ROADMAP.md/PROJECT.md exist:** Offer to reconstruct STATE.md
-**If .aidlc/ doesn't exist:** This is a new project - route to /sdlc:new-project
+**If .aidlc/ doesn't exist:** This is a new project - route to __CMD_PREFIX__new-project
 </step>
 
 <step name="load_state">
@@ -125,7 +125,7 @@ Present complete project status to user:
     Resume with: Task tool (resume parameter with agent ID)
 
 [If pending todos exist:]
-📋 [N] pending todos — /sdlc:check-todos to review
+📋 [N] pending todos — __CMD_PREFIX__check-todos to review
 
 [If blockers exist:]
 ⚠️  Carried concerns:
@@ -181,11 +181,11 @@ What would you like to do?
 [Primary action based on state - e.g.:]
 1. Resume interrupted agent [if interrupted agent found]
    OR
-1. Execute phase (/sdlc:execute-phase {phase})
+1. Execute phase (__CMD_PREFIX__execute-phase {phase})
    OR
-1. Discuss Phase 3 context (/sdlc:discuss-phase 3) [if CONTEXT.md missing]
+1. Discuss Phase 3 context (__CMD_PREFIX__discuss-phase 3) [if CONTEXT.md missing]
    OR
-1. Plan Phase 3 (/sdlc:plan-phase 3) [if CONTEXT.md exists or discuss option declined]
+1. Plan Phase 3 (__CMD_PREFIX__plan-phase 3) [if CONTEXT.md exists or discuss option declined]
 
 [Secondary options:]
 2. Review current phase status
@@ -216,7 +216,7 @@ Based on user selection, route to appropriate workflow:
 
   **{phase}-{plan}: [Plan Name]** — [objective from PLAN.md]
 
-  `/sdlc:execute-phase {phase}`
+  `__CMD_PREFIX__execute-phase {phase}`
 
   <sub>`/clear` first → fresh context window</sub>
 
@@ -230,15 +230,15 @@ Based on user selection, route to appropriate workflow:
 
   **Phase [N]: [Name]** — [Goal from ROADMAP.md]
 
-  `/sdlc:plan-phase [phase-number]`
+  `__CMD_PREFIX__plan-phase [phase-number]`
 
   <sub>`/clear` first → fresh context window</sub>
 
   ---
 
   **Also available:**
-  - `/sdlc:discuss-phase [N]` — gather context first
-  - `/sdlc:research-phase [N]` — investigate unknowns
+  - `__CMD_PREFIX__discuss-phase [N]` — gather context first
+  - `__CMD_PREFIX__research-phase [N]` — investigate unknowns
 
   ---
   ```

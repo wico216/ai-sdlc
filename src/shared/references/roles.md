@@ -31,7 +31,7 @@
 **Key actions:**
 - Executes bolts (plan → build → test)
 - Works with AI on code generation and review
-- Runs `/sdlc:bolt` and validates AI output
+- Runs `__CMD_PREFIX__bolt` and validates AI output
 - Reports deviations and blockers
 
 ### QA / Reviewer
@@ -40,7 +40,7 @@
 **Approves:** UNIT COMPLETE gate
 **Key actions:**
 - Validates acceptance criteria are met with evidence
-- Runs `/sdlc:verify-work` for UAT
+- Runs `__CMD_PREFIX__verify-work` for UAT
 - Reviews test coverage and edge cases
 - Ensures no regressions across units
 

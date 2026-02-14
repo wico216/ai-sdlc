@@ -21,7 +21,7 @@ Updates `.aidlc/config.json` with workflow preferences and model profile selecti
 ls .aidlc/config.json 2>/dev/null
 ```
 
-**If not found:** Error - run `/sdlc:new-project` first.
+**If not found:** Error - run `__CMD_PREFIX__new-project` first.
 
 ## 2. Read Current Config
 
@@ -132,13 +132,13 @@ Display:
 | Execution Verifier   | {On/Off} |
 | Git Branching        | {None/Per Phase/Per Milestone} |
 
-These settings apply to future /sdlc:plan-phase and /sdlc:execute-phase runs.
+These settings apply to future __CMD_PREFIX__plan-phase and __CMD_PREFIX__execute-phase runs.
 
 Quick commands:
-- /sdlc:set-profile <profile> — switch model profile
-- /sdlc:plan-phase --research — force research
-- /sdlc:plan-phase --skip-research — skip research
-- /sdlc:plan-phase --skip-verify — skip plan check
+- __CMD_PREFIX__set-profile <profile> — switch model profile
+- __CMD_PREFIX__plan-phase --research — force research
+- __CMD_PREFIX__plan-phase --skip-research — skip research
+- __CMD_PREFIX__plan-phase --skip-verify — skip plan check
 ```
 
 </process>

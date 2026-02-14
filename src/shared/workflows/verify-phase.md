@@ -18,8 +18,8 @@ Then verify each level against the actual codebase.
 </core_principle>
 
 <required_reading>
-@__SDLC_HOME__/references/verification-patterns.md
-@__SDLC_HOME__/templates/verification-report.md
+@__SDLC_REFS__/verification-patterns.md
+@__SDLC_TEMPLATES__/verification-report.md
 </required_reading>
 
 <process>
@@ -564,7 +564,7 @@ Fill template sections:
 9. **Recommended Fix Plans:** If gaps_found
 10. **Verification Metadata:** Approach, timing, counts
 
-See __SDLC_HOME__/templates/verification-report.md for complete template.
+See __SDLC_TEMPLATES__/verification-report.md for complete template.
 </step>
 
 <step name="return_to_orchestrator">

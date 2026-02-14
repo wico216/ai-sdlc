@@ -22,7 +22,7 @@ Verify milestone achieved its definition of done. Check requirements coverage, c
 </execution_context>
 
 <context>
-Version: $ARGUMENTS (optional — defaults to current milestone)
+Version: __ARGUMENTS__ (optional — defaults to current milestone)
 
 **Original Intent:**
 @.aidlc/PROJECT.md
@@ -181,7 +181,7 @@ All requirements covered. Cross-phase integration verified. E2E flows complete.
 
 **Complete milestone** — archive and tag
 
-/sdlc:complete-milestone {version}
+__CMD_PREFIX__complete-milestone {version}
 
 <sub>/clear first → fresh context window</sub>
 
@@ -218,7 +218,7 @@ All requirements covered. Cross-phase integration verified. E2E flows complete.
 
 **Plan gap closure** — create phases to complete milestone
 
-/sdlc:plan-milestone-gaps
+__CMD_PREFIX__plan-milestone-gaps
 
 <sub>/clear first → fresh context window</sub>
 
@@ -226,7 +226,7 @@ All requirements covered. Cross-phase integration verified. E2E flows complete.
 
 **Also available:**
 - cat .aidlc/v{version}-MILESTONE-AUDIT.md — see full report
-- /sdlc:complete-milestone {version} — proceed anyway (accept tech debt)
+- __CMD_PREFIX__complete-milestone {version} — proceed anyway (accept tech debt)
 
 ───────────────────────────────────────────────────────────────
 
@@ -256,11 +256,11 @@ All requirements met. No critical blockers. Accumulated tech debt needs review.
 
 **A. Complete milestone** — accept debt, track in backlog
 
-/sdlc:complete-milestone {version}
+__CMD_PREFIX__complete-milestone {version}
 
 **B. Plan cleanup phase** — address debt before completing
 
-/sdlc:plan-milestone-gaps
+__CMD_PREFIX__plan-milestone-gaps
 
 <sub>/clear first → fresh context window</sub>
 

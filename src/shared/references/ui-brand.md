@@ -115,8 +115,8 @@ Always at end of major completions.
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- `/sdlc:alternative-1` — description
-- `/sdlc:alternative-2` — description
+- `__CMD_PREFIX__alternative-1` — description
+- `__CMD_PREFIX__alternative-2` — description
 
 ───────────────────────────────────────────────────────────────
 ```

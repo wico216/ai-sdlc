@@ -14,8 +14,8 @@ Phase number: $ARGUMENTS (required)
 ```
 Error: Phase number required.
 
-Usage: /sdlc:list-phase-assumptions [phase-number]
-Example: /sdlc:list-phase-assumptions 3
+Usage: __CMD_PREFIX__list-phase-assumptions [phase-number]
+Example: __CMD_PREFIX__list-phase-assumptions 3
 ```
 
 Exit workflow.
@@ -153,8 +153,8 @@ Present next steps:
 
 ```
 What's next?
-1. Discuss context (/sdlc:discuss-phase ${PHASE}) - Let me ask you questions to build comprehensive context
-2. Plan this phase (/sdlc:plan-phase ${PHASE}) - Create detailed execution plans
+1. Discuss context (__CMD_PREFIX__discuss-phase ${PHASE}) - Let me ask you questions to build comprehensive context
+2. Plan this phase (__CMD_PREFIX__plan-phase ${PHASE}) - Create detailed execution plans
 3. Re-examine assumptions - I'll analyze again with your corrections
 4. Done for now
 ```

@@ -28,7 +28,7 @@ Parse the command arguments:
 - First argument: integer phase number to insert after
 - Remaining arguments: phase description
 
-Example: `/sdlc:insert-phase 72 Fix critical auth bug`
+Example: `__CMD_PREFIX__insert-phase 72 Fix critical auth bug`
 → after = 72
 → description = "Fix critical auth bug"
 
@@ -37,8 +37,8 @@ Validation:
 ```bash
 if [ $# -lt 2 ]; then
   echo "ERROR: Both phase number and description required"
-  echo "Usage: /sdlc:insert-phase <after> <description>"
-  echo "Example: /sdlc:insert-phase 72 Fix critical auth bug"
+  echo "Usage: __CMD_PREFIX__insert-phase <after> <description>"
+  echo "Example: __CMD_PREFIX__insert-phase 72 Fix critical auth bug"
   exit 1
 fi
 ```
@@ -143,7 +143,7 @@ Insert the new phase entry into the roadmap:
    **Plans:** 0 plans
 
    Plans:
-   - [ ] TBD (run /sdlc:plan-phase {decimal_phase} to break down)
+   - [ ] TBD (run __CMD_PREFIX__plan-phase {decimal_phase} to break down)
 
    **Details:**
    [To be added during planning]
@@ -189,7 +189,7 @@ Project state updated: .aidlc/STATE.md
 
 **Phase {decimal_phase}: {description}** — urgent insertion
 
-`/sdlc:plan-phase {decimal_phase}`
+`__CMD_PREFIX__plan-phase {decimal_phase}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -207,11 +207,11 @@ Project state updated: .aidlc/STATE.md
 
 <anti_patterns>
 
-- Don't use this for planned work at end of milestone (use /sdlc:add-phase)
+- Don't use this for planned work at end of milestone (use __CMD_PREFIX__add-phase)
 - Don't insert before Phase 1 (decimal 0.1 makes no sense)
 - Don't renumber existing phases
 - Don't modify the target phase content
-- Don't create plans yet (that's /sdlc:plan-phase)
+- Don't create plans yet (that's __CMD_PREFIX__plan-phase)
 - Don't commit changes (user decides when to commit)
   </anti_patterns>
 

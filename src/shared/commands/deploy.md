@@ -37,11 +37,11 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 
 <execution_context>
 
-@__SDLC_HOME__/references/principles.md
-@__SDLC_HOME__/references/gates.md
-@__SDLC_HOME__/templates/deployment-plan.md
-@__SDLC_HOME__/templates/runbook.md
-@__SDLC_HOME__/templates/observability-config.md
+@__SDLC_REFS__/principles.md
+@__SDLC_REFS__/gates.md
+@__SDLC_TEMPLATES__/deployment-plan.md
+@__SDLC_TEMPLATES__/runbook.md
+@__SDLC_TEMPLATES__/observability-config.md
 
 </execution_context>
 
@@ -68,7 +68,7 @@ Not all units are complete:
 - UNIT-002: in-progress ✗
 - UNIT-003: defined ✗
 
-Complete all units before Operations. Run /sdlc:bolt {UNIT-ID} to continue.
+Complete all units before Operations. Run __CMD_PREFIX__bolt {UNIT-ID} to continue.
 ```
 
 Use AskUserQuestion:

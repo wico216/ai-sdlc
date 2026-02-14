@@ -292,14 +292,14 @@ Created .aidlc/codebase/:
 
 **Initialize project** — use codebase context for planning
 
-`/sdlc:new-project`
+`__CMD_PREFIX__new-project`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- Re-run mapping: `/sdlc:map-codebase`
+- Re-run mapping: `__CMD_PREFIX__map-codebase`
 - Review specific file: `cat .aidlc/codebase/STACK.md`
 - Edit any document before proceeding
 

@@ -32,18 +32,18 @@ If no `.aidlc/` directory:
 ```
 No planning structure found.
 
-Run /sdlc:new-project to start a new project.
+Run __CMD_PREFIX__new-project to start a new project.
 ```
 
 Exit.
 
-If missing STATE.md: suggest `/sdlc:new-project`.
+If missing STATE.md: suggest `__CMD_PREFIX__new-project`.
 
 **If ROADMAP.md missing but PROJECT.md exists:**
 
 This means a milestone was completed and archived. Go to **Route F** (between milestones).
 
-If missing both ROADMAP.md and PROJECT.md: suggest `/sdlc:new-project`.
+If missing both ROADMAP.md and PROJECT.md: suggest `__CMD_PREFIX__new-project`.
 </step>
 
 <step name="load">
@@ -100,10 +100,10 @@ CONTEXT: [✓ if CONTEXT.md exists | - if not]
 - [any blockers or concerns from STATE.md]
 
 ## Pending Todos
-- [count] pending — /sdlc:check-todos to review
+- [count] pending — __CMD_PREFIX__check-todos to review
 
 ## Active Debug Sessions
-- [count] active — /sdlc:debug to continue
+- [count] active — __CMD_PREFIX__debug to continue
 (Only show this section if count > 0)
 
 ## What's Next
@@ -162,7 +162,7 @@ Read its `<objective>` section.
 
 **{phase}-{plan}: [Plan Name]** — [objective summary from PLAN.md]
 
-`/sdlc:execute-phase {phase}`
+`__CMD_PREFIX__execute-phase {phase}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -185,7 +185,7 @@ Check if `{phase}-CONTEXT.md` exists in phase directory.
 **Phase {N}: {Name}** — {Goal from ROADMAP.md}
 <sub>✓ Context gathered, ready to plan</sub>
 
-`/sdlc:plan-phase {phase-number}`
+`__CMD_PREFIX__plan-phase {phase-number}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -201,15 +201,15 @@ Check if `{phase}-CONTEXT.md` exists in phase directory.
 
 **Phase {N}: {Name}** — {Goal from ROADMAP.md}
 
-`/sdlc:discuss-phase {phase}` — gather context and clarify approach
+`__CMD_PREFIX__discuss-phase {phase}` — gather context and clarify approach
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:plan-phase {phase}` — skip discussion, plan directly
-- `/sdlc:list-phase-assumptions {phase}` — see Claude's assumptions
+- `__CMD_PREFIX__plan-phase {phase}` — skip discussion, plan directly
+- `__CMD_PREFIX__list-phase-assumptions {phase}` — see Claude's assumptions
 
 ---
 ```
@@ -227,15 +227,15 @@ UAT.md exists with gaps (diagnosed issues). User needs to plan fixes.
 
 **{phase}-UAT.md** has {N} gaps requiring fixes.
 
-`/sdlc:plan-phase {phase} --gaps`
+`__CMD_PREFIX__plan-phase {phase} --gaps`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:execute-phase {phase}` — execute phase plans
-- `/sdlc:verify-work {phase}` — run more UAT testing
+- `__CMD_PREFIX__execute-phase {phase}` — execute phase plans
+- `__CMD_PREFIX__verify-work {phase}` — run more UAT testing
 
 ---
 ```
@@ -274,15 +274,15 @@ Read ROADMAP.md to get the next phase's name and goal.
 
 **Phase {Z+1}: {Name}** — {Goal from ROADMAP.md}
 
-`/sdlc:discuss-phase {Z+1}` — gather context and clarify approach
+`__CMD_PREFIX__discuss-phase {Z+1}` — gather context and clarify approach
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:plan-phase {Z+1}` — skip discussion, plan directly
-- `/sdlc:verify-work {Z}` — user acceptance test before continuing
+- `__CMD_PREFIX__plan-phase {Z+1}` — skip discussion, plan directly
+- `__CMD_PREFIX__verify-work {Z}` — user acceptance test before continuing
 
 ---
 ```
@@ -302,14 +302,14 @@ All {N} phases finished!
 
 **Complete Milestone** — archive and prepare for next
 
-`/sdlc:complete-milestone`
+`__CMD_PREFIX__complete-milestone`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:verify-work` — user acceptance test before completing milestone
+- `__CMD_PREFIX__verify-work` — user acceptance test before completing milestone
 
 ---
 ```
@@ -333,7 +333,7 @@ Ready to plan the next milestone.
 
 **Start Next Milestone** — questioning → research → requirements → roadmap
 
-`/sdlc:new-milestone`
+`__CMD_PREFIX__new-milestone`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -345,10 +345,10 @@ Ready to plan the next milestone.
 <step name="edge_cases">
 **Handle edge cases:**
 
-- Phase complete but next phase not planned → offer `/sdlc:plan-phase [next]`
+- Phase complete but next phase not planned → offer `__CMD_PREFIX__plan-phase [next]`
 - All work complete → offer milestone completion
 - Blockers present → highlight before offering to continue
-- Handoff file exists → mention it, offer `/sdlc:resume-work`
+- Handoff file exists → mention it, offer `__CMD_PREFIX__resume-work`
   </step>
 
 </process>
@@ -358,7 +358,7 @@ Ready to plan the next milestone.
 - [ ] Rich context provided (recent work, decisions, issues)
 - [ ] Current position clear with visual progress
 - [ ] What's next clearly explained
-- [ ] Smart routing: /sdlc:execute-phase if plans exist, /sdlc:plan-phase if not
+- [ ] Smart routing: __CMD_PREFIX__execute-phase if plans exist, __CMD_PREFIX__plan-phase if not
 - [ ] User confirms before any action
 - [ ] Seamless handoff to appropriate sdlc command
       </success_criteria>

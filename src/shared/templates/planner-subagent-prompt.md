@@ -34,7 +34,7 @@ Template for spawning sdlc-planner agent. The agent contains all planning expert
 </planning_context>
 
 <downstream_consumer>
-Output consumed by /sdlc:execute-phase
+Output consumed by __CMD_PREFIX__execute-phase
 Plans must be executable prompts with:
 - Frontmatter (wave, depends_on, files_modified, autonomous)
 - Tasks in XML format
@@ -68,7 +68,7 @@ Before returning PLANNING COMPLETE:
 
 ## Usage
 
-**From /sdlc:plan-phase (standard mode):**
+**From __CMD_PREFIX__plan-phase (standard mode):**
 ```python
 Task(
   prompt=filled_template,
@@ -77,7 +77,7 @@ Task(
 )
 ```
 
-**From /sdlc:plan-phase --gaps (gap closure mode):**
+**From __CMD_PREFIX__plan-phase --gaps (gap closure mode):**
 ```python
 Task(
   prompt=filled_template,  # with mode: gap_closure

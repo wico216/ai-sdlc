@@ -17,11 +17,11 @@ Output: Conversational output only (no file creation) - ends with "What do you t
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/list-phase-assumptions.md
+@__SDLC_WORKFLOWS__/list-phase-assumptions.md
 </execution_context>
 
 <context>
-Phase number: $ARGUMENTS (required)
+Phase number: __ARGUMENTS__ (required)
 
 **Load project state first:**
 @.aidlc/STATE.md

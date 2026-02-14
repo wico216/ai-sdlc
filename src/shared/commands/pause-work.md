@@ -118,7 +118,7 @@ Current state:
 - Status: [in_progress/blocked]
 - Committed as WIP
 
-To resume: /sdlc:resume-work
+To resume: __CMD_PREFIX__resume-work
 
 ```
 </step>

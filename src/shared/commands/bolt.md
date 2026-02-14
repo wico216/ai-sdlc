@@ -39,14 +39,14 @@ Execute a Construction bolt for a specific unit. A Bolt is the smallest iteratio
 
 <execution_context>
 
-@__SDLC_HOME__/references/principles.md
-@__SDLC_HOME__/references/gates.md
-@__SDLC_HOME__/references/ui-brand.md
+@__SDLC_REFS__/principles.md
+@__SDLC_REFS__/gates.md
+@__SDLC_REFS__/ui-brand.md
 
 </execution_context>
 
 <context>
-Unit: $ARGUMENTS (unit ID like "UNIT-001" or just number like "1")
+Unit: __ARGUMENTS__ (unit ID like "UNIT-001" or just number like "1")
 
 **Flags:**
 - `--skip-design-gate` — Skip the Design Approved gate (for subsequent bolts on same unit)
@@ -64,11 +64,11 @@ Unit: $ARGUMENTS (unit ID like "UNIT-001" or just number like "1")
 ls .aidlc/units/ 2>/dev/null
 ```
 
-**If no units directory:** Error — run `/sdlc:inception` first.
+**If no units directory:** Error — run `__CMD_PREFIX__inception` first.
 
 **Resolve unit:**
 
-Parse $ARGUMENTS to find the target unit:
+Parse __ARGUMENTS__ to find the target unit:
 - If "UNIT-001" or "1": find `.aidlc/units/UNIT-001.md`
 - If no argument: check STATE.md for current unit, or list available units
 
@@ -183,7 +183,7 @@ The planner gets:
 
 ```
 Task(prompt="
-First, read __CLAUDE_HOME__/agents/sdlc-planner.md for your role and instructions.
+First, read __AGENTS_DIR__/sdlc-planner.md for your role and instructions.
 
 <planning_context>
 
@@ -222,7 +222,7 @@ Display banner:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**Use the same wave-based execution as /sdlc:execute-phase:**
+**Use the same wave-based execution as __CMD_PREFIX__execute-phase:**
 
 Spawn sdlc-executor for each plan. Collect results.
 
@@ -267,7 +267,7 @@ Use AskUserQuestion:
 - options:
   - "Approve — unit done" — Mark unit complete
   - "Not yet" — More work needed, plan another bolt
-  - "Verify first" — Run /sdlc:verify-work on this unit
+  - "Verify first" — Run __CMD_PREFIX__verify-work on this unit
 
 **If approved:**
 - Update unit status to `complete` in unit file
@@ -276,10 +276,10 @@ Use AskUserQuestion:
 
 **If not yet:**
 - Identify remaining work
-- Suggest: "Run `/sdlc:bolt {UNIT-ID} --skip-design-gate` for another bolt"
+- Suggest: "Run `__CMD_PREFIX__bolt {UNIT-ID} --skip-design-gate` for another bolt"
 
 **If verify first:**
-- Suggest: "Run `/sdlc:verify-work` then return to check gate"
+- Suggest: "Run `__CMD_PREFIX__verify-work` then return to check gate"
 
 If NOT all criteria met:
 - Show which criteria are still pending
@@ -300,15 +300,15 @@ If NOT all criteria met:
 ## ▶ Next
 
 {If unit complete:}
-/sdlc:retro {UNIT-ID} — run Guardrail Retro (recommended)
-/sdlc:bolt {next-UNIT-ID} — start next unit
+__CMD_PREFIX__retro {UNIT-ID} — run Guardrail Retro (recommended)
+__CMD_PREFIX__bolt {next-UNIT-ID} — start next unit
 
 {If more bolts needed:}
-/sdlc:bolt {UNIT-ID} --skip-design-gate — continue this unit
+__CMD_PREFIX__bolt {UNIT-ID} --skip-design-gate — continue this unit
 
 {If all units complete:}
-/sdlc:retro {UNIT-ID} — run Guardrail Retro before moving on
-/sdlc:deploy — begin Operations phase
+__CMD_PREFIX__retro {UNIT-ID} — run Guardrail Retro before moving on
+__CMD_PREFIX__deploy — begin Operations phase
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```

@@ -51,7 +51,7 @@ Create: .aidlc/debug/{slug}.md
 
 ## Usage
 
-**From /sdlc:debug:**
+**From __CMD_PREFIX__debug:**
 ```python
 Task(
   prompt=filled_template,

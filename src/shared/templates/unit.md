@@ -6,7 +6,7 @@
 
 ## Instructions for agents
 
-- Generate units during Inception (`/sdlc:inception`)
+- Generate units during Inception (`__CMD_PREFIX__inception`)
 - Each unit should be completable in 1-5 Bolts (hours to days, not weeks)
 - Units should be parallelizable — minimal cross-unit dependencies
 - Every unit traces back to requirements and stories

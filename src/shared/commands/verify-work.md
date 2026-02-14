@@ -17,16 +17,16 @@ Validate built features through conversational testing with persistent state.
 
 Purpose: Confirm what Claude built actually works from user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
 
-Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for /sdlc:execute-phase
+Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for __CMD_PREFIX__execute-phase
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/verify-work.md
-@__SDLC_HOME__/templates/UAT.md
+@__SDLC_WORKFLOWS__/verify-work.md
+@__SDLC_TEMPLATES__/UAT.md
 </execution_context>
 
 <context>
-Phase: $ARGUMENTS (optional)
+Phase: __ARGUMENTS__ (optional)
 - If provided: Test specific phase (e.g., "4")
 - If not provided: Check for active sessions or prompt for phase
 
@@ -50,7 +50,7 @@ Phase: $ARGUMENTS (optional)
    - Spawn sdlc-planner in --gaps mode to create fix plans
    - Spawn sdlc-plan-checker to verify fix plans
    - Iterate planner ↔ checker until plans pass (max 3)
-   - Present ready status with `/clear` then `/sdlc:execute-phase`
+   - Present ready status with `/clear` then `__CMD_PREFIX__execute-phase`
 </process>
 
 <anti_patterns>
@@ -90,15 +90,15 @@ UAT complete ✓
 
 **Phase {Z+1}: {Name}** — {Goal from ROADMAP.md}
 
-/sdlc:discuss-phase {Z+1} — gather context and clarify approach
+__CMD_PREFIX__discuss-phase {Z+1} — gather context and clarify approach
 
 <sub>/clear first → fresh context window</sub>
 
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- /sdlc:plan-phase {Z+1} — skip discussion, plan directly
-- /sdlc:execute-phase {Z+1} — skip to execution (if already planned)
+- __CMD_PREFIX__plan-phase {Z+1} — skip discussion, plan directly
+- __CMD_PREFIX__execute-phase {Z+1} — skip to execution (if already planned)
 
 ───────────────────────────────────────────────────────────────
 
@@ -121,14 +121,14 @@ Final phase verified ✓
 
 **Audit milestone** — verify requirements, cross-phase integration, E2E flows
 
-/sdlc:audit-milestone
+__CMD_PREFIX__audit-milestone
 
 <sub>/clear first → fresh context window</sub>
 
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- /sdlc:complete-milestone — skip audit, archive directly
+- __CMD_PREFIX__complete-milestone — skip audit, archive directly
 
 ───────────────────────────────────────────────────────────────
 
@@ -156,7 +156,7 @@ Fix plans verified ✓
 
 **Execute fix plans** — run diagnosed fixes
 
-/sdlc:execute-phase {Z} --gaps-only
+__CMD_PREFIX__execute-phase {Z} --gaps-only
 
 <sub>/clear first → fresh context window</sub>
 
@@ -164,7 +164,7 @@ Fix plans verified ✓
 
 **Also available:**
 - cat .aidlc/phases/{phase_dir}/*-PLAN.md — review fix plans
-- /sdlc:plan-phase {Z} --gaps — regenerate fix plans
+- __CMD_PREFIX__plan-phase {Z} --gaps — regenerate fix plans
 
 ───────────────────────────────────────────────────────────────
 
@@ -199,8 +199,8 @@ Review the issues above and either:
 ───────────────────────────────────────────────────────────────
 
 **Options:**
-- /sdlc:plan-phase {Z} --gaps — retry fix planning with guidance
-- /sdlc:discuss-phase {Z} — gather more context before replanning
+- __CMD_PREFIX__plan-phase {Z} --gaps — retry fix planning with guidance
+- __CMD_PREFIX__discuss-phase {Z} — gather more context before replanning
 
 ───────────────────────────────────────────────────────────────
 </offer_next>
@@ -215,5 +215,5 @@ Review the issues above and either:
 - [ ] If issues: parallel debug agents diagnose root causes
 - [ ] If issues: sdlc-planner creates fix plans from diagnosed gaps
 - [ ] If issues: sdlc-plan-checker verifies fix plans (max 3 iterations)
-- [ ] Ready for `/sdlc:execute-phase` when complete
+- [ ] Ready for `__CMD_PREFIX__execute-phase` when complete
 </success_criteria>

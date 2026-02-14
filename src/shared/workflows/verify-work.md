@@ -1,5 +1,5 @@
 <purpose>
-Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /clear, and feeds gaps into /sdlc:plan-phase --gaps.
+Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /clear, and feeds gaps into __CMD_PREFIX__plan-phase --gaps.
 
 User tests, Claude records. One test at a time. Plain text responses.
 </purpose>
@@ -15,7 +15,7 @@ No Pass/Fail buttons. No severity questions. Just: "Here's what should happen. D
 </philosophy>
 
 <template>
-@__SDLC_HOME__/templates/UAT.md
+@__SDLC_TEMPLATES__/UAT.md
 </template>
 
 <process>
@@ -78,7 +78,7 @@ If no, continue to `create_uat_file`.
 ```
 No active UAT sessions.
 
-Provide a phase number to start testing (e.g., /sdlc:verify-work 4)
+Provide a phase number to start testing (e.g., __CMD_PREFIX__verify-work 4)
 ```
 
 **If no active sessions AND $ARGUMENTS provided:**
@@ -343,8 +343,8 @@ Present summary:
 ```
 All tests passed. Ready to continue.
 
-- `/sdlc:plan-phase {next}` — Plan next phase
-- `/sdlc:execute-phase {next}` — Execute next phase
+- `__CMD_PREFIX__plan-phase {next}` — Plan next phase
+- `__CMD_PREFIX__execute-phase {next}` — Execute next phase
 ```
 </step>
 
@@ -360,7 +360,7 @@ Spawning parallel debug agents to investigate each issue.
 ```
 
 - Load diagnose-issues workflow
-- Follow @__SDLC_HOME__/workflows/diagnose-issues.md
+- Follow @__SDLC_WORKFLOWS__/diagnose-issues.md
 - Spawn parallel debug agents for each issue
 - Collect root causes
 - Update UAT.md with root causes
@@ -403,7 +403,7 @@ Task(
 </planning_context>
 
 <downstream_consumer>
-Output consumed by /sdlc:execute-phase
+Output consumed by __CMD_PREFIX__execute-phase
 Plans must be executable prompts.
 </downstream_consumer>
 """,
@@ -510,7 +510,7 @@ Display: `Max iterations reached. {N} issues remain.`
 Offer options:
 1. Force proceed (execute despite issues)
 2. Provide guidance (user gives direction, retry)
-3. Abandon (exit, user runs /sdlc:plan-phase manually)
+3. Abandon (exit, user runs __CMD_PREFIX__plan-phase manually)
 
 Wait for user response.
 </step>
@@ -538,7 +538,7 @@ Plans verified and ready for execution.
 
 **Execute fixes** — run fix plans
 
-`/clear` then `/sdlc:execute-phase {phase} --gaps-only`
+`/clear` then `__CMD_PREFIX__execute-phase {phase} --gaps-only`
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -592,5 +592,5 @@ Default to **major** if unclear. User can correct if needed.
 - [ ] If issues: sdlc-planner creates fix plans (gap_closure mode)
 - [ ] If issues: sdlc-plan-checker verifies fix plans
 - [ ] If issues: revision loop until plans pass (max 3 iterations)
-- [ ] Ready for `/sdlc:execute-phase --gaps-only` when complete
+- [ ] Ready for `__CMD_PREFIX__execute-phase --gaps-only` when complete
 </success_criteria>

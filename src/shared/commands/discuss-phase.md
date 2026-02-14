@@ -24,12 +24,12 @@ Extract implementation decisions that downstream agents need — researcher and 
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/discuss-phase.md
-@__SDLC_HOME__/templates/context.md
+@__SDLC_WORKFLOWS__/discuss-phase.md
+@__SDLC_TEMPLATES__/context.md
 </execution_context>
 
 <context>
-Phase number: $ARGUMENTS (required)
+Phase number: __ARGUMENTS__ (required)
 
 **Load project state:**
 @.aidlc/STATE.md

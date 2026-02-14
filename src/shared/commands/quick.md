@@ -62,7 +62,7 @@ Check that an active AI-SDLC project exists:
 ```bash
 if [ ! -f .aidlc/ROADMAP.md ]; then
   echo "Quick mode requires an active project with ROADMAP.md."
-  echo "Run /sdlc:new-project first."
+  echo "Run __CMD_PREFIX__new-project first."
   exit 1
 fi
 ```
@@ -291,7 +291,7 @@ Commit: ${commit_hash}
 
 ---
 
-Ready for next task: /sdlc:quick
+Ready for next task: __CMD_PREFIX__quick
 ```
 
 </process>

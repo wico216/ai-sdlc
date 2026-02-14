@@ -6,7 +6,7 @@ Execute a phase prompt (PLAN.md) and create the outcome summary (SUMMARY.md).
 Read STATE.md before any operation to load project context.
 Read config.json for planning behavior settings.
 
-@__SDLC_HOME__/references/git-integration.md
+@__SDLC_REFS__/git-integration.md
 </required_reading>
 
 <process>
@@ -958,7 +958,7 @@ After TDD plan completion, ensure:
 - Standard plans: Multiple tasks, 1 commit per task, 2-4 commits total
 - TDD plans: Single feature, 2-3 commits for RED/GREEN/REFACTOR cycle
 
-See `__SDLC_HOME__/references/tdd.md` for TDD plan structure.
+See `__SDLC_REFS__/tdd.md` for TDD plan structure.
 </tdd_plan_execution>
 
 <task_commit>
@@ -1126,7 +1126,7 @@ I'll verify after: [verification]
 - If verification passes or N/A: continue to next task
 - If verification fails: inform user, wait for resolution
 
-See __SDLC_HOME__/references/checkpoints.md for complete checkpoint guidance.
+See __SDLC_REFS__/checkpoints.md for complete checkpoint guidance.
 </step>
 
 <step name="checkpoint_return_for_orchestrator">
@@ -1260,7 +1260,7 @@ grep -A 50 "^user_setup:" .aidlc/phases/XX-name/{phase}-{plan}-PLAN.md | head -5
 
 **If user_setup exists and is not empty:**
 
-Create `.aidlc/phases/XX-name/{phase}-USER-SETUP.md` using template from `__SDLC_HOME__/templates/user-setup.md`.
+Create `.aidlc/phases/XX-name/{phase}-USER-SETUP.md` using template from `__SDLC_TEMPLATES__/user-setup.md`.
 
 **Content generation:**
 
@@ -1321,7 +1321,7 @@ Set `USER_SETUP_CREATED=true` if file was generated, for use in completion messa
 
 <step name="create_summary">
 Create `{phase}-{plan}-SUMMARY.md` as specified in the prompt's `<output>` section.
-Use __SDLC_HOME__/templates/summary.md for structure.
+Use __SDLC_TEMPLATES__/summary.md for structure.
 
 **File location:** `.aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 
@@ -1714,14 +1714,14 @@ Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 **{phase}-{next-plan}: [Plan Name]** — [objective from next PLAN.md]
 
-`/sdlc:execute-phase {phase}`
+`__CMD_PREFIX__execute-phase {phase}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:verify-work {phase}-{plan}` — manual acceptance testing before continuing
+- `__CMD_PREFIX__verify-work {phase}-{plan}` — manual acceptance testing before continuing
 - Review what was built before continuing
 
 ---
@@ -1775,15 +1775,15 @@ All {Y} plans finished.
 
 **Phase {Z+1}: {Next Phase Name}** — {Goal from ROADMAP.md}
 
-`/sdlc:plan-phase {Z+1}`
+`__CMD_PREFIX__plan-phase {Z+1}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:verify-work {Z}` — manual acceptance testing before continuing
-- `/sdlc:discuss-phase {Z+1}` — gather context first
+- `__CMD_PREFIX__verify-work {Z}` — manual acceptance testing before continuing
+- `__CMD_PREFIX__discuss-phase {Z+1}` — gather context first
 - Review phase accomplishments before continuing
 
 ---
@@ -1813,15 +1813,15 @@ All {Y} plans finished.
 
 **Complete Milestone** — archive and prepare for next
 
-`/sdlc:complete-milestone`
+`__CMD_PREFIX__complete-milestone`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:verify-work` — manual acceptance testing before completing milestone
-- `/sdlc:add-phase <description>` — add another phase before completing
+- `__CMD_PREFIX__verify-work` — manual acceptance testing before completing milestone
+- `__CMD_PREFIX__add-phase <description>` — add another phase before completing
 - Review accomplishments before archiving
 
 ---

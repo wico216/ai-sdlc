@@ -21,17 +21,17 @@ Output ONLY the reference content below. Do NOT add:
 
 ## Quick Start
 
-1. `/sdlc:new-project` - Initialize project (questioning, research, requirements, roadmap)
-2. `/sdlc:inception` - Run full Inception phase (intent, units, risk register, gates)
-3. `/sdlc:bolt 1` - Execute a Construction bolt for the first unit
-4. `/sdlc:deploy` - Run Operations phase when ready
+1. `__CMD_PREFIX__new-project` - Initialize project (questioning, research, requirements, roadmap)
+2. `__CMD_PREFIX__inception` - Run full Inception phase (intent, units, risk register, gates)
+3. `__CMD_PREFIX__bolt 1` - Execute a Construction bolt for the first unit
+4. `__CMD_PREFIX__deploy` - Run Operations phase when ready
 
 ## Core Workflow (3 Phases)
 
 ```
-INCEPTION:     /sdlc:new-project → /sdlc:inception
-CONSTRUCTION:  /sdlc:bolt <unit> (repeat per unit)
-OPERATIONS:    /sdlc:deploy
+INCEPTION:     __CMD_PREFIX__new-project → __CMD_PREFIX__inception
+CONSTRUCTION:  __CMD_PREFIX__bolt <unit> (repeat per unit)
+OPERATIONS:    __CMD_PREFIX__deploy
 ```
 
 ### 5 Gates (Proof over Prose)
@@ -46,7 +46,7 @@ OPERATIONS:    /sdlc:deploy
 
 ### Project Initialization
 
-**`/sdlc:new-project`**
+**`__CMD_PREFIX__new-project`**
 Initialize new project through unified flow.
 
 One command takes you from idea to ready-for-planning:
@@ -63,22 +63,22 @@ Creates all `.aidlc/` artifacts:
 - `ROADMAP.md` — phases mapped to requirements
 - `STATE.md` — project memory
 
-Usage: `/sdlc:new-project`
+Usage: `__CMD_PREFIX__new-project`
 
-**`/sdlc:map-codebase`**
+**`__CMD_PREFIX__map-codebase`**
 Map an existing codebase for brownfield projects.
 
 - Analyzes codebase with parallel Explore agents
 - Creates `.aidlc/codebase/` with 7 focused documents
 - Covers stack, architecture, structure, conventions, testing, integrations, concerns
-- Use before `/sdlc:new-project` on existing codebases
+- Use before `__CMD_PREFIX__new-project` on existing codebases
 
-Usage: `/sdlc:map-codebase`
+Usage: `__CMD_PREFIX__map-codebase`
 
 ### Inception Phase
 
-**`/sdlc:inception`**
-Run the full AI-SDLC Inception phase after `/sdlc:new-project`.
+**`__CMD_PREFIX__inception`**
+Run the full AI-SDLC Inception phase after `__CMD_PREFIX__new-project`.
 
 Converts intent into testable, decomposed work:
 - Creates intent document (Golden Thread starting point)
@@ -94,11 +94,11 @@ Creates additional `.aidlc/` artifacts:
 - `risk-register.md` — identified risks with mitigations
 - `audit.md` — append-only decision log
 
-Usage: `/sdlc:inception`
+Usage: `__CMD_PREFIX__inception`
 
 ### Construction Phase
 
-**`/sdlc:bolt <unit>`**
+**`__CMD_PREFIX__bolt <unit>`**
 Execute a Construction bolt for a specific unit.
 
 A Bolt is the smallest iteration in AI-SDLC (hours to days):
@@ -114,13 +114,13 @@ Flags:
 - `--plan-only` — Only create plans, don't execute
 - `--execute-only` — Execute existing plans
 
-Usage: `/sdlc:bolt UNIT-001`
-Usage: `/sdlc:bolt 1`
-Usage: `/sdlc:bolt UNIT-002 --skip-design-gate`
+Usage: `__CMD_PREFIX__bolt UNIT-001`
+Usage: `__CMD_PREFIX__bolt 1`
+Usage: `__CMD_PREFIX__bolt UNIT-002 --skip-design-gate`
 
 ### Operations Phase
 
-**`/sdlc:deploy`**
+**`__CMD_PREFIX__deploy`**
 Run the Operations phase — deployment plan, runbooks, and Production Ready gate.
 
 - Verifies all units are complete
@@ -130,22 +130,22 @@ Run the Operations phase — deployment plan, runbooks, and Production Ready gat
 - Runs Production Ready gate (final gate)
 - Completes the Golden Thread: Intent → Code → Deployment
 
-Usage: `/sdlc:deploy`
+Usage: `__CMD_PREFIX__deploy`
 
 ### Unit Research & Planning
 
-These commands help prepare for bolt execution. They are called internally by `/sdlc:bolt` but can also be used standalone for deeper control.
+These commands help prepare for bolt execution. They are called internally by `__CMD_PREFIX__bolt` but can also be used standalone for deeper control.
 
-**`/sdlc:discuss-phase <number>`**
+**`__CMD_PREFIX__discuss-phase <number>`**
 Help articulate your vision for a phase before planning.
 
 - Captures how you imagine this phase working
 - Creates CONTEXT.md with your vision, essentials, and boundaries
 - Use when you have ideas about how something should look/feel
 
-Usage: `/sdlc:discuss-phase 2`
+Usage: `__CMD_PREFIX__discuss-phase 2`
 
-**`/sdlc:research-phase <number>`**
+**`__CMD_PREFIX__research-phase <number>`**
 Comprehensive ecosystem research for niche/complex domains.
 
 - Discovers standard stack, architecture patterns, pitfalls
@@ -153,47 +153,47 @@ Comprehensive ecosystem research for niche/complex domains.
 - Use for 3D, games, audio, shaders, ML, and other specialized domains
 - Goes beyond "which library" to ecosystem knowledge
 
-Usage: `/sdlc:research-phase 3`
+Usage: `__CMD_PREFIX__research-phase 3`
 
-**`/sdlc:list-phase-assumptions <number>`**
+**`__CMD_PREFIX__list-phase-assumptions <number>`**
 See what Claude is planning to do before it starts.
 
 - Shows Claude's intended approach for a phase
 - Lets you course-correct if Claude misunderstood your vision
 - No files created - conversational output only
 
-Usage: `/sdlc:list-phase-assumptions 3`
+Usage: `__CMD_PREFIX__list-phase-assumptions 3`
 
 ### Advanced: Direct Phase Execution
 
-> **Note:** These commands bypass AI-SDLC gates (Design Approved, Unit Complete). They are the internal execution engine used by `/sdlc:bolt`. Use them directly only when you need fine-grained control over planning and execution, and understand that gate enforcement and Golden Thread traceability are your responsibility.
+> **Note:** These commands bypass AI-SDLC gates (Design Approved, Unit Complete). They are the internal execution engine used by `__CMD_PREFIX__bolt`. Use them directly only when you need fine-grained control over planning and execution, and understand that gate enforcement and Golden Thread traceability are your responsibility.
 
-**`/sdlc:plan-phase <number>`**
+**`__CMD_PREFIX__plan-phase <number>`**
 Create detailed execution plan for a specific phase.
 
 - Generates `.aidlc/phases/XX-phase-name/XX-YY-PLAN.md`
 - Breaks phase into concrete, actionable tasks
 - Includes verification criteria and success measures
 - Multiple plans per phase supported (XX-01, XX-02, etc.)
-- **Does not enforce Design Approved gate** — use `/sdlc:bolt` for gate-enforced flow
+- **Does not enforce Design Approved gate** — use `__CMD_PREFIX__bolt` for gate-enforced flow
 
-Usage: `/sdlc:plan-phase 1`
+Usage: `__CMD_PREFIX__plan-phase 1`
 Result: Creates `.aidlc/phases/01-foundation/01-01-PLAN.md`
 
-**`/sdlc:execute-phase <phase-number>`**
+**`__CMD_PREFIX__execute-phase <phase-number>`**
 Execute all plans in a phase.
 
 - Groups plans by wave (from frontmatter), executes waves sequentially
 - Plans within each wave run in parallel via Task tool
 - Verifies phase goal after all plans complete
 - Updates REQUIREMENTS.md, ROADMAP.md, STATE.md
-- **Does not enforce Unit Complete gate** — use `/sdlc:bolt` for gate-enforced flow
+- **Does not enforce Unit Complete gate** — use `__CMD_PREFIX__bolt` for gate-enforced flow
 
-Usage: `/sdlc:execute-phase 5`
+Usage: `__CMD_PREFIX__execute-phase 5`
 
 ### Quick Mode
 
-**`/sdlc:quick`**
+**`__CMD_PREFIX__quick`**
 Execute small, ad-hoc tasks with AI-SDLC guarantees but skip optional agents.
 
 Quick mode uses the same system with a shorter path:
@@ -203,33 +203,33 @@ Quick mode uses the same system with a shorter path:
 
 Use when you know exactly what to do and the task is small enough to not need research or verification.
 
-Usage: `/sdlc:quick`
+Usage: `__CMD_PREFIX__quick`
 Result: Creates `.aidlc/quick/NNN-slug/PLAN.md`, `.aidlc/quick/NNN-slug/SUMMARY.md`
 
 ### Extended Workflow: Roadmap & Milestone Management
 
 > These commands extend AI-SDLC for multi-release projects. They manage the ROADMAP.md phases and milestone lifecycle. They are not part of the core 3-phase model (Inception → Construction → Operations) but are useful for iterative development across multiple releases.
 
-**`/sdlc:add-phase <description>`**
+**`__CMD_PREFIX__add-phase <description>`**
 Add new phase to end of current milestone.
 
 - Appends to ROADMAP.md
 - Uses next sequential number
 - Updates phase directory structure
 
-Usage: `/sdlc:add-phase "Add admin dashboard"`
+Usage: `__CMD_PREFIX__add-phase "Add admin dashboard"`
 
-**`/sdlc:insert-phase <after> <description>`**
+**`__CMD_PREFIX__insert-phase <after> <description>`**
 Insert urgent work as decimal phase between existing phases.
 
 - Creates intermediate phase (e.g., 7.1 between 7 and 8)
 - Useful for discovered work that must happen mid-milestone
 - Maintains phase ordering
 
-Usage: `/sdlc:insert-phase 7 "Fix critical auth bug"`
+Usage: `__CMD_PREFIX__insert-phase 7 "Fix critical auth bug"`
 Result: Creates Phase 7.1
 
-**`/sdlc:remove-phase <number>`**
+**`__CMD_PREFIX__remove-phase <number>`**
 Remove a future phase and renumber subsequent phases.
 
 - Deletes phase directory and all references
@@ -237,10 +237,10 @@ Remove a future phase and renumber subsequent phases.
 - Only works on future (unstarted) phases
 - Git commit preserves historical record
 
-Usage: `/sdlc:remove-phase 17`
+Usage: `__CMD_PREFIX__remove-phase 17`
 Result: Phase 17 deleted, phases 18-20 become 17-19
 
-**`/sdlc:new-milestone <name>`**
+**`__CMD_PREFIX__new-milestone <name>`**
 Start a new milestone through unified flow.
 
 - Deep questioning to understand what you're building next
@@ -248,11 +248,11 @@ Start a new milestone through unified flow.
 - Requirements definition with scoping
 - Roadmap creation with phase breakdown
 
-Mirrors `/sdlc:new-project` flow for brownfield projects (existing PROJECT.md).
+Mirrors `__CMD_PREFIX__new-project` flow for brownfield projects (existing PROJECT.md).
 
-Usage: `/sdlc:new-milestone "v2.0 Features"`
+Usage: `__CMD_PREFIX__new-milestone "v2.0 Features"`
 
-**`/sdlc:complete-milestone <version>`**
+**`__CMD_PREFIX__complete-milestone <version>`**
 Archive completed milestone and prepare for next version.
 
 - Creates MILESTONES.md entry with stats
@@ -260,9 +260,9 @@ Archive completed milestone and prepare for next version.
 - Creates git tag for the release
 - Prepares workspace for next version
 
-Usage: `/sdlc:complete-milestone 1.0.0`
+Usage: `__CMD_PREFIX__complete-milestone 1.0.0`
 
-**`/sdlc:audit-milestone [version]`**
+**`__CMD_PREFIX__audit-milestone [version]`**
 Audit milestone completion against original intent.
 
 - Reads all phase VERIFICATION.md files
@@ -270,21 +270,21 @@ Audit milestone completion against original intent.
 - Spawns integration checker for cross-phase wiring
 - Creates MILESTONE-AUDIT.md with gaps and tech debt
 
-Usage: `/sdlc:audit-milestone`
+Usage: `__CMD_PREFIX__audit-milestone`
 
-**`/sdlc:plan-milestone-gaps`**
+**`__CMD_PREFIX__plan-milestone-gaps`**
 Create phases to close gaps identified by audit.
 
 - Reads MILESTONE-AUDIT.md and groups gaps into phases
 - Prioritizes by requirement priority (must/should/nice)
 - Adds gap closure phases to ROADMAP.md
-- Ready for `/sdlc:plan-phase` on new phases
+- Ready for `__CMD_PREFIX__plan-phase` on new phases
 
-Usage: `/sdlc:plan-milestone-gaps`
+Usage: `__CMD_PREFIX__plan-milestone-gaps`
 
 ### Progress Tracking
 
-**`/sdlc:progress`**
+**`__CMD_PREFIX__progress`**
 Check project status and intelligently route to next action.
 
 - Shows visual progress bar and completion percentage
@@ -294,45 +294,45 @@ Check project status and intelligently route to next action.
 - Offers to execute next plan or create it if missing
 - Detects 100% milestone completion
 
-Usage: `/sdlc:progress`
+Usage: `__CMD_PREFIX__progress`
 
 ### Session Management
 
-**`/sdlc:resume-work`**
+**`__CMD_PREFIX__resume-work`**
 Resume work from previous session with full context restoration.
 
 - Reads STATE.md for project context
 - Shows current position and recent progress
 - Offers next actions based on project state
 
-Usage: `/sdlc:resume-work`
+Usage: `__CMD_PREFIX__resume-work`
 
-**`/sdlc:pause-work`**
+**`__CMD_PREFIX__pause-work`**
 Create context handoff when pausing work mid-phase.
 
 - Creates .continue-here file with current state
 - Updates STATE.md session continuity section
 - Captures in-progress work context
 
-Usage: `/sdlc:pause-work`
+Usage: `__CMD_PREFIX__pause-work`
 
 ### Debugging
 
-**`/sdlc:debug [issue description]`**
+**`__CMD_PREFIX__debug [issue description]`**
 Systematic debugging with persistent state across context resets.
 
 - Gathers symptoms through adaptive questioning
 - Creates `.aidlc/debug/[slug].md` to track investigation
 - Investigates using scientific method (evidence → hypothesis → test)
-- Survives `/clear` — run `/sdlc:debug` with no args to resume
+- Survives `/clear` — run `__CMD_PREFIX__debug` with no args to resume
 - Archives resolved issues to `.aidlc/debug/resolved/`
 
-Usage: `/sdlc:debug "login button doesn't work"`
-Usage: `/sdlc:debug` (resume active session)
+Usage: `__CMD_PREFIX__debug "login button doesn't work"`
+Usage: `__CMD_PREFIX__debug` (resume active session)
 
 ### Todo Management
 
-**`/sdlc:add-todo [description]`**
+**`__CMD_PREFIX__add-todo [description]`**
 Capture idea or task as todo from current conversation.
 
 - Extracts context from conversation (or uses provided description)
@@ -341,24 +341,24 @@ Capture idea or task as todo from current conversation.
 - Checks for duplicates before creating
 - Updates STATE.md todo count
 
-Usage: `/sdlc:add-todo` (infers from conversation)
-Usage: `/sdlc:add-todo Add auth token refresh`
+Usage: `__CMD_PREFIX__add-todo` (infers from conversation)
+Usage: `__CMD_PREFIX__add-todo Add auth token refresh`
 
-**`/sdlc:check-todos [area]`**
+**`__CMD_PREFIX__check-todos [area]`**
 List pending todos and select one to work on.
 
 - Lists all pending todos with title, area, age
-- Optional area filter (e.g., `/sdlc:check-todos api`)
+- Optional area filter (e.g., `__CMD_PREFIX__check-todos api`)
 - Loads full context for selected todo
 - Routes to appropriate action (work now, add to phase, brainstorm)
 - Moves todo to done/ when work begins
 
-Usage: `/sdlc:check-todos`
-Usage: `/sdlc:check-todos api`
+Usage: `__CMD_PREFIX__check-todos`
+Usage: `__CMD_PREFIX__check-todos api`
 
 ### User Acceptance Testing
 
-**`/sdlc:verify-work [phase]`**
+**`__CMD_PREFIX__verify-work [phase]`**
 Validate built features through conversational UAT.
 
 - Extracts testable deliverables from SUMMARY.md files
@@ -366,11 +366,11 @@ Validate built features through conversational UAT.
 - Automatically diagnoses failures and creates fix plans
 - Ready for re-execution if issues found
 
-Usage: `/sdlc:verify-work 3`
+Usage: `__CMD_PREFIX__verify-work 3`
 
 ### Guardrail Retro
 
-**`/sdlc:retro [unit-id or 'milestone']`**
+**`__CMD_PREFIX__retro [unit-id or 'milestone']`**
 Review what AI did well/poorly and improve for next time.
 
 - Analyzes audit trail, gate results, rework cycles, risk register
@@ -379,13 +379,13 @@ Review what AI did well/poorly and improve for next time.
 - Produces concrete improvement actions for next unit
 - Optionally updates risk register with new risks
 
-Usage: `/sdlc:retro UNIT-001`
-Usage: `/sdlc:retro milestone`
-Usage: `/sdlc:retro` (retro on most recently completed unit)
+Usage: `__CMD_PREFIX__retro UNIT-001`
+Usage: `__CMD_PREFIX__retro milestone`
+Usage: `__CMD_PREFIX__retro` (retro on most recently completed unit)
 
 ### Compliance
 
-**`/sdlc:audit-compliance`**
+**`__CMD_PREFIX__audit-compliance`**
 Verify AI-SDLC compliance — gates passed, Golden Thread intact, audit trail complete.
 
 - Checks all 5 gates have evidence in audit trail
@@ -394,34 +394,34 @@ Verify AI-SDLC compliance — gates passed, Golden Thread intact, audit trail co
 - Checks risk register exists and is structured
 - Produces `.aidlc/COMPLIANCE.md` with pass/fail checklist
 
-Usage: `/sdlc:audit-compliance`
+Usage: `__CMD_PREFIX__audit-compliance`
 
 ### Configuration
 
-**`/sdlc:settings`**
+**`__CMD_PREFIX__settings`**
 Configure workflow toggles and model profile interactively.
 
 - Toggle researcher, plan checker, verifier agents
 - Select model profile (quality/balanced/budget)
 - Updates `.aidlc/config.json`
 
-Usage: `/sdlc:settings`
+Usage: `__CMD_PREFIX__settings`
 
-**`/sdlc:set-profile <profile>`**
+**`__CMD_PREFIX__set-profile <profile>`**
 Quick switch model profile for AI-SDLC agents.
 
 - `quality` — Opus everywhere except verification
 - `balanced` — Opus for planning, Sonnet for execution (default)
 - `budget` — Sonnet for writing, Haiku for research/verification
 
-Usage: `/sdlc:set-profile budget`
+Usage: `__CMD_PREFIX__set-profile budget`
 
 ### Utility Commands
 
-**`/sdlc:help`**
+**`__CMD_PREFIX__help`**
 Show this command reference.
 
-**`/sdlc:update`**
+**`__CMD_PREFIX__update`**
 Update AI-SDLC to latest version with changelog preview.
 
 - Shows installed vs latest version comparison
@@ -430,15 +430,15 @@ Update AI-SDLC to latest version with changelog preview.
 - Confirms before running install
 - Uses GitHub API to check for new releases
 
-Usage: `/sdlc:update`
+Usage: `__CMD_PREFIX__update`
 
-**`/sdlc:community`**
+**`__CMD_PREFIX__community`**
 Open the AI-SDLC community on GitHub.
 
 - Report issues, request features, share feedback
 - Browse discussions and solutions
 
-Usage: `/sdlc:community`
+Usage: `__CMD_PREFIX__community`
 
 ## Files & Structure
 
@@ -472,7 +472,7 @@ Usage: `/sdlc:community`
 
 ## Workflow Modes
 
-Set during `/sdlc:new-project`:
+Set during `__CMD_PREFIX__new-project`:
 
 **Interactive Mode**
 
@@ -520,55 +520,55 @@ Example config:
 **Starting a new project (full AI-SDLC flow):**
 
 ```
-/sdlc:new-project        # INCEPTION: questioning → research → requirements → roadmap
+__CMD_PREFIX__new-project        # INCEPTION: questioning → research → requirements → roadmap
 /clear
-/sdlc:inception          # INCEPTION: intent → units → risk register → gates
+__CMD_PREFIX__inception          # INCEPTION: intent → units → risk register → gates
 /clear
-/sdlc:bolt UNIT-001      # CONSTRUCTION: design gate → plan → execute → unit gate
+__CMD_PREFIX__bolt UNIT-001      # CONSTRUCTION: design gate → plan → execute → unit gate
 /clear
-/sdlc:bolt UNIT-002      # CONSTRUCTION: next unit
+__CMD_PREFIX__bolt UNIT-002      # CONSTRUCTION: next unit
 /clear
-/sdlc:deploy             # OPERATIONS: deployment plan → runbooks → production ready gate
+__CMD_PREFIX__deploy             # OPERATIONS: deployment plan → runbooks → production ready gate
 ```
 
 **Resuming work after a break:**
 
 ```
-/sdlc:progress  # See where you left off and continue
+__CMD_PREFIX__progress  # See where you left off and continue
 ```
 
 **Adding urgent mid-milestone work:**
 
 ```
-/sdlc:insert-phase 5 "Critical security fix"
-/sdlc:plan-phase 5.1
-/sdlc:execute-phase 5.1
+__CMD_PREFIX__insert-phase 5 "Critical security fix"
+__CMD_PREFIX__plan-phase 5.1
+__CMD_PREFIX__execute-phase 5.1
 ```
 
 **Completing a milestone:**
 
 ```
-/sdlc:complete-milestone 1.0.0
+__CMD_PREFIX__complete-milestone 1.0.0
 /clear
-/sdlc:new-milestone  # Start next milestone (questioning → research → requirements → roadmap)
+__CMD_PREFIX__new-milestone  # Start next milestone (questioning → research → requirements → roadmap)
 ```
 
 **Capturing ideas during work:**
 
 ```
-/sdlc:add-todo                    # Capture from conversation context
-/sdlc:add-todo Fix modal z-index  # Capture with explicit description
-/sdlc:check-todos                 # Review and work on todos
-/sdlc:check-todos api             # Filter by area
+__CMD_PREFIX__add-todo                    # Capture from conversation context
+__CMD_PREFIX__add-todo Fix modal z-index  # Capture with explicit description
+__CMD_PREFIX__check-todos                 # Review and work on todos
+__CMD_PREFIX__check-todos api             # Filter by area
 ```
 
 **Debugging an issue:**
 
 ```
-/sdlc:debug "form submission fails silently"  # Start debug session
+__CMD_PREFIX__debug "form submission fails silently"  # Start debug session
 # ... investigation happens, context fills up ...
 /clear
-/sdlc:debug                                    # Resume from where you left off
+__CMD_PREFIX__debug                                    # Resume from where you left off
 ```
 
 ## Getting Help
@@ -576,5 +576,5 @@ Example config:
 - Read `.aidlc/PROJECT.md` for project vision
 - Read `.aidlc/STATE.md` for current context
 - Check `.aidlc/ROADMAP.md` for phase status
-- Run `/sdlc:progress` to check where you're up to
+- Run `__CMD_PREFIX__progress` to check where you're up to
   </reference>

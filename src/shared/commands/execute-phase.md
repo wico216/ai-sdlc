@@ -21,16 +21,16 @@ Orchestrator stays lean: discover plans, analyze dependencies, group into waves,
 
 Context budget: ~15% orchestrator, 100% fresh per subagent.
 
-> **Note:** This command is the internal execution engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete) or update the audit trail with gate records. For the full gate-enforced workflow, use `/sdlc:bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over execution.
+> **Note:** This command is the internal execution engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete) or update the audit trail with gate records. For the full gate-enforced workflow, use `__CMD_PREFIX__bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over execution.
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/references/ui-brand.md
-@__SDLC_HOME__/workflows/execute-phase.md
+@__SDLC_REFS__/ui-brand.md
+@__SDLC_WORKFLOWS__/execute-phase.md
 </execution_context>
 
 <context>
-Phase: $ARGUMENTS
+Phase: __ARGUMENTS__
 
 **Flags:**
 - `--gaps-only` — Execute only gap closure plans (plans with `gap_closure: true` in frontmatter). Use after verify-work creates fix plans.
@@ -110,7 +110,7 @@ Phase: $ARGUMENTS
    - Route by status:
      - `passed` → continue to step 8
      - `human_needed` → present items, get approval or feedback
-     - `gaps_found` → present gaps, offer `/sdlc:plan-phase {X} --gaps`
+     - `gaps_found` → present gaps, offer `__CMD_PREFIX__plan-phase {X} --gaps`
 
 8. **Update roadmap and state**
    - Update ROADMAP.md, STATE.md
@@ -164,15 +164,15 @@ Goal verified ✓
 
 **Phase {Z+1}: {Name}** — {Goal from ROADMAP.md}
 
-/sdlc:discuss-phase {Z+1} — gather context and clarify approach
+__CMD_PREFIX__discuss-phase {Z+1} — gather context and clarify approach
 
 <sub>/clear first → fresh context window</sub>
 
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- /sdlc:plan-phase {Z+1} — skip discussion, plan directly
-- /sdlc:verify-work {Z} — manual acceptance testing before continuing
+- __CMD_PREFIX__plan-phase {Z+1} — skip discussion, plan directly
+- __CMD_PREFIX__verify-work {Z} — manual acceptance testing before continuing
 
 ───────────────────────────────────────────────────────────────
 
@@ -195,15 +195,15 @@ All phase goals verified ✓
 
 **Audit milestone** — verify requirements, cross-phase integration, E2E flows
 
-/sdlc:audit-milestone
+__CMD_PREFIX__audit-milestone
 
 <sub>/clear first → fresh context window</sub>
 
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- /sdlc:verify-work — manual acceptance testing
-- /sdlc:complete-milestone — skip audit, archive directly
+- __CMD_PREFIX__verify-work — manual acceptance testing
+- __CMD_PREFIX__complete-milestone — skip audit, archive directly
 
 ───────────────────────────────────────────────────────────────
 
@@ -230,7 +230,7 @@ Report: .aidlc/phases/{phase_dir}/{phase}-VERIFICATION.md
 
 **Plan gap closure** — create additional plans to complete the phase
 
-/sdlc:plan-phase {Z} --gaps
+__CMD_PREFIX__plan-phase {Z} --gaps
 
 <sub>/clear first → fresh context window</sub>
 
@@ -238,16 +238,16 @@ Report: .aidlc/phases/{phase_dir}/{phase}-VERIFICATION.md
 
 **Also available:**
 - cat .aidlc/phases/{phase_dir}/{phase}-VERIFICATION.md — see full report
-- /sdlc:verify-work {Z} — manual testing before planning
+- __CMD_PREFIX__verify-work {Z} — manual testing before planning
 
 ───────────────────────────────────────────────────────────────
 
 ---
 
-After user runs /sdlc:plan-phase {Z} --gaps:
+After user runs __CMD_PREFIX__plan-phase {Z} --gaps:
 1. Planner reads VERIFICATION.md gaps
 2. Creates plans 04, 05, etc. to close gaps
-3. User runs /sdlc:execute-phase {Z} again
+3. User runs __CMD_PREFIX__execute-phase {Z} again
 4. Execute-phase runs incomplete plans (04, 05...)
 5. Verifier runs again → loop until passed
 </offer_next>
@@ -284,7 +284,7 @@ Plans with `autonomous: false` have checkpoints. The execute-phase.md workflow h
 - Orchestrator presents to user, collects response
 - Spawns fresh continuation agent (not resume)
 
-See `@__SDLC_HOME__/workflows/execute-phase.md` step `checkpoint_handling` for complete details.
+See `@__SDLC_WORKFLOWS__/execute-phase.md` step `checkpoint_handling` for complete details.
 </checkpoint_handling>
 
 <deviation_rules>

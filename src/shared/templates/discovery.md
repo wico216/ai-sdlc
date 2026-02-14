@@ -4,7 +4,7 @@ Template for `.aidlc/phases/XX-name/DISCOVERY.md` - shallow research for library
 
 **Purpose:** Answer "which library/option should we use" questions during mandatory discovery in plan-phase.
 
-For deep ecosystem research ("how do experts build this"), use `/sdlc:research-phase` which produces RESEARCH.md.
+For deep ecosystem research ("how do experts build this"), use `__CMD_PREFIX__research-phase` which produces RESEARCH.md.
 
 ---
 
@@ -142,5 +142,5 @@ Create `.aidlc/phases/XX-name/DISCOVERY.md`:
 - Niche/complex domains (3D, games, audio, shaders)
 - Need ecosystem knowledge, not just library choice
 - "How do experts build this" questions
-- Use `/sdlc:research-phase` for these
+- Use `__CMD_PREFIX__research-phase` for these
 </guidelines>

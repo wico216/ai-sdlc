@@ -1,6 +1,6 @@
 ---
 name: sdlc:research-phase
-description: Research how to implement a phase (standalone - usually use /sdlc:plan-phase instead)
+description: Research how to implement a phase (standalone - usually use __CMD_PREFIX__plan-phase instead)
 argument-hint: "[phase]"
 allowed-tools:
   - Read
@@ -11,7 +11,7 @@ allowed-tools:
 <objective>
 Research how to implement a phase. Spawns sdlc-phase-researcher agent with phase context.
 
-**Note:** This is a standalone research command. For most workflows, use `/sdlc:plan-phase` which integrates research automatically.
+**Note:** This is a standalone research command. For most workflows, use `__CMD_PREFIX__plan-phase` which integrates research automatically.
 
 **Use this command when:**
 - You want to research without planning yet
@@ -24,7 +24,7 @@ Research how to implement a phase. Spawns sdlc-phase-researcher agent with phase
 </objective>
 
 <context>
-Phase number: $ARGUMENTS (required)
+Phase number: __ARGUMENTS__ (required)
 
 Normalize phase input in step 1 before any directory lookups.
 </context>
@@ -53,12 +53,12 @@ Store resolved model for use in Task calls below.
 
 ```bash
 # Normalize phase number (8 → 08, but preserve decimals like 2.1 → 02.1)
-if [[ "$ARGUMENTS" =~ ^[0-9]+$ ]]; then
-  PHASE=$(printf "%02d" "$ARGUMENTS")
-elif [[ "$ARGUMENTS" =~ ^([0-9]+)\.([0-9]+)$ ]]; then
+if [[ "__ARGUMENTS__" =~ ^[0-9]+$ ]]; then
+  PHASE=$(printf "%02d" "__ARGUMENTS__")
+elif [[ "__ARGUMENTS__" =~ ^([0-9]+)\.([0-9]+)$ ]]; then
   PHASE=$(printf "%02d.%s" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")
 else
-  PHASE="$ARGUMENTS"
+  PHASE="__ARGUMENTS__"
 fi
 
 grep -A5 "Phase ${PHASE}:" .aidlc/ROADMAP.md 2>/dev/null
@@ -122,7 +122,7 @@ Mode: ecosystem
 </context>
 
 <downstream_consumer>
-Your RESEARCH.md will be loaded by `/sdlc:plan-phase` which uses specific sections:
+Your RESEARCH.md will be loaded by `__CMD_PREFIX__plan-phase` which uses specific sections:
 - `## Standard Stack` → Plans use these libraries
 - `## Architecture Patterns` → Task structure follows these
 - `## Don't Hand-Roll` → Tasks NEVER build custom solutions for listed problems
@@ -148,7 +148,7 @@ Write to: .aidlc/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 
 ```
 Task(
-  prompt="First, read __CLAUDE_HOME__/agents/sdlc-phase-researcher.md for your role and instructions.\n\n" + filled_prompt,
+  prompt="First, read __AGENTS_DIR__/sdlc-phase-researcher.md for your role and instructions.\n\n" + filled_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
   description="Research Phase {phase}"
@@ -182,7 +182,7 @@ Research file: @.aidlc/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 
 ```
 Task(
-  prompt="First, read __CLAUDE_HOME__/agents/sdlc-phase-researcher.md for your role and instructions.\n\n" + continuation_prompt,
+  prompt="First, read __AGENTS_DIR__/sdlc-phase-researcher.md for your role and instructions.\n\n" + continuation_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
   description="Continue research Phase {phase}"

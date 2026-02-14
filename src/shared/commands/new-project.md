@@ -23,16 +23,16 @@ This is the most leveraged moment in any project. Deep questioning here means be
 - `.aidlc/ROADMAP.md` — phase structure
 - `.aidlc/STATE.md` — project memory
 
-**After this command:** Run `/sdlc:inception` to decompose into units, create risk register, and pass gates.
+**After this command:** Run `__CMD_PREFIX__inception` to decompose into units, create risk register, and pass gates.
 
 </objective>
 
 <execution_context>
 
-@__SDLC_HOME__/references/questioning.md
-@__SDLC_HOME__/references/ui-brand.md
-@__SDLC_HOME__/templates/project.md
-@__SDLC_HOME__/templates/requirements.md
+@__SDLC_REFS__/questioning.md
+@__SDLC_REFS__/ui-brand.md
+@__SDLC_TEMPLATES__/project.md
+@__SDLC_TEMPLATES__/requirements.md
 
 </execution_context>
 
@@ -44,7 +44,7 @@ This is the most leveraged moment in any project. Deep questioning here means be
 
 1. **Abort if project exists:**
    ```bash
-   [ -f .aidlc/PROJECT.md ] && echo "ERROR: Project already initialized. Use /sdlc:progress" && exit 1
+   [ -f .aidlc/PROJECT.md ] && echo "ERROR: Project already initialized. Use __CMD_PREFIX__progress" && exit 1
    ```
 
 2. **Initialize git repo in THIS directory** (required even if inside a parent repo):
@@ -78,12 +78,12 @@ Use AskUserQuestion:
 - header: "Existing Code"
 - question: "I detected existing code in this directory. Would you like to map the codebase first?"
 - options:
-  - "Map codebase first" — Run /sdlc:map-codebase to understand existing architecture (Recommended)
+  - "Map codebase first" — Run __CMD_PREFIX__map-codebase to understand existing architecture (Recommended)
   - "Skip mapping" — Proceed with project initialization
 
 **If "Map codebase first":**
 ```
-Run `/sdlc:map-codebase` first, then return to `/sdlc:new-project`
+Run `__CMD_PREFIX__map-codebase` first, then return to `__CMD_PREFIX__new-project`
 ```
 Exit command.
 
@@ -374,7 +374,7 @@ EOF
 )"
 ```
 
-**Note:** Run `/sdlc:settings` anytime to update these preferences.
+**Note:** Run `__CMD_PREFIX__settings` anytime to update these preferences.
 
 ## Phase 5.5: Resolve Model Profile
 
@@ -439,7 +439,7 @@ Display spawning indicator:
 Spawn 4 parallel sdlc-project-researcher agents with rich context:
 
 ```
-Task(prompt="First, read __CLAUDE_HOME__/agents/sdlc-project-researcher.md for your role and instructions.
+Task(prompt="First, read __AGENTS_DIR__/sdlc-project-researcher.md for your role and instructions.
 
 <research_type>
 Project Research — Stack dimension for [domain].
@@ -475,11 +475,11 @@ Your STACK.md feeds into roadmap creation. Be prescriptive:
 
 <output>
 Write to: .aidlc/research/STACK.md
-Use template: __SDLC_HOME__/templates/research-project/STACK.md
+Use template: __SDLC_TEMPLATES__/research-project/STACK.md
 </output>
 ", subagent_type="general-purpose", model="{researcher_model}", description="Stack research")
 
-Task(prompt="First, read __CLAUDE_HOME__/agents/sdlc-project-researcher.md for your role and instructions.
+Task(prompt="First, read __AGENTS_DIR__/sdlc-project-researcher.md for your role and instructions.
 
 <research_type>
 Project Research — Features dimension for [domain].
@@ -515,11 +515,11 @@ Your FEATURES.md feeds into requirements definition. Categorize clearly:
 
 <output>
 Write to: .aidlc/research/FEATURES.md
-Use template: __SDLC_HOME__/templates/research-project/FEATURES.md
+Use template: __SDLC_TEMPLATES__/research-project/FEATURES.md
 </output>
 ", subagent_type="general-purpose", model="{researcher_model}", description="Features research")
 
-Task(prompt="First, read __CLAUDE_HOME__/agents/sdlc-project-researcher.md for your role and instructions.
+Task(prompt="First, read __AGENTS_DIR__/sdlc-project-researcher.md for your role and instructions.
 
 <research_type>
 Project Research — Architecture dimension for [domain].
@@ -555,11 +555,11 @@ Your ARCHITECTURE.md informs phase structure in roadmap. Include:
 
 <output>
 Write to: .aidlc/research/ARCHITECTURE.md
-Use template: __SDLC_HOME__/templates/research-project/ARCHITECTURE.md
+Use template: __SDLC_TEMPLATES__/research-project/ARCHITECTURE.md
 </output>
 ", subagent_type="general-purpose", model="{researcher_model}", description="Architecture research")
 
-Task(prompt="First, read __CLAUDE_HOME__/agents/sdlc-project-researcher.md for your role and instructions.
+Task(prompt="First, read __AGENTS_DIR__/sdlc-project-researcher.md for your role and instructions.
 
 <research_type>
 Project Research — Pitfalls dimension for [domain].
@@ -595,7 +595,7 @@ Your PITFALLS.md prevents mistakes in roadmap/planning. For each pitfall:
 
 <output>
 Write to: .aidlc/research/PITFALLS.md
-Use template: __SDLC_HOME__/templates/research-project/PITFALLS.md
+Use template: __SDLC_TEMPLATES__/research-project/PITFALLS.md
 </output>
 ", subagent_type="general-purpose", model="{researcher_model}", description="Pitfalls research")
 ```
@@ -618,7 +618,7 @@ Read these files:
 
 <output>
 Write to: .aidlc/research/SUMMARY.md
-Use template: __SDLC_HOME__/templates/research-project/SUMMARY.md
+Use template: __SDLC_TEMPLATES__/research-project/SUMMARY.md
 Commit after writing.
 </output>
 ", subagent_type="sdlc-research-synthesizer", model="{synthesizer_model}", description="Synthesize research")
@@ -953,7 +953,7 @@ Present completion with next steps:
 
 Run the full AI-SDLC Inception phase to decompose into units:
 
-/sdlc:inception — create intent, units, risk register, and pass gates
+__CMD_PREFIX__inception — create intent, units, risk register, and pass gates
 
 <sub>/clear first → fresh context window</sub>
 
@@ -996,7 +996,7 @@ Run the full AI-SDLC Inception phase to decompose into units:
 - [ ] ROADMAP.md created with phases, requirement mappings, success criteria
 - [ ] STATE.md initialized
 - [ ] REQUIREMENTS.md traceability updated
-- [ ] User knows next step is `/sdlc:discuss-phase 1`
+- [ ] User knows next step is `__CMD_PREFIX__discuss-phase 1`
 
 **Atomic commits:** Each phase commits its artifacts immediately. If context is lost, artifacts persist.
 

@@ -22,18 +22,18 @@ This is the brownfield equivalent of new-project. The project exists, PROJECT.md
 - `.aidlc/ROADMAP.md` — phase structure (continues numbering)
 - `.aidlc/STATE.md` — reset for new milestone
 
-**After this command:** Run `/sdlc:plan-phase [N]` to start execution.
+**After this command:** Run `__CMD_PREFIX__plan-phase [N]` to start execution.
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/references/questioning.md
-@__SDLC_HOME__/references/ui-brand.md
-@__SDLC_HOME__/templates/project.md
-@__SDLC_HOME__/templates/requirements.md
+@__SDLC_REFS__/questioning.md
+@__SDLC_REFS__/ui-brand.md
+@__SDLC_TEMPLATES__/project.md
+@__SDLC_TEMPLATES__/requirements.md
 </execution_context>
 
 <context>
-Milestone name: $ARGUMENTS (optional - will prompt if not provided)
+Milestone name: __ARGUMENTS__ (optional - will prompt if not provided)
 
 **Load project context:**
 @.aidlc/PROJECT.md
@@ -41,7 +41,7 @@ Milestone name: $ARGUMENTS (optional - will prompt if not provided)
 @.aidlc/MILESTONES.md
 @.aidlc/config.json
 
-**Load milestone context (if exists, from /sdlc:discuss-milestone):**
+**Load milestone context (if exists, from __CMD_PREFIX__discuss-milestone):**
 @.aidlc/MILESTONE-CONTEXT.md
 </context>
 
@@ -52,7 +52,7 @@ Milestone name: $ARGUMENTS (optional - will prompt if not provided)
 - Read PROJECT.md (existing project, Validated requirements, decisions)
 - Read MILESTONES.md (what shipped previously)
 - Read STATE.md (pending todos, blockers)
-- Check for MILESTONE-CONTEXT.md (from /sdlc:discuss-milestone)
+- Check for MILESTONE-CONTEXT.md (from __CMD_PREFIX__discuss-milestone)
 
 ## Phase 2: Gather Milestone Goals
 
@@ -216,7 +216,7 @@ Your STACK.md feeds into roadmap creation. Be prescriptive:
 
 <output>
 Write to: .aidlc/research/STACK.md
-Use template: __SDLC_HOME__/templates/research-project/STACK.md
+Use template: __SDLC_TEMPLATES__/research-project/STACK.md
 </output>
 ", subagent_type="sdlc-project-researcher", model="{researcher_model}", description="Stack research")
 
@@ -257,7 +257,7 @@ Your FEATURES.md feeds into requirements definition. Categorize clearly:
 
 <output>
 Write to: .aidlc/research/FEATURES.md
-Use template: __SDLC_HOME__/templates/research-project/FEATURES.md
+Use template: __SDLC_TEMPLATES__/research-project/FEATURES.md
 </output>
 ", subagent_type="sdlc-project-researcher", model="{researcher_model}", description="Features research")
 
@@ -299,7 +299,7 @@ Your ARCHITECTURE.md informs phase structure in roadmap. Include:
 
 <output>
 Write to: .aidlc/research/ARCHITECTURE.md
-Use template: __SDLC_HOME__/templates/research-project/ARCHITECTURE.md
+Use template: __SDLC_TEMPLATES__/research-project/ARCHITECTURE.md
 </output>
 ", subagent_type="sdlc-project-researcher", model="{researcher_model}", description="Architecture research")
 
@@ -337,7 +337,7 @@ Your PITFALLS.md prevents mistakes in roadmap/planning. For each pitfall:
 
 <output>
 Write to: .aidlc/research/PITFALLS.md
-Use template: __SDLC_HOME__/templates/research-project/PITFALLS.md
+Use template: __SDLC_TEMPLATES__/research-project/PITFALLS.md
 </output>
 ", subagent_type="sdlc-project-researcher", model="{researcher_model}", description="Pitfalls research")
 ```
@@ -360,7 +360,7 @@ Read these files:
 
 <output>
 Write to: .aidlc/research/SUMMARY.md
-Use template: __SDLC_HOME__/templates/research-project/SUMMARY.md
+Use template: __SDLC_TEMPLATES__/research-project/SUMMARY.md
 Commit after writing.
 </output>
 ", subagent_type="sdlc-research-synthesizer", model="{synthesizer_model}", description="Synthesize research")
@@ -688,14 +688,14 @@ Present completion with next steps:
 
 **Phase [N]: [Phase Name]** — [Goal from ROADMAP.md]
 
-`/sdlc:discuss-phase [N]` — gather context and clarify approach
+`__CMD_PREFIX__discuss-phase [N]` — gather context and clarify approach
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:plan-phase [N]` — skip discussion, plan directly
+- `__CMD_PREFIX__plan-phase [N]` — skip discussion, plan directly
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -715,7 +715,7 @@ Present completion with next steps:
 - [ ] User feedback incorporated (if any)
 - [ ] ROADMAP.md created with phases continuing from previous milestone
 - [ ] All commits made (if planning docs committed)
-- [ ] User knows next step is `/sdlc:discuss-phase [N]`
+- [ ] User knows next step is `__CMD_PREFIX__discuss-phase [N]`
 
 **Atomic commits:** Each phase commits its artifacts immediately. If context is lost, artifacts persist.
 </success_criteria>

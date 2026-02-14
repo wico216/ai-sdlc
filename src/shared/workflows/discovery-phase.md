@@ -4,7 +4,7 @@ Produces DISCOVERY.md (for Level 2-3) that informs PLAN.md creation.
 
 Called from plan-phase.md's mandatory_discovery step with a depth parameter.
 
-NOTE: For comprehensive ecosystem research ("how do experts build this"), use /sdlc:research-phase instead, which produces RESEARCH.md.
+NOTE: For comprehensive ecosystem research ("how do experts build this"), use __CMD_PREFIX__research-phase instead, which produces RESEARCH.md.
 </purpose>
 
 <depth_levels>
@@ -28,7 +28,7 @@ Claude's training data is 6-18 months stale. Always verify.
 2. **Official docs** - When Context7 lacks coverage
 3. **WebSearch LAST** - For comparisons and trends only
 
-See __SDLC_HOME__/templates/discovery.md `<discovery_protocol>` for full protocol.
+See __SDLC_TEMPLATES__/discovery.md `<discovery_protocol>` for full protocol.
 </source_hierarchy>
 
 <process>
@@ -107,7 +107,7 @@ For: Choosing between options, new external integration.
 
 5. **Cross-verify:** Any WebSearch finding → confirm with Context7/official docs.
 
-6. **Create DISCOVERY.md** using __SDLC_HOME__/templates/discovery.md structure:
+6. **Create DISCOVERY.md** using __SDLC_TEMPLATES__/discovery.md structure:
 
    - Summary with recommendation
    - Key findings per option
@@ -126,7 +126,7 @@ For: Architectural decisions, novel problems, high-risk choices.
 
 **Process:**
 
-1. **Scope the discovery** using __SDLC_HOME__/templates/discovery.md:
+1. **Scope the discovery** using __SDLC_TEMPLATES__/discovery.md:
 
    - Define clear scope
    - Define include/exclude boundaries
@@ -160,7 +160,7 @@ For: Architectural decisions, novel problems, high-risk choices.
 
 6. **Create comprehensive DISCOVERY.md:**
 
-   - Full structure from __SDLC_HOME__/templates/discovery.md
+   - Full structure from __SDLC_TEMPLATES__/discovery.md
    - Quality report with source attribution
    - Confidence by finding
    - If LOW confidence on any critical finding → add validation checkpoints
@@ -184,7 +184,7 @@ Ask: What do we need to learn before we can plan this phase?
   </step>
 
 <step name="create_discovery_scope">
-Use __SDLC_HOME__/templates/discovery.md.
+Use __SDLC_TEMPLATES__/discovery.md.
 
 Include:
 
@@ -252,8 +252,8 @@ Confidence: [level]
 
 What's next?
 
-1. Discuss phase context (/sdlc:discuss-phase [current-phase])
-2. Create phase plan (/sdlc:plan-phase [current-phase])
+1. Discuss phase context (__CMD_PREFIX__discuss-phase [current-phase])
+2. Create phase plan (__CMD_PREFIX__plan-phase [current-phase])
 3. Refine discovery (dig deeper)
 4. Review discovery
 

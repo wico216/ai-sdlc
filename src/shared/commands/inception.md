@@ -17,8 +17,8 @@ allowed-tools:
 Run the AI-SDLC Inception phase: convert intent into testable, decomposed work.
 
 **When to use:**
-- After `/sdlc:new-project` (greenfield — PROJECT.md and REQUIREMENTS.md already exist)
-- After `/sdlc:new-milestone` (brownfield — adding to existing project)
+- After `__CMD_PREFIX__new-project` (greenfield — PROJECT.md and REQUIREMENTS.md already exist)
+- After `__CMD_PREFIX__new-milestone` (brownfield — adding to existing project)
 - Standalone, when you have a PROJECT.md + REQUIREMENTS.md and need to decompose into units
 
 **Creates:**
@@ -29,7 +29,7 @@ Run the AI-SDLC Inception phase: convert intent into testable, decomposed work.
 - `.aidlc/audit.md` — Append-only decision log (initialized or appended to)
 - Updates `.aidlc/STATE.md` — Phase tracking
 
-**After this command:** The Inception Exit gate must be passed, then run `/sdlc:plan-phase 1` to begin Construction.
+**After this command:** The Inception Exit gate must be passed, then run `__CMD_PREFIX__plan-phase 1` to begin Construction.
 
 **Principles in play:**
 - #2 Reverse Conversation: AI proposes, human approves
@@ -43,14 +43,14 @@ Run the AI-SDLC Inception phase: convert intent into testable, decomposed work.
 
 <execution_context>
 
-@__SDLC_HOME__/references/principles.md
-@__SDLC_HOME__/references/phases.md
-@__SDLC_HOME__/references/gates.md
-@__SDLC_HOME__/templates/intent.md
-@__SDLC_HOME__/templates/unit.md
-@__SDLC_HOME__/templates/risk-register.md
-@__SDLC_HOME__/templates/execution-plan.md
-@__SDLC_HOME__/templates/audit.md
+@__SDLC_REFS__/principles.md
+@__SDLC_REFS__/phases.md
+@__SDLC_REFS__/gates.md
+@__SDLC_TEMPLATES__/intent.md
+@__SDLC_TEMPLATES__/unit.md
+@__SDLC_TEMPLATES__/risk-register.md
+@__SDLC_TEMPLATES__/execution-plan.md
+@__SDLC_TEMPLATES__/audit.md
 
 </execution_context>
 
@@ -71,7 +71,7 @@ Run the AI-SDLC Inception phase: convert intent into testable, decomposed work.
    **If PROJECT.md or REQUIREMENTS.md missing:**
    ```
    Inception requires PROJECT.md and REQUIREMENTS.md.
-   Run `/sdlc:new-project` first to initialize the project.
+   Run `__CMD_PREFIX__new-project` first to initialize the project.
    ```
    Exit command.
 
@@ -131,7 +131,7 @@ If brownfield and `.aidlc/codebase/` doesn't exist:
 ```
 Existing code detected. Running codebase analysis...
 ```
-Suggest running `/sdlc:map-codebase` and returning. Or if codebase map exists, read key findings.
+Suggest running `__CMD_PREFIX__map-codebase` and returning. Or if codebase map exists, read key findings.
 
 ## Stage 3: Create Intent Document
 
@@ -234,7 +234,7 @@ Use `execution-plan.md` template. Present to user:
 |---|---|---|
 | Workspace Detection | Yes | Done |
 | Reverse Engineering | {Yes/No} | {Done/N/A} |
-| Requirements Analysis | Yes | Done (via /sdlc:new-project) |
+| Requirements Analysis | Yes | Done (via __CMD_PREFIX__new-project) |
 | User Stories | {Yes/No} | Pending |
 | Workflow Planning | Yes | This step |
 | Application Design | {Yes/No} | Pending |
@@ -553,7 +553,7 @@ Audit entry with `gate-rejection`. Ask what's missing. Route back to the relevan
 
 Start building the first unit:
 
-/sdlc:plan-phase 1 — plan the first unit's bolts
+__CMD_PREFIX__plan-phase 1 — plan the first unit's bolts
 
 <sub>/clear first → fresh context window</sub>
 
@@ -587,7 +587,7 @@ Start building the first unit:
 - [ ] Gate: INCEPTION EXIT — passed with evidence
 - [ ] Audit trail has entries for both gates
 - [ ] STATE.md updated to reflect Construction readiness
-- [ ] User knows next step is `/sdlc:plan-phase 1`
+- [ ] User knows next step is `__CMD_PREFIX__plan-phase 1`
 
 **Proof over Prose:** Every gate must show evidence, not just claim completion.
 

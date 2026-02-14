@@ -37,10 +37,10 @@ Output: [What artifacts will be created]
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/execute-plan.md
-@__SDLC_HOME__/templates/summary.md
+@__SDLC_WORKFLOWS__/execute-plan.md
+@__SDLC_TEMPLATES__/summary.md
 [If plan contains checkpoint tasks (type="checkpoint:*"), add:]
-@__SDLC_HOME__/references/checkpoints.md
+@__SDLC_REFS__/checkpoints.md
 </execution_context>
 
 <context>
@@ -75,7 +75,7 @@ Output: [What artifacts will be created]
   <done>[Acceptance criteria]</done>
 </task>
 
-<!-- For checkpoint task examples and patterns, see @__SDLC_HOME__/references/checkpoints.md -->
+<!-- For checkpoint task examples and patterns, see @__SDLC_REFS__/checkpoints.md -->
 <!-- Key rule: Claude starts dev server BEFORE human-verify checkpoints. User only visits URLs. -->
 
 <task type="checkpoint:decision" gate="blocking">
@@ -132,7 +132,7 @@ After completion, create `.aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 | `user_setup` | No | Array of human-required setup items (external services) |
 | `must_haves` | Yes | Goal-backward verification criteria (see below) |
 
-**Wave is pre-computed:** Wave numbers are assigned during `/sdlc:plan-phase`. Execute-phase reads `wave` directly from frontmatter and groups plans by wave number. No runtime dependency analysis needed.
+**Wave is pre-computed:** Wave numbers are assigned during `__CMD_PREFIX__plan-phase`. Execute-phase reads `wave` directly from frontmatter and groups plans by wave number. No runtime dependency analysis needed.
 
 **Must-haves enable verification:** The `must_haves` field carries goal-backward requirements from planning to execution. After all plans complete, execute-phase spawns a verification subagent that checks these criteria against the actual codebase.
 
@@ -268,7 +268,7 @@ TDD features get dedicated plans with `type: tdd`.
 → Yes: Create a TDD plan
 → No: Standard task in standard plan
 
-See `__SDLC_HOME__/references/tdd.md` for TDD plan structure.
+See `__SDLC_REFS__/tdd.md` for TDD plan structure.
 
 ---
 
@@ -372,9 +372,9 @@ Output: Working dashboard component.
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/execute-plan.md
-@__SDLC_HOME__/templates/summary.md
-@__SDLC_HOME__/references/checkpoints.md
+@__SDLC_WORKFLOWS__/execute-plan.md
+@__SDLC_TEMPLATES__/summary.md
+@__SDLC_REFS__/checkpoints.md
 </execution_context>
 
 <context>
@@ -497,7 +497,7 @@ user_setup:
 
 **Result:** Execute-plan generates `{phase}-USER-SETUP.md` with checklist for the user.
 
-See `__SDLC_HOME__/templates/user-setup.md` for full schema and examples
+See `__SDLC_TEMPLATES__/user-setup.md` for full schema and examples
 
 ---
 
@@ -564,4 +564,4 @@ Task completion ≠ Goal achievement. A task "create chat component" can complet
 5. Gaps found → fix plans created → execute → re-verify
 6. All must_haves pass → phase complete
 
-See `__SDLC_HOME__/workflows/verify-phase.md` for verification logic.
+See `__SDLC_WORKFLOWS__/verify-phase.md` for verification logic.

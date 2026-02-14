@@ -18,8 +18,8 @@ Run a Guardrail Retro after completing a unit or milestone. This is how the team
 **Purpose:** Review what the AI did well/poorly, which guardrails helped/were missing, and produce concrete improvement actions for the next unit.
 
 **When to run:**
-- After `/sdlc:bolt` completes a unit (Unit Complete gate passed)
-- After `/sdlc:audit-milestone` or `/sdlc:complete-milestone`
+- After `__CMD_PREFIX__bolt` completes a unit (Unit Complete gate passed)
+- After `__CMD_PREFIX__audit-milestone` or `__CMD_PREFIX__complete-milestone`
 - Anytime the team wants to reflect on completed work
 
 **Principles in play:**
@@ -31,12 +31,12 @@ Run a Guardrail Retro after completing a unit or milestone. This is how the team
 
 <execution_context>
 
-@__SDLC_HOME__/references/principles.md
+@__SDLC_REFS__/principles.md
 
 </execution_context>
 
 <context>
-Scope: $ARGUMENTS
+Scope: __ARGUMENTS__
 
 - If "UNIT-001" or "1": retro for that specific unit
 - If "milestone" or "v1.0": retro for the entire milestone
@@ -53,11 +53,11 @@ Scope: $ARGUMENTS
 ls .aidlc/ 2>/dev/null
 ```
 
-**If no .aidlc/:** Error — no project to retro. Run `/sdlc:new-project` first.
+**If no .aidlc/:** Error — no project to retro. Run `__CMD_PREFIX__new-project` first.
 
 **Resolve scope:**
 
-Parse $ARGUMENTS to determine retro scope:
+Parse __ARGUMENTS__ to determine retro scope:
 
 - **Unit retro:** Find the unit file, its design doc, related phase summaries and verifications
 - **Milestone retro:** Aggregate across all units and phases
@@ -258,10 +258,10 @@ If yes, append new RISK-IDs to `.aidlc/risk-register.md`.
 ## ▶ Next
 
 {If unit retro + more units:}
-/sdlc:bolt {next-UNIT-ID} — start next unit (with retro learnings applied)
+__CMD_PREFIX__bolt {next-UNIT-ID} — start next unit (with retro learnings applied)
 
 {If milestone retro:}
-/sdlc:new-milestone — start next milestone cycle
+__CMD_PREFIX__new-milestone — start next milestone cycle
 
 {Always:}
 Review improvement actions before starting next work.

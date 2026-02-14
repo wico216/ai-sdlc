@@ -418,7 +418,7 @@ Extract completed milestone details and create archive file.
 
 1. Create archive file path: `.aidlc/milestones/v[X.Y]-ROADMAP.md`
 
-2. Read `__SDLC_HOME__/templates/milestone-archive.md` template
+2. Read `__SDLC_TEMPLATES__/milestone-archive.md` template
 
 3. Extract data from current ROADMAP.md:
    - All phases belonging to this milestone (by phase number range)
@@ -523,7 +523,7 @@ Archive requirements and prepare for fresh requirements in next milestone.
    ✅ REQUIREMENTS.md deleted (fresh one needed for next milestone)
    ```
 
-**Important:** The next milestone workflow starts with `/sdlc:new-milestone` which includes requirements definition. PROJECT.md's Validated section carries the cumulative record across milestones.
+**Important:** The next milestone workflow starts with `__CMD_PREFIX__new-milestone` which includes requirements definition. PROJECT.md's Validated section carries the cumulative record across milestones.
 
 </step>
 
@@ -836,7 +836,7 @@ Tag: v[X.Y]
 
 **Start Next Milestone** — questioning → research → requirements → roadmap
 
-`/sdlc:new-milestone`
+`__CMD_PREFIX__new-milestone`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -898,6 +898,6 @@ Milestone completion is successful when:
 - [ ] STATE.md updated with fresh project reference
 - [ ] Git tag created (v[X.Y])
 - [ ] Milestone commit made (includes archive files and deletion)
-- [ ] User knows next step (/sdlc:new-milestone)
+- [ ] User knows next step (__CMD_PREFIX__new-milestone)
 
 </success_criteria>

@@ -15,7 +15,7 @@ allowed-tools:
 ---
 
 <execution_context>
-@__SDLC_HOME__/references/ui-brand.md
+@__SDLC_REFS__/ui-brand.md
 </execution_context>
 
 <objective>
@@ -27,11 +27,11 @@ Create executable phase prompts (PLAN.md files) for a roadmap phase with integra
 
 **Why subagents:** Research and planning burn context fast. Verification uses fresh context. User sees the flow between agents in main context.
 
-> **Note:** This command is the internal planning engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete). For the full gate-enforced workflow, use `/sdlc:bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over planning.
+> **Note:** This command is the internal planning engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete). For the full gate-enforced workflow, use `__CMD_PREFIX__bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over planning.
 </objective>
 
 <context>
-Phase number: $ARGUMENTS (optional - auto-detects next unplanned phase if not provided)
+Phase number: __ARGUMENTS__ (optional - auto-detects next unplanned phase if not provided)
 
 **Flags:**
 - `--research` — Force re-research even if RESEARCH.md exists
@@ -50,7 +50,7 @@ Normalize phase input in step 2 before any directory lookups.
 ls .aidlc/ 2>/dev/null
 ```
 
-**If not found:** Error - user should run `/sdlc:new-project` first.
+**If not found:** Error - user should run `__CMD_PREFIX__new-project` first.
 
 **Resolve model profile for agent spawning:**
 
@@ -72,7 +72,7 @@ Store resolved models for use in Task calls below.
 
 ## 2. Parse and Normalize Arguments
 
-Extract from $ARGUMENTS:
+Extract from __ARGUMENTS__:
 
 - Phase number (integer or decimal like `2.1`)
 - `--research` flag to force re-research
@@ -198,7 +198,7 @@ Answer: "What do I need to know to PLAN this phase well?"
 </objective>
 
 <phase_context>
-**IMPORTANT:** If CONTEXT.md exists below, it contains user decisions from /sdlc:discuss-phase.
+**IMPORTANT:** If CONTEXT.md exists below, it contains user decisions from __CMD_PREFIX__discuss-phase.
 
 - **Decisions section** = Locked choices — research THESE deeply, don't explore alternatives
 - **Claude's Discretion section** = Your freedom areas — research options, make recommendations
@@ -225,7 +225,7 @@ Write research findings to: {phase_dir}/{phase}-RESEARCH.md
 
 ```
 Task(
-  prompt="First, read __CLAUDE_HOME__/agents/sdlc-phase-researcher.md for your role and instructions.\n\n" + research_prompt,
+  prompt="First, read __AGENTS_DIR__/sdlc-phase-researcher.md for your role and instructions.\n\n" + research_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
   description="Research Phase {phase}"
@@ -300,7 +300,7 @@ Fill prompt with inlined content and spawn:
 
 **Phase Context (if exists):**
 
-IMPORTANT: If phase context exists below, it contains USER DECISIONS from /sdlc:discuss-phase.
+IMPORTANT: If phase context exists below, it contains USER DECISIONS from __CMD_PREFIX__discuss-phase.
 - **Decisions** = LOCKED — honor these exactly, do not revisit or suggest alternatives
 - **Claude's Discretion** = Your freedom — make implementation choices here
 - **Deferred Ideas** = Out of scope — do NOT include in this phase
@@ -317,7 +317,7 @@ IMPORTANT: If phase context exists below, it contains USER DECISIONS from /sdlc:
 </planning_context>
 
 <downstream_consumer>
-Output consumed by /sdlc:execute-phase
+Output consumed by __CMD_PREFIX__execute-phase
 Plans must be executable prompts with:
 
 - Frontmatter (wave, depends_on, files_modified, autonomous)
@@ -340,7 +340,7 @@ Before returning PLANNING COMPLETE:
 
 ```
 Task(
-  prompt="First, read __CLAUDE_HOME__/agents/sdlc-planner.md for your role and instructions.\n\n" + filled_prompt,
+  prompt="First, read __AGENTS_DIR__/sdlc-planner.md for your role and instructions.\n\n" + filled_prompt,
   subagent_type="general-purpose",
   model="{planner_model}",
   description="Plan Phase {phase}"
@@ -403,7 +403,7 @@ Fill checker prompt with inlined content and spawn:
 
 **Phase Context (if exists):**
 
-IMPORTANT: If phase context exists below, it contains USER DECISIONS from /sdlc:discuss-phase.
+IMPORTANT: If phase context exists below, it contains USER DECISIONS from __CMD_PREFIX__discuss-phase.
 Plans MUST honor these decisions. Flag as issue if plans contradict user's stated vision.
 
 - **Decisions** = LOCKED — plans must implement these exactly
@@ -489,7 +489,7 @@ Return what changed.
 
 ```
 Task(
-  prompt="First, read __CLAUDE_HOME__/agents/sdlc-planner.md for your role and instructions.\n\n" + revision_prompt,
+  prompt="First, read __AGENTS_DIR__/sdlc-planner.md for your role and instructions.\n\n" + revision_prompt,
   subagent_type="general-purpose",
   model="{planner_model}",
   description="Revise Phase {phase} plans"
@@ -540,7 +540,7 @@ Verification: {Passed | Passed with override | Skipped}
 
 **Execute Phase {X}** — run all {N} plans
 
-/sdlc:execute-phase {X}
+__CMD_PREFIX__execute-phase {X}
 
 <sub>/clear first → fresh context window</sub>
 
@@ -548,7 +548,7 @@ Verification: {Passed | Passed with override | Skipped}
 
 **Also available:**
 - cat .aidlc/phases/{phase-dir}/*-PLAN.md — review plans
-- /sdlc:plan-phase {X} --research — re-research first
+- __CMD_PREFIX__plan-phase {X} --research — re-research first
 
 ───────────────────────────────────────────────────────────────
 </offer_next>

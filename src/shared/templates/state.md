@@ -147,10 +147,10 @@ Updated after each plan completion.
 
 **Decisions:** Reference to PROJECT.md Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
 
-**Pending Todos:** Ideas captured via /sdlc:add-todo
+**Pending Todos:** Ideas captured via __CMD_PREFIX__add-todo
 - Count of pending todos
 - Reference to .aidlc/todos/pending/
-- Brief list if few, count if many (e.g., "5 pending todos — see /sdlc:check-todos")
+- Brief list if few, count if many (e.g., "5 pending todos — see __CMD_PREFIX__check-todos")
 
 **Blockers/Concerns:** From "Next Phase Readiness" sections
 - Issues that affect future work

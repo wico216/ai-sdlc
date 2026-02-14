@@ -216,7 +216,7 @@ ai-sdlc/
 
 **New Workflow:**
 - Implementation: `ai-sdlc/workflows/{name}.md`
-- Usage: Reference from command with `@__SDLC_HOME__/workflows/{name}.md`
+- Usage: Reference from command with `@__SDLC_WORKFLOWS__/{name}.md`
 
 **New Reference Document:**
 - Implementation: `ai-sdlc/references/{name}.md`
@@ -234,7 +234,7 @@ ai-sdlc/
 - Committed: Yes (source of truth)
 
 **commands/**
-- Purpose: Slash commands installed to __CLAUDE_HOME__/commands/
+- Purpose: Slash commands installed to the tool's command directory
 - Source: Copied by bin/install.js during installation
 - Committed: Yes (source of truth)
 

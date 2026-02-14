@@ -20,18 +20,18 @@ Output: .aidlc/codebase/ folder with 7 structured documents about the codebase s
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/map-codebase.md
+@__SDLC_WORKFLOWS__/map-codebase.md
 </execution_context>
 
 <context>
-Focus area: $ARGUMENTS (optional - if provided, tells agents to focus on specific subsystem)
+Focus area: __ARGUMENTS__ (optional - if provided, tells agents to focus on specific subsystem)
 
 **Load project state if exists:**
 Check for .aidlc/STATE.md - loads context if project already initialized
 
 **This command can run:**
-- Before /sdlc:new-project (brownfield codebases) - creates codebase map first
-- After /sdlc:new-project (greenfield codebases) - updates codebase map as code evolves
+- Before __CMD_PREFIX__new-project (brownfield codebases) - creates codebase map first
+- After __CMD_PREFIX__new-project (greenfield codebases) - updates codebase map as code evolves
 - Anytime to refresh codebase understanding
 </context>
 
@@ -59,7 +59,7 @@ Check for .aidlc/STATE.md - loads context if project already initialized
 4. Wait for agents to complete, collect confirmations (NOT document contents)
 5. Verify all 7 documents exist with line counts
 6. Commit codebase map
-7. Offer next steps (typically: /sdlc:new-project or /sdlc:plan-phase)
+7. Offer next steps (typically: __CMD_PREFIX__new-project or __CMD_PREFIX__plan-phase)
 </process>
 
 <success_criteria>

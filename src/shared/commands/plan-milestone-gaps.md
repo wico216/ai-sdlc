@@ -11,11 +11,11 @@ allowed-tools:
 ---
 
 <objective>
-Create all phases necessary to close gaps identified by `/sdlc:audit-milestone`.
+Create all phases necessary to close gaps identified by `__CMD_PREFIX__audit-milestone`.
 
 Reads MILESTONE-AUDIT.md, groups gaps into logical phases, creates phase entries in ROADMAP.md, and offers to plan each phase.
 
-One command creates all fix phases — no manual `/sdlc:add-phase` per gap.
+One command creates all fix phases — no manual `__CMD_PREFIX__add-phase` per gap.
 </objective>
 
 <execution_context>
@@ -51,7 +51,7 @@ Parse YAML frontmatter to extract structured gaps:
 
 If no audit file exists or has no gaps, error:
 ```
-No audit gaps found. Run `/sdlc:audit-milestone` first.
+No audit gaps found. Run `__CMD_PREFIX__audit-milestone` first.
 ```
 
 ## 2. Prioritize Gaps
@@ -188,22 +188,22 @@ git commit -m "docs(roadmap): add gap closure phases {N}-{M}"
 
 **Plan first gap closure phase**
 
-`/sdlc:plan-phase {N}`
+`__CMD_PREFIX__plan-phase {N}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:execute-phase {N}` — if plans already exist
+- `__CMD_PREFIX__execute-phase {N}` — if plans already exist
 - `cat .aidlc/ROADMAP.md` — see updated roadmap
 
 ---
 
 **After all gap phases complete:**
 
-`/sdlc:audit-milestone` — re-audit to verify gaps closed
-`/sdlc:complete-milestone {version}` — archive when audit passes
+`__CMD_PREFIX__audit-milestone` — re-audit to verify gaps closed
+`__CMD_PREFIX__complete-milestone {version}` — archive when audit passes
 ```
 
 </process>
@@ -291,5 +291,5 @@ becomes:
 - [ ] ROADMAP.md updated with new phases
 - [ ] Phase directories created
 - [ ] Changes committed
-- [ ] User knows to run `/sdlc:plan-phase` next
+- [ ] User knows to run `__CMD_PREFIX__plan-phase` next
 </success_criteria>

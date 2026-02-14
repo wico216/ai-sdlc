@@ -119,7 +119,7 @@ Load and validate:
 ```
 Phase [X] not found in roadmap.
 
-Use /sdlc:progress to see available phases.
+Use __CMD_PREFIX__progress to see available phases.
 ```
 Exit workflow.
 
@@ -376,14 +376,14 @@ Created: .aidlc/phases/${PADDED_PHASE}-${SLUG}/${PADDED_PHASE}-CONTEXT.md
 
 **Phase ${PHASE}: [Name]** — [Goal from ROADMAP.md]
 
-`/sdlc:plan-phase ${PHASE}`
+`__CMD_PREFIX__plan-phase ${PHASE}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `/sdlc:plan-phase ${PHASE} --skip-research` — plan without research
+- `__CMD_PREFIX__plan-phase ${PHASE} --skip-research` — plan without research
 - Review/edit CONTEXT.md before continuing
 
 ---

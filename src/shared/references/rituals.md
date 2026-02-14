@@ -11,7 +11,7 @@
 
 ### How it works
 
-1. One person shares screen running `/sdlc:inception`
+1. One person shares screen running `__CMD_PREFIX__inception`
 2. Team discusses each unit's bounded context and acceptance criteria together
 3. AI proposes decomposition, team debates and refines
 4. Risk register reviewed collaboratively — risks the AI missed surface in group discussion
@@ -37,7 +37,7 @@ Even working alone, the principle applies: don't rush through Inception. Take ti
 
 ### How it works
 
-1. One person drives (runs `/sdlc:bolt`), others observe and contribute
+1. One person drives (runs `__CMD_PREFIX__bolt`), others observe and contribute
 2. AI generates code, team reviews together in real-time
 3. Design decisions made collaboratively, logged in audit trail
 4. Rotate driver every 30-60 minutes
@@ -56,12 +56,12 @@ Work in focused sessions (2-3 hours). Review AI-generated code carefully — you
 **When:** After completing a unit (Unit Complete gate) or milestone
 **Who:** Full team
 **Duration:** 30-60 minutes
-**Command:** `/sdlc:retro`
+**Command:** `__CMD_PREFIX__retro`
 **Purpose:** Review what the AI did well/poorly and improve for next time
 
 ### How it works
 
-1. Run `/sdlc:retro {UNIT-ID}` — AI analyzes audit trail, gate results, rework cycles
+1. Run `__CMD_PREFIX__retro {UNIT-ID}` — AI analyzes audit trail, gate results, rework cycles
 2. AI presents findings: what went well, what went wrong, guardrail effectiveness
 3. Team adds human observations the data doesn't capture
 4. Together, produce concrete improvement actions for the next unit
@@ -84,7 +84,7 @@ The retro is not about blame. It's about tuning the system — better prompts, b
 
 ### Solo developer adaptation
 
-Still valuable. Run `/sdlc:retro` after each unit. The data analysis alone surfaces patterns you won't notice in the flow of work. Add your own observations before finalizing.
+Still valuable. Run `__CMD_PREFIX__retro` after each unit. The data analysis alone surfaces patterns you won't notice in the flow of work. Add your own observations before finalizing.
 
 ## Ritual Frequency
 

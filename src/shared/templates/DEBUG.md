@@ -99,7 +99,7 @@ files_changed: []
 
 <lifecycle>
 
-**Creation:** Immediately when /sdlc:debug is called
+**Creation:** Immediately when __CMD_PREFIX__debug is called
 - Create file with trigger from user input
 - Set status to "gathering"
 - Current Focus: next_action = "gather symptoms"

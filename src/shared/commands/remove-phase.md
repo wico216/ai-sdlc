@@ -26,15 +26,15 @@ Output: Phase deleted, all subsequent phases renumbered, git commit as historica
 <step name="parse_arguments">
 Parse the command arguments:
 - Argument is the phase number to remove (integer or decimal)
-- Example: `/sdlc:remove-phase 17` → phase = 17
-- Example: `/sdlc:remove-phase 16.1` → phase = 16.1
+- Example: `__CMD_PREFIX__remove-phase 17` → phase = 17
+- Example: `__CMD_PREFIX__remove-phase 16.1` → phase = 16.1
 
 If no argument provided:
 
 ```
 ERROR: Phase number required
-Usage: /sdlc:remove-phase <phase-number>
-Example: /sdlc:remove-phase 17
+Usage: __CMD_PREFIX__remove-phase <phase-number>
+Example: __CMD_PREFIX__remove-phase 17
 ```
 
 Exit.
@@ -80,7 +80,7 @@ Only future phases can be removed:
 - Current phase: {current}
 - Phase {target} is current or completed
 
-To abandon current work, use /sdlc:pause-work instead.
+To abandon current work, use __CMD_PREFIX__pause-work instead.
 ```
 
 Exit.
@@ -291,7 +291,7 @@ Current position: Phase {current} of {new-total}
 ## What's Next
 
 Would you like to:
-- `/sdlc:progress` — see updated roadmap status
+- `__CMD_PREFIX__progress` — see updated roadmap status
 - Continue with current phase
 - Review roadmap
 

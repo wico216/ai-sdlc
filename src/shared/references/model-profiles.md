@@ -49,7 +49,7 @@ Orchestrators resolve model before spawning:
 
 ## Switching Profiles
 
-Runtime: `/sdlc:set-profile <profile>`
+Runtime: `__CMD_PREFIX__set-profile <profile>`
 
 Per-project default: Set in `.aidlc/config.json`:
 ```json

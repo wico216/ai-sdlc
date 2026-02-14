@@ -24,8 +24,8 @@ Switch the model profile used by AI-SDLC agents. This controls which Claude mode
 ## 1. Validate argument
 
 ```
-if $ARGUMENTS.profile not in ["quality", "balanced", "budget"]:
-  Error: Invalid profile "$ARGUMENTS.profile"
+if __ARGUMENTS__.profile not in ["quality", "balanced", "budget"]:
+  Error: Invalid profile "__ARGUMENTS__.profile"
   Valid profiles: quality, balanced, budget
   STOP
 ```
@@ -39,7 +39,7 @@ ls .aidlc/config.json 2>/dev/null
 If no `.aidlc/` directory:
 ```
 Error: No AI-SDLC project found.
-Run /sdlc:new-project first to initialize a project.
+Run __CMD_PREFIX__new-project first to initialize a project.
 ```
 
 ## 3. Update config.json
@@ -52,7 +52,7 @@ cat .aidlc/config.json
 Update `model_profile` field (or add if missing):
 ```json
 {
-  "model_profile": "$ARGUMENTS.profile"
+  "model_profile": "__ARGUMENTS__.profile"
 }
 ```
 
@@ -61,7 +61,7 @@ Write updated config back to `.aidlc/config.json`.
 ## 4. Confirm
 
 ```
-✓ Model profile set to: $ARGUMENTS.profile
+✓ Model profile set to: __ARGUMENTS__.profile
 
 Agents will now use:
 [Show table from model-profiles.md for selected profile]
@@ -75,7 +75,7 @@ Next spawned agents will use the new profile.
 
 **Switch to budget mode:**
 ```
-/sdlc:set-profile budget
+__CMD_PREFIX__set-profile budget
 
 ✓ Model profile set to: budget
 
@@ -90,7 +90,7 @@ Agents will now use:
 
 **Switch to quality mode:**
 ```
-/sdlc:set-profile quality
+__CMD_PREFIX__set-profile quality
 
 ✓ Model profile set to: quality
 

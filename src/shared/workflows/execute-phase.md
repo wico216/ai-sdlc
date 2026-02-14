@@ -216,7 +216,7 @@ waves = {
 }
 ```
 
-**No dependency analysis needed.** Wave numbers are pre-computed during `/sdlc:plan-phase`.
+**No dependency analysis needed.** Wave numbers are pre-computed during `__CMD_PREFIX__plan-phase`.
 
 Report wave structure with context:
 ```
@@ -286,10 +286,10 @@ Execute each wave in sequence. Autonomous plans within a wave run in parallel.
    </objective>
 
    <execution_context>
-   @__SDLC_HOME__/workflows/execute-plan.md
-   @__SDLC_HOME__/templates/summary.md
-   @__SDLC_HOME__/references/checkpoints.md
-   @__SDLC_HOME__/references/tdd.md
+   @__SDLC_WORKFLOWS__/execute-plan.md
+   @__SDLC_TEMPLATES__/summary.md
+   @__SDLC_REFS__/checkpoints.md
+   @__SDLC_REFS__/tdd.md
    </execution_context>
 
    <context>
@@ -502,7 +502,7 @@ grep "^status:" "$PHASE_DIR"/*-VERIFICATION.md | cut -d: -f2 | tr -d ' '
 |--------|--------|
 | `passed` | Continue to update_roadmap |
 | `human_needed` | Present items to user, get approval or feedback |
-| `gaps_found` | Present gap summary, offer `/sdlc:plan-phase {phase} --gaps` |
+| `gaps_found` | Present gap summary, offer `__CMD_PREFIX__plan-phase {phase} --gaps` |
 
 **If passed:**
 
@@ -549,7 +549,7 @@ Present gaps and offer next command:
 
 **Plan gap closure** — create additional plans to complete the phase
 
-`/sdlc:plan-phase {X} --gaps`
+`__CMD_PREFIX__plan-phase {X} --gaps`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -557,13 +557,13 @@ Present gaps and offer next command:
 
 **Also available:**
 - `cat {phase_dir}/{phase}-VERIFICATION.md` — see full report
-- `/sdlc:verify-work {X}` — manual testing before planning
+- `__CMD_PREFIX__verify-work {X}` — manual testing before planning
 ```
 
-User runs `/sdlc:plan-phase {X} --gaps` which:
+User runs `__CMD_PREFIX__plan-phase {X} --gaps` which:
 1. Reads VERIFICATION.md gaps
 2. Creates additional plans (04, 05, etc.) with `gap_closure: true` to close gaps
-3. User then runs `/sdlc:execute-phase {X} --gaps-only`
+3. User then runs `__CMD_PREFIX__execute-phase {X} --gaps-only`
 4. Execute-phase runs only gap closure plans (04-05)
 5. Verifier runs again after new plans complete
 
@@ -607,7 +607,7 @@ Present next steps based on milestone status:
 
 **Phase {X+1}: {Name}** — {Goal}
 
-`/sdlc:plan-phase {X+1}`
+`__CMD_PREFIX__plan-phase {X+1}`
 
 <sub>`/clear` first for fresh context</sub>
 ```
@@ -618,7 +618,7 @@ MILESTONE COMPLETE!
 
 All {N} phases executed.
 
-`/sdlc:complete-milestone`
+`__CMD_PREFIX__complete-milestone`
 ```
 </step>
 
@@ -658,7 +658,7 @@ No polling (Task blocks). No context bleed.
 
 If phase execution was interrupted (context limit, user exit, error):
 
-1. Run `/sdlc:execute-phase {phase}` again
+1. Run `__CMD_PREFIX__execute-phase {phase}` again
 2. discover_plans finds completed SUMMARYs
 3. Skips completed plans
 4. Resumes from first incomplete plan
