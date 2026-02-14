@@ -396,17 +396,17 @@ Update AI-SDLC to latest version with changelog preview.
 - Displays changelog entries for versions you've missed
 - Highlights breaking changes
 - Confirms before running install
-- Better than raw `npx ai-sdlc-cc`
+- Uses GitHub API to check for new releases
 
 Usage: `/sdlc:update`
 
-**`/sdlc:join-discord`**
-Join the AI-SDLC Discord community.
+**`/sdlc:community`**
+Open the AI-SDLC community on GitHub.
 
-- Get help, share what you're building, stay updated
-- Connect with other AI-SDLC users
+- Report issues, request features, share feedback
+- Browse discussions and solutions
 
-Usage: `/sdlc:join-discord`
+Usage: `/sdlc:community`
 
 ## Files & Structure
 

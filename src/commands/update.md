@@ -4,9 +4,9 @@ description: Update AI-SDLC to latest version with changelog display
 ---
 
 <objective>
-Check for AI-SDLC updates, install if available, and display what changed.
+Check for AI-SDLC updates from GitHub, install if available, and display what changed.
 
-Provides a better update experience than raw `npx ai-sdlc-cc` by showing version diff and changelog entries.
+Uses the GitHub API to check for new releases against the locally installed version.
 </objective>
 
 <process>
@@ -26,27 +26,35 @@ cat __SDLC_HOME__/VERSION 2>/dev/null
 
 Your installation doesn't include version tracking.
 
-Running fresh install...
+Please re-install from the repository:
+git clone https://github.com/wico216/ai-sdlc.git
+cd ai-sdlc && ./install.sh
 ```
 
-Proceed to install step (treat as version 0.0.0 for comparison).
+STOP here if no VERSION file. User needs to re-install.
 </step>
 
 <step name="check_latest_version">
-Check npm for latest version:
+Check GitHub for latest release:
 
 ```bash
-npm view ai-sdlc-cc version 2>/dev/null
+curl -s https://api.github.com/repos/wico216/ai-sdlc/releases/latest 2>/dev/null | grep -o '"tag_name"[[:space:]]*:[[:space:]]*"[^"]*"' | grep -o '"[^"]*"$' | tr -d '"v'
 ```
 
-**If npm check fails:**
-```
-Couldn't check for updates (offline or npm unavailable).
-
-To update manually: `npx ai-sdlc-cc --global`
+**If no releases found, fall back to checking the VERSION file on main:**
+```bash
+curl -s https://raw.githubusercontent.com/wico216/ai-sdlc/main/src/VERSION 2>/dev/null
 ```
 
-STOP here if npm unavailable.
+**If both fail:**
+```
+Couldn't check for updates (offline or GitHub unavailable).
+
+To update manually:
+  cd /path/to/ai-sdlc && git pull && ./install.sh
+```
+
+STOP here if GitHub unavailable.
 </step>
 
 <step name="compare_versions">
@@ -77,46 +85,65 @@ You're ahead of the latest release (development version?).
 STOP here if ahead.
 </step>
 
-<step name="show_changes_and_confirm">
-**If update available**, fetch and show what's new BEFORE updating:
+<step name="find_clone_dir">
+Locate the AI-SDLC clone directory:
 
-1. Fetch changelog (same as fetch_changelog step)
-2. Extract entries between installed and latest versions
-3. Display preview and ask for confirmation:
+```bash
+# Check common locations
+for dir in \
+  "$HOME/ai-sdlc" \
+  "$HOME/Documents/ai-sdlc" \
+  "$HOME/Documents/Work/ai-sdlc" \
+  "$HOME/Projects/ai-sdlc" \
+  "$HOME/Code/ai-sdlc" \
+  "$HOME/repos/ai-sdlc"; do
+  [ -d "$dir/.git" ] && echo "FOUND: $dir" && break
+done
+```
+
+**If not found:** Ask user where they cloned the repo, or suggest re-cloning:
+```
+Could not find your ai-sdlc clone directory.
+
+Option 1: Tell me where you cloned it
+Option 2: Re-clone fresh:
+  git clone https://github.com/wico216/ai-sdlc.git
+  cd ai-sdlc && ./install.sh
+```
+</step>
+
+<step name="show_changes_and_confirm">
+**If update available**, fetch changelog and show what's new BEFORE updating:
+
+```bash
+cd {clone_dir} && git fetch origin main
+git log --oneline HEAD..origin/main
+```
+
+Display preview and ask for confirmation:
 
 ```
 ## AI-SDLC Update Available
 
-**Installed:** 1.5.10
-**Latest:** 1.5.15
+**Installed:** 0.1.0
+**Latest:** 0.2.0
 
 ### What's New
 ────────────────────────────────────────────────────────────
 
-## [1.5.15] - 2026-01-20
-
-### Added
-- Feature X
-
-## [1.5.14] - 2026-01-18
-
-### Fixed
-- Bug fix Y
+{git log output showing commits between versions}
 
 ────────────────────────────────────────────────────────────
 
-⚠️  **Note:** The installer performs a clean install of AI-SDLC folders:
-- `__CLAUDE_HOME__/commands/sdlc/` will be wiped and replaced
-- `__SDLC_HOME__/` will be wiped and replaced
-- `__CLAUDE_HOME__/agents/sdlc-*` files will be replaced
+This will:
+- Pull latest changes from GitHub
+- Re-run install.sh to update commands, agents, and references
+- Your project `.aidlc/` directories are NOT affected
 
-Your custom files in other locations are preserved:
-- Custom commands in `__CLAUDE_HOME__/commands/your-stuff/` ✓
-- Custom agents not prefixed with `sdlc-` ✓
-- Custom hooks ✓
-- Your CLAUDE.md files ✓
-
-If you've modified any AI-SDLC files directly, back them up first.
+Your custom files are preserved:
+- Custom commands not in `sdlc/` directory
+- Custom agents not prefixed with `sdlc-`
+- Your CLAUDE.md files
 ```
 
 Use AskUserQuestion:
@@ -132,7 +159,7 @@ Use AskUserQuestion:
 Run the update:
 
 ```bash
-npx ai-sdlc-cc --global
+cd {clone_dir} && git pull origin main && ./install.sh
 ```
 
 Capture output. If install fails, show error and STOP.
@@ -145,16 +172,14 @@ rm -f __CLAUDE_HOME__/cache/sdlc-update-check.json
 </step>
 
 <step name="display_result">
-Format completion message (changelog was already shown in confirmation step):
+Format completion message:
 
 ```
-╔═══════════════════════════════════════════════════════════╗
-║  AI-SDLC Updated: v1.5.10 → v1.5.15                           ║
-╚═══════════════════════════════════════════════════════════╝
+## AI-SDLC Updated: v{old} -> v{new}
 
-⚠️  Restart Claude Code to pick up the new commands.
+Restart Claude Code to pick up the new commands.
 
-[View full changelog](https://github.com/glittercowboy/ai-sdlc/blob/main/CHANGELOG.md)
+[View releases](https://github.com/wico216/ai-sdlc/releases)
 ```
 </step>
 
@@ -162,11 +187,10 @@ Format completion message (changelog was already shown in confirmation step):
 
 <success_criteria>
 - [ ] Installed version read correctly
-- [ ] Latest version checked via npm
+- [ ] Latest version checked via GitHub API
 - [ ] Update skipped if already current
-- [ ] Changelog fetched and displayed BEFORE update
-- [ ] Clean install warning shown
+- [ ] Changes shown BEFORE update
 - [ ] User confirmation obtained
-- [ ] Update executed successfully
+- [ ] git pull + install.sh executed successfully
 - [ ] Restart reminder shown
 </success_criteria>

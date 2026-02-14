@@ -21,10 +21,10 @@ if (!fs.existsSync(cacheDir)) {
   fs.mkdirSync(cacheDir, { recursive: true });
 }
 
-// Run check in background (spawn background process, windowsHide prevents console flash)
+// Run check in background (spawn background process)
 const child = spawn(process.execPath, ['-e', `
   const fs = require('fs');
-  const { execSync } = require('child_process');
+  const https = require('https');
 
   const cacheFile = ${JSON.stringify(cacheFile)};
   const projectVersionFile = ${JSON.stringify(projectVersionFile)};
@@ -40,19 +40,60 @@ const child = spawn(process.execPath, ['-e', `
     }
   } catch (e) {}
 
-  let latest = null;
-  try {
-    latest = execSync('npm view ai-sdlc-cc version', { encoding: 'utf8', timeout: 10000, windowsHide: true }).trim();
-  } catch (e) {}
-
-  const result = {
-    update_available: latest && installed !== latest,
-    installed,
-    latest: latest || 'unknown',
-    checked: Math.floor(Date.now() / 1000)
+  // Check GitHub for latest release
+  const options = {
+    hostname: 'api.github.com',
+    path: '/repos/wico216/ai-sdlc/releases/latest',
+    headers: { 'User-Agent': 'ai-sdlc-update-check' },
+    timeout: 10000
   };
 
-  fs.writeFileSync(cacheFile, JSON.stringify(result));
+  const req = https.get(options, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      let latest = null;
+      try {
+        const json = JSON.parse(data);
+        if (json.tag_name) {
+          latest = json.tag_name.replace(/^v/, '');
+        }
+      } catch (e) {}
+
+      // If no releases yet, try raw VERSION file from main branch
+      if (!latest) {
+        const fallback = https.get({
+          hostname: 'raw.githubusercontent.com',
+          path: '/wico216/ai-sdlc/main/src/VERSION',
+          headers: { 'User-Agent': 'ai-sdlc-update-check' },
+          timeout: 10000
+        }, (fRes) => {
+          let fData = '';
+          fRes.on('data', chunk => fData += chunk);
+          fRes.on('end', () => {
+            latest = fData.trim() || null;
+            writeResult(installed, latest);
+          });
+        });
+        fallback.on('error', () => writeResult(installed, null));
+        return;
+      }
+
+      writeResult(installed, latest);
+    });
+  });
+
+  req.on('error', () => writeResult(installed, null));
+
+  function writeResult(installed, latest) {
+    const result = {
+      update_available: latest && installed !== latest && latest !== '404: Not Found',
+      installed,
+      latest: latest || 'unknown',
+      checked: Math.floor(Date.now() / 1000)
+    };
+    fs.writeFileSync(cacheFile, JSON.stringify(result));
+  }
 `], {
   stdio: 'ignore',
   windowsHide: true

@@ -39,6 +39,9 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 
 @__SDLC_HOME__/references/principles.md
 @__SDLC_HOME__/references/gates.md
+@__SDLC_HOME__/templates/deployment-plan.md
+@__SDLC_HOME__/templates/runbook.md
+@__SDLC_HOME__/templates/observability-config.md
 
 </execution_context>
 
