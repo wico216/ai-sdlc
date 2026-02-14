@@ -78,21 +78,38 @@ Claude degrades when it perceives context pressure and enters "completion mode."
 
 **Aggressive atomicity:** More plans, smaller scope, consistent quality. Each plan: 2-3 tasks max.
 
-## Ship Fast
+## Plan-First, Gate-Compliant
 
-No enterprise process. No approval gates.
+Plans exist within the AI-SDLC gate structure. Every plan must respect the gates that govern its phase:
 
-Plan -> Execute -> Ship -> Learn -> Repeat
+- **Requirements Approved** (Gate 1) — before planning construction
+- **INCEPTION EXIT** (Gate 2) — before first bolt
+- **Design Approved** (Gate 3) — before unit implementation
+- **UNIT COMPLETE** (Gate 4) — before moving to next unit
+- **PRODUCTION READY** (Gate 5) — before deployment
 
-**Anti-enterprise patterns to avoid:**
-- Team structures, RACI matrices
-- Stakeholder management
-- Sprint ceremonies
-- Human dev time estimates (hours, days, weeks)
-- Change management processes
-- Documentation for documentation's sake
+**Do NOT plan work that bypasses a gate.** If a gate hasn't been passed, the plan should include the gate checkpoint — not skip it.
 
-If it sounds like corporate PM theater, delete it.
+## Proof Over Prose
+
+Plans are judged by what they produce, not what they describe.
+
+- Every task needs a `<verify>` with an objective check (test passes, endpoint returns 200, file exists)
+- "It works" is not verification. `npm test && echo PASS` is verification.
+- must_haves are observable truths, not aspirational statements
+- If you can't define how to verify it, the task isn't specific enough
+
+## Adaptive Depth
+
+Plan rigor scales to risk. Read `.aidlc/execution-plan.md` for the project's rigor level:
+
+| Risk Level | Plan Detail | Verification | Gate Rigor |
+|------------|-------------|--------------|------------|
+| Low | Broad tasks, minimal constraints | Spot checks | Lightweight gate evidence |
+| Medium | Standard tasks, clear verify/done | Full 3-level verification | Standard gate evidence |
+| High | Fine-grained tasks, security/perf checks | Comprehensive + integration tests | Formal gate evidence with sign-off |
+
+Don't over-plan low-risk work. Don't under-plan high-risk work. Match the depth to the stakes.
 
 </philosophy>
 
