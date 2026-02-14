@@ -23,7 +23,7 @@ This is the most leveraged moment in any project. Deep questioning here means be
 - `.aidlc/ROADMAP.md` — phase structure
 - `.aidlc/STATE.md` — project memory
 
-**After this command:** Run `/sdlc:plan-phase 1` to start execution.
+**After this command:** Run `/sdlc:inception` to decompose into units, create risk register, and pass gates.
 
 </objective>
 
@@ -956,11 +956,6 @@ Run the full AI-SDLC Inception phase to decompose into units:
 /sdlc:inception — create intent, units, risk register, and pass gates
 
 <sub>/clear first → fresh context window</sub>
-
----
-
-**Skip Inception (quick mode):**
-- /sdlc:plan-phase 1 — go straight to planning (skips unit decomposition)
 
 ───────────────────────────────────────────────────────────────
 ```

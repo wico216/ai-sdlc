@@ -20,6 +20,8 @@ Execute all plans in a phase using wave-based parallel execution.
 Orchestrator stays lean: discover plans, analyze dependencies, group into waves, spawn subagents, collect results. Each subagent loads the full execute-plan context and handles its own plan.
 
 Context budget: ~15% orchestrator, 100% fresh per subagent.
+
+> **Note:** This command is the internal execution engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete) or update the audit trail with gate records. For the full gate-enforced workflow, use `/sdlc:bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over execution.
 </objective>
 
 <execution_context>

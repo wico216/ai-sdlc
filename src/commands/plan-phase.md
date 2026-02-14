@@ -26,6 +26,8 @@ Create executable phase prompts (PLAN.md files) for a roadmap phase with integra
 **Orchestrator role:** Parse arguments, validate phase, research domain (unless skipped or exists), spawn sdlc-planner agent, verify plans with sdlc-plan-checker, iterate until plans pass or max iterations reached, present results.
 
 **Why subagents:** Research and planning burn context fast. Verification uses fresh context. User sees the flow between agents in main context.
+
+> **Note:** This command is the internal planning engine. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete). For the full gate-enforced workflow, use `/sdlc:bolt <unit>` which calls this internally. Use this command directly only when you need fine-grained control over planning.
 </objective>
 
 <context>

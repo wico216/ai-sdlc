@@ -132,7 +132,9 @@ Run the Operations phase — deployment plan, runbooks, and Production Ready gat
 
 Usage: `/sdlc:deploy`
 
-### Phase Planning
+### Unit Research & Planning
+
+These commands help prepare for bolt execution. They are called internally by `/sdlc:bolt` but can also be used standalone for deeper control.
 
 **`/sdlc:discuss-phase <number>`**
 Help articulate your vision for a phase before planning.
@@ -162,6 +164,10 @@ See what Claude is planning to do before it starts.
 
 Usage: `/sdlc:list-phase-assumptions 3`
 
+### Advanced: Direct Phase Execution
+
+> **Note:** These commands bypass AI-SDLC gates (Design Approved, Unit Complete). They are the internal execution engine used by `/sdlc:bolt`. Use them directly only when you need fine-grained control over planning and execution, and understand that gate enforcement and Golden Thread traceability are your responsibility.
+
 **`/sdlc:plan-phase <number>`**
 Create detailed execution plan for a specific phase.
 
@@ -169,11 +175,10 @@ Create detailed execution plan for a specific phase.
 - Breaks phase into concrete, actionable tasks
 - Includes verification criteria and success measures
 - Multiple plans per phase supported (XX-01, XX-02, etc.)
+- **Does not enforce Design Approved gate** — use `/sdlc:bolt` for gate-enforced flow
 
 Usage: `/sdlc:plan-phase 1`
 Result: Creates `.aidlc/phases/01-foundation/01-01-PLAN.md`
-
-### Execution
 
 **`/sdlc:execute-phase <phase-number>`**
 Execute all plans in a phase.
@@ -182,6 +187,7 @@ Execute all plans in a phase.
 - Plans within each wave run in parallel via Task tool
 - Verifies phase goal after all plans complete
 - Updates REQUIREMENTS.md, ROADMAP.md, STATE.md
+- **Does not enforce Unit Complete gate** — use `/sdlc:bolt` for gate-enforced flow
 
 Usage: `/sdlc:execute-phase 5`
 
@@ -200,7 +206,9 @@ Use when you know exactly what to do and the task is small enough to not need re
 Usage: `/sdlc:quick`
 Result: Creates `.aidlc/quick/NNN-slug/PLAN.md`, `.aidlc/quick/NNN-slug/SUMMARY.md`
 
-### Roadmap Management
+### Extended Workflow: Roadmap & Milestone Management
+
+> These commands extend AI-SDLC for multi-release projects. They manage the ROADMAP.md phases and milestone lifecycle. They are not part of the core 3-phase model (Inception → Construction → Operations) but are useful for iterative development across multiple releases.
 
 **`/sdlc:add-phase <description>`**
 Add new phase to end of current milestone.
@@ -232,8 +240,6 @@ Remove a future phase and renumber subsequent phases.
 Usage: `/sdlc:remove-phase 17`
 Result: Phase 17 deleted, phases 18-20 become 17-19
 
-### Milestone Management
-
 **`/sdlc:new-milestone <name>`**
 Start a new milestone through unified flow.
 
@@ -255,6 +261,26 @@ Archive completed milestone and prepare for next version.
 - Prepares workspace for next version
 
 Usage: `/sdlc:complete-milestone 1.0.0`
+
+**`/sdlc:audit-milestone [version]`**
+Audit milestone completion against original intent.
+
+- Reads all phase VERIFICATION.md files
+- Checks requirements coverage
+- Spawns integration checker for cross-phase wiring
+- Creates MILESTONE-AUDIT.md with gaps and tech debt
+
+Usage: `/sdlc:audit-milestone`
+
+**`/sdlc:plan-milestone-gaps`**
+Create phases to close gaps identified by audit.
+
+- Reads MILESTONE-AUDIT.md and groups gaps into phases
+- Prioritizes by requirement priority (must/should/nice)
+- Adds gap closure phases to ROADMAP.md
+- Ready for `/sdlc:plan-phase` on new phases
+
+Usage: `/sdlc:plan-milestone-gaps`
 
 ### Progress Tracking
 
@@ -357,27 +383,18 @@ Usage: `/sdlc:retro UNIT-001`
 Usage: `/sdlc:retro milestone`
 Usage: `/sdlc:retro` (retro on most recently completed unit)
 
-### Milestone Auditing
+### Compliance
 
-**`/sdlc:audit-milestone [version]`**
-Audit milestone completion against original intent.
+**`/sdlc:audit-compliance`**
+Verify AI-SDLC compliance — gates passed, Golden Thread intact, audit trail complete.
 
-- Reads all phase VERIFICATION.md files
-- Checks requirements coverage
-- Spawns integration checker for cross-phase wiring
-- Creates MILESTONE-AUDIT.md with gaps and tech debt
+- Checks all 5 gates have evidence in audit trail
+- Verifies Golden Thread traceability (intent → requirements → units → code → deployment)
+- Validates audit trail completeness
+- Checks risk register exists and is structured
+- Produces `.aidlc/COMPLIANCE.md` with pass/fail checklist
 
-Usage: `/sdlc:audit-milestone`
-
-**`/sdlc:plan-milestone-gaps`**
-Create phases to close gaps identified by audit.
-
-- Reads MILESTONE-AUDIT.md and groups gaps into phases
-- Prioritizes by requirement priority (must/should/nice)
-- Adds gap closure phases to ROADMAP.md
-- Ready for `/sdlc:plan-phase` on new phases
-
-Usage: `/sdlc:plan-milestone-gaps`
+Usage: `/sdlc:audit-compliance`
 
 ### Configuration
 
@@ -512,16 +529,6 @@ Example config:
 /sdlc:bolt UNIT-002      # CONSTRUCTION: next unit
 /clear
 /sdlc:deploy             # OPERATIONS: deployment plan → runbooks → production ready gate
-```
-
-**Quick start (skip Inception decomposition):**
-
-```
-/sdlc:new-project        # Initialize project
-/clear
-/sdlc:plan-phase 1       # Plan first phase directly
-/clear
-/sdlc:execute-phase 1    # Execute
 ```
 
 **Resuming work after a break:**

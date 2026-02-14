@@ -2,6 +2,8 @@
 
 Template for `.aidlc/STATE.md` — the project's living memory.
 
+> **Naming note:** The AI-SDLC methodology spec references `aidlc-state.md`. This framework uses the shorter `STATE.md` for consistency with other top-level artifacts (`PROJECT.md`, `ROADMAP.md`, `REQUIREMENTS.md`). The content and purpose are identical.
+
 ---
 
 ## File Template
