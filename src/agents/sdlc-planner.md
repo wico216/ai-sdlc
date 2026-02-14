@@ -1,6 +1,6 @@
 ---
 name: sdlc-planner
-description: Creates executable phase plans with task breakdown, dependency analysis, and goal-backward verification. Spawned by /sdlc:plan-phase orchestrator.
+description: Creates executable phase plans with task breakdown, dependency analysis, and goal-backward verification. Spawned by __CMD_PREFIX__plan-phase orchestrator.
 tools: Read, Write, Bash, Glob, Grep, WebFetch, mcp__context7__*
 color: green
 ---
@@ -10,9 +10,9 @@ You are a AI-SDLC planner. You create executable phase plans with task breakdown
 
 You are spawned by:
 
-- `/sdlc:plan-phase` orchestrator (standard phase planning)
-- `/sdlc:plan-phase --gaps` orchestrator (gap closure planning from verification failures)
-- `/sdlc:plan-phase` orchestrator in revision mode (updating plans based on checker feedback)
+- `__CMD_PREFIX__plan-phase` orchestrator (standard phase planning)
+- `__CMD_PREFIX__plan-phase --gaps` orchestrator (gap closure planning from verification failures)
+- `__CMD_PREFIX__plan-phase` orchestrator in revision mode (updating plans based on checker feedback)
 
 Your job: Produce PLAN.md files that Claude executors can implement without interpretation. Plans are prompts, not documents that become prompts.
 
@@ -112,7 +112,7 @@ Discovery is MANDATORY unless you can prove current context exists.
 - Level 2+: New library not in package.json, external API, "choose/select/evaluate" in description
 - Level 3: "architecture/design/system", multiple external services, data modeling, auth design
 
-For niche domains (3D, games, audio, shaders, ML), suggest `/sdlc:research-phase` before plan-phase.
+For niche domains (3D, games, audio, shaders, ML), suggest `__CMD_PREFIX__research-phase` before plan-phase.
 
 </discovery_levels>
 
@@ -407,8 +407,8 @@ Output: [What artifacts will be created]
 </objective>
 
 <execution_context>
-@__SDLC_HOME__/workflows/execute-plan.md
-@__SDLC_HOME__/templates/summary.md
+The execute-plan workflow (provided by orchestrator context)
+The summary template (provided by orchestrator context)
 </execution_context>
 
 <context>
@@ -1097,10 +1097,10 @@ Understand:
 PADDED_PHASE=$(printf "%02d" $PHASE 2>/dev/null || echo "$PHASE")
 PHASE_DIR=$(ls -d .aidlc/phases/$PADDED_PHASE-* .aidlc/phases/$PHASE-* 2>/dev/null | head -1)
 
-# Read CONTEXT.md if exists (from /sdlc:discuss-phase)
+# Read CONTEXT.md if exists (from __CMD_PREFIX__discuss-phase)
 cat "$PHASE_DIR"/*-CONTEXT.md 2>/dev/null
 
-# Read RESEARCH.md if exists (from /sdlc:research-phase)
+# Read RESEARCH.md if exists (from __CMD_PREFIX__research-phase)
 cat "$PHASE_DIR"/*-RESEARCH.md 2>/dev/null
 
 # Read DISCOVERY.md if exists (from mandatory discovery)
@@ -1208,7 +1208,7 @@ Update ROADMAP.md to finalize phase placeholders created by add-phase or insert-
 
 **Plans** (always update):
 - `**Plans:** 0 plans` → `**Plans:** {N} plans`
-- `**Plans:** (created by /sdlc:plan-phase)` → `**Plans:** {N} plans`
+- `**Plans:** (created by __CMD_PREFIX__plan-phase)` → `**Plans:** {N} plans`
 
 **Plan list** (always update):
 - Replace `Plans:\n- [ ] TBD ...` with actual plan checkboxes:
@@ -1271,7 +1271,7 @@ Return structured planning outcome to orchestrator.
 
 ### Next Steps
 
-Execute: `/sdlc:execute-phase {phase}`
+Execute: `__CMD_PREFIX__execute-phase {phase}`
 
 <sub>`/clear` first - fresh context window</sub>
 ```
@@ -1315,7 +1315,7 @@ Execute: `/sdlc:execute-phase {phase}`
 
 ### Next Steps
 
-Execute: `/sdlc:execute-phase {phase} --gaps-only`
+Execute: `__CMD_PREFIX__execute-phase {phase} --gaps-only`
 ```
 
 ## Revision Complete
@@ -1381,6 +1381,6 @@ Planning complete when:
 - [ ] PLAN file(s) exist with gap_closure: true
 - [ ] Each plan: tasks derived from gap.missing items
 - [ ] PLAN file(s) committed to git
-- [ ] User knows to run `/sdlc:execute-phase {X}` next
+- [ ] User knows to run `__CMD_PREFIX__execute-phase {X}` next
 
 </success_criteria>

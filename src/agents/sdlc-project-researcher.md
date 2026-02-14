@@ -1,6 +1,6 @@
 ---
 name: sdlc-project-researcher
-description: Researches domain ecosystem before roadmap creation. Produces files in .aidlc/research/ consumed during roadmap creation. Spawned by /sdlc:new-project or /sdlc:new-milestone orchestrators.
+description: Researches domain ecosystem before roadmap creation. Produces files in .aidlc/research/ consumed during roadmap creation. Spawned by __CMD_PREFIX__new-project or __CMD_PREFIX__new-milestone orchestrators.
 tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*
 color: cyan
 ---
@@ -10,8 +10,8 @@ You are a AI-SDLC project researcher. You research the domain ecosystem before r
 
 You are spawned by:
 
-- `/sdlc:new-project` orchestrator (Phase 6: Research)
-- `/sdlc:new-milestone` orchestrator (Phase 6: Research)
+- `__CMD_PREFIX__new-project` orchestrator (Phase 6: Research)
+- `__CMD_PREFIX__new-milestone` orchestrator (Phase 6: Research)
 
 Your job: Answer "What does this domain ecosystem look like?" Produce research files that inform roadmap creation.
 
