@@ -106,25 +106,25 @@ To use uncommitted mode:
 | Strategy | When branch created | Branch scope | Merge point |
 |----------|---------------------|--------------|-------------|
 | `none` | Never | N/A | N/A |
-| `phase` | At `execute-phase` start | Single phase | User merges after phase |
-| `milestone` | At first `execute-phase` of milestone | Entire milestone | At `complete-milestone` |
+| `unit` | At `build-unit` start | Single unit | User merges after unit |
+| `project` | At first `build-unit` of project | Entire project | At `approve-release` |
 
 **When `git.branching_strategy: "none"` (default):**
 - All work commits to current branch
 - Standard AI-SDLC behavior
 
-**When `git.branching_strategy: "phase"`:**
-- `execute-phase` creates/switches to a branch before execution
-- Branch name from `phase_branch_template` (e.g., `sdlc/phase-03-authentication`)
-- All plan commits go to that branch
-- User merges branches manually after phase completion
-- `complete-milestone` offers to merge all phase branches
+**When `git.branching_strategy: "unit"`:**
+- `build-unit` creates/switches to a branch before execution
+- Branch name from `unit_branch_template` (e.g., `sdlc/unit-003-authentication`)
+- All bolt commits go to that branch
+- User merges branches manually after unit completion
+- `approve-release` offers to merge all unit branches
 
-**When `git.branching_strategy: "milestone"`:**
-- First `execute-phase` of milestone creates the milestone branch
-- Branch name from `milestone_branch_template` (e.g., `sdlc/v1.0-mvp`)
-- All phases in milestone commit to same branch
-- `complete-milestone` offers to merge milestone branch to main
+**When `git.branching_strategy: "project"`:**
+- First `build-unit` of project creates the project branch
+- Branch name from `project_branch_template` (e.g., `sdlc/myapp-v1`)
+- All units in project commit to same branch
+- `approve-release` offers to merge project branch to main
 
 **Template variables:**
 
@@ -165,7 +165,7 @@ if [ "$BRANCHING_STRATEGY" = "milestone" ]; then
 fi
 ```
 
-**Merge options at complete-milestone:**
+**Merge options at approve-release:**
 
 | Option | Git command | Result |
 |--------|-------------|--------|

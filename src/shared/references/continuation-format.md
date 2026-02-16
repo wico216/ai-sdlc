@@ -27,7 +27,7 @@ Standard format for presenting next steps after completing a command or workflow
 ## Format Rules
 
 1. **Always show what it is** — name + description, never just a command path
-2. **Pull context from source** — ROADMAP.md for phases, PLAN.md `<objective>` for plans
+2. **Pull context from source** — execution-plan.md for units, bolt-plan.md `<objective>` for bolts
 3. **Command in inline code** — backticks, easy to copy-paste, renders as clickable link
 4. **`/clear` explanation** — always include, keeps it concise but explains why
 5. **"Also available" not "Other options"** — sounds more app-like
@@ -35,101 +35,98 @@ Standard format for presenting next steps after completing a command or workflow
 
 ## Variants
 
-### Execute Next Plan
+### Execute Next Bolt
 
 ```
 ---
 
 ## ▶ Next Up
 
-**02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
+**Bolt 02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
 
-`__CMD_PREFIX__execute-phase 2`
+`__CMD_PREFIX__build-unit 002`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- Review plan before executing
-- `__CMD_PREFIX__list-phase-assumptions 2` — check assumptions
+- Review bolt plan before executing
 
 ---
 ```
 
-### Execute Final Plan in Phase
+### Execute Final Bolt in Unit
 
-Add note that this is the last plan and what comes after:
+Add note that this is the last bolt and what comes after:
 
 ```
 ---
 
 ## ▶ Next Up
 
-**02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
-<sub>Final plan in Phase 2</sub>
+**Bolt 02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
+<sub>Final bolt in Unit 002</sub>
 
-`__CMD_PREFIX__execute-phase 2`
+`__CMD_PREFIX__build-unit 002`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **After this completes:**
-- Phase 2 → Phase 3 transition
-- Next: **Phase 3: Core Features** — User dashboard and settings
+- Unit 002 complete → Unit 003 next
+- Next: **Unit 003: Core Features** — User dashboard and settings
 
 ---
 ```
 
-### Plan a Phase
+### Plan a Unit
 
 ```
 ---
 
 ## ▶ Next Up
 
-**Phase 2: Authentication** — JWT login flow with refresh tokens
+**Unit 002: Authentication** — JWT login flow with refresh tokens
 
-`__CMD_PREFIX__plan-phase 2`
+`__CMD_PREFIX__plan-unit 002`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__discuss-phase 2` — gather context first
-- `__CMD_PREFIX__research-phase 2` — investigate unknowns
-- Review roadmap
+- `__CMD_PREFIX__elaborate` — gather context first
+- Review execution plan
 
 ---
 ```
 
-### Phase Complete, Ready for Next
+### Unit Complete, Ready for Next
 
 Show completion status before next action:
 
 ```
 ---
 
-## ✓ Phase 2 Complete
+## ✓ Unit 002 Complete
 
-3/3 plans executed
+3/3 bolts executed
 
 ## ▶ Next Up
 
-**Phase 3: Core Features** — User dashboard, settings, and data export
+**Unit 003: Core Features** — User dashboard, settings, and data export
 
-`__CMD_PREFIX__plan-phase 3`
+`__CMD_PREFIX__plan-unit 003`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__discuss-phase 3` — gather context first
-- `__CMD_PREFIX__research-phase 3` — investigate unknowns
-- Review what Phase 2 built
+- `__CMD_PREFIX__elaborate` — gather context first
+- Review what Unit 002 built
 
 ---
 ```
@@ -143,33 +140,11 @@ When there's no clear primary action:
 
 ## ▶ Next Up
 
-**Phase 3: Core Features** — User dashboard, settings, and data export
+**Unit 003: Core Features** — User dashboard, settings, and data export
 
-**To plan directly:** `__CMD_PREFIX__plan-phase 3`
+**To plan directly:** `__CMD_PREFIX__plan-unit 003`
 
-**To discuss context first:** `__CMD_PREFIX__discuss-phase 3`
-
-**To research unknowns:** `__CMD_PREFIX__research-phase 3`
-
-<sub>`/clear` first → fresh context window</sub>
-
----
-```
-
-### Milestone Complete
-
-```
----
-
-## 🎉 Milestone v1.0 Complete
-
-All 4 phases shipped
-
-## ▶ Next Up
-
-**Start v1.1** — questioning → research → requirements → roadmap
-
-`__CMD_PREFIX__new-milestone`
+**To discuss context first:** `__CMD_PREFIX__elaborate`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -214,15 +189,15 @@ Extract: `**02-03: Refresh Token Rotation** — Add /api/auth/refresh with slidi
 ## To Continue
 
 Run `/clear`, then paste:
-__CMD_PREFIX__execute-phase 2
+__CMD_PREFIX__build-unit UNIT-002
 ```
 
-User has no idea what 02-03 is about.
+User has no idea what the unit is about.
 
 ### Don't: Missing /clear explanation
 
 ```
-`__CMD_PREFIX__plan-phase 3`
+`__CMD_PREFIX__plan-unit UNIT-003`
 
 Run /clear first.
 ```
@@ -233,7 +208,7 @@ Doesn't explain why. User might skip it.
 
 ```
 Other options:
-- Review roadmap
+- Review execution plan
 ```
 
 Sounds like an afterthought. Use "Also available:" instead.
@@ -242,7 +217,7 @@ Sounds like an afterthought. Use "Also available:" instead.
 
 ```
 ```
-__CMD_PREFIX__plan-phase 3
+__CMD_PREFIX__plan-unit UNIT-003
 ```
 ```
 

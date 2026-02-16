@@ -148,7 +148,7 @@ ai-sdlc/
 **commands/sdlc/**
 - Purpose: Slash command definitions for Claude Code
 - Contains: *.md files (one per command)
-- Key files: new-project.md, plan-phase.md, execute-plan.md
+- Key files: new-project.md, plan-unit.md, build-unit.md
 - Subdirectories: None (flat structure)
 
 **ai-sdlc/references/**

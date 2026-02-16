@@ -40,7 +40,7 @@
 **Approves:** UNIT COMPLETE gate
 **Key actions:**
 - Validates acceptance criteria are met with evidence
-- Runs `__CMD_PREFIX__verify-work` for UAT
+- Runs `__CMD_PREFIX__verify-unit` for UAT
 - Reviews test coverage and edge cases
 - Ensures no regressions across units
 

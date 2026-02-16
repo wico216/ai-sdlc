@@ -2,7 +2,7 @@
 
 Template for `.aidlc/STATE.md` — the project's living memory.
 
-> **Naming note:** The AI-SDLC methodology spec references `aidlc-state.md`. This framework uses the shorter `STATE.md` for consistency with other top-level artifacts (`PROJECT.md`, `ROADMAP.md`, `REQUIREMENTS.md`). The content and purpose are identical.
+> **Naming note:** The AI-SDLC methodology spec references `aidlc-state.md`. This framework uses the shorter `STATE.md` for consistency with other top-level artifacts (`PROJECT.md`, `REQUIREMENTS.md`). The content and purpose are identical.
 
 ---
 
@@ -16,13 +16,13 @@ Template for `.aidlc/STATE.md` — the project's living memory.
 See: .aidlc/PROJECT.md (updated [date])
 
 **Core value:** [One-liner from PROJECT.md Core Value section]
-**Current focus:** [Current phase name]
+**Current focus:** [Current unit name]
 
 ## Current Position
 
-Phase: [X] of [Y] ([Phase name])
-Plan: [A] of [B] in current phase
-Status: [Ready to plan / Planning / Ready to execute / In progress / Phase complete]
+Unit: [X] of [Y] ([Unit name])
+Bolt: [A] of [B] in current unit
+Status: [Ready to plan / Planning / Ready to build / In progress / Unit complete]
 Last activity: [YYYY-MM-DD] — [What happened]
 
 Progress: [░░░░░░░░░░] 0%
@@ -30,21 +30,21 @@ Progress: [░░░░░░░░░░] 0%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: [N]
+- Total bolts completed: [N]
 - Average duration: [X] min
 - Total execution time: [X.X] hours
 
-**By Phase:**
+**By Unit:**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
+| Unit | Bolts | Total | Avg/Bolt |
+|------|-------|-------|----------|
 | - | - | - | - |
 
 **Recent Trend:**
-- Last 5 plans: [durations]
+- Last 5 bolts: [durations]
 - Trend: [Improving / Stable / Degrading]
 
-*Updated after each plan completion*
+*Updated after each bolt completion*
 
 ## Accumulated Context
 
@@ -53,14 +53,8 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Phase X]: [Decision summary]
-- [Phase Y]: [Decision summary]
-
-### Pending Todos
-
-[From .aidlc/todos/pending/ — ideas captured during sessions]
-
-None yet.
+- [Unit X]: [Decision summary]
+- [Unit Y]: [Decision summary]
 
 ### Blockers/Concerns
 
@@ -77,7 +71,7 @@ Resume file: [Path to .continue-here*.md if exists, otherwise "None"]
 
 <purpose>
 
-STATE.md is the project's short-term memory spanning all phases and sessions.
+STATE.md is the project's short-term memory spanning all units and sessions.
 
 **Problem it solves:** Information is captured in summaries, issues, and decisions but not systematically consumed. Sessions start without context.
 
@@ -91,23 +85,23 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
 
 <lifecycle>
 
-**Creation:** After ROADMAP.md is created (during init)
+**Creation:** After execution-plan.md is created (during init)
 - Reference PROJECT.md (read it for current context)
 - Initialize empty accumulated context sections
-- Set position to "Phase 1 ready to plan"
+- Set position to "Unit 1 ready to plan"
 
 **Reading:** First step of every workflow
-- progress: Present status to user
+- status: Present status to user
 - plan: Inform planning decisions
-- execute: Know current position
-- transition: Know what's complete
+- build: Know current position
+- unit-complete: Know what's complete
 
 **Writing:** After every significant action
-- execute: After SUMMARY.md created
-  - Update position (phase, plan, status)
+- build: After bolt-summary.md created
+  - Update position (unit, bolt, status)
   - Note new decisions (detail in PROJECT.md)
   - Add blockers/concerns
-- transition: After phase marked complete
+- unit-complete: After unit marked complete
   - Update progress bar
   - Clear resolved blockers
   - Refresh Project Reference date
@@ -119,42 +113,37 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
 ### Project Reference
 Points to PROJECT.md for full context. Includes:
 - Core value (the ONE thing that matters)
-- Current focus (which phase)
+- Current focus (which unit)
 - Last update date (triggers re-read if stale)
 
 Claude reads PROJECT.md directly for requirements, constraints, and decisions.
 
 ### Current Position
 Where we are right now:
-- Phase X of Y — which phase
-- Plan A of B — which plan within phase
+- Unit X of Y — which unit
+- Bolt A of B — which bolt within unit
 - Status — current state
 - Last activity — what happened most recently
 - Progress bar — visual indicator of overall completion
 
-Progress calculation: (completed plans) / (total plans across all phases) × 100%
+Progress calculation: (completed bolts) / (total bolts across all units) × 100%
 
 ### Performance Metrics
 Track velocity to understand execution patterns:
-- Total plans completed
-- Average duration per plan
-- Per-phase breakdown
+- Total bolts completed
+- Average duration per bolt
+- Per-unit breakdown
 - Recent trend (improving/stable/degrading)
 
-Updated after each plan completion.
+Updated after each bolt completion.
 
 ### Accumulated Context
 
 **Decisions:** Reference to PROJECT.md Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
 
-**Pending Todos:** Ideas captured via __CMD_PREFIX__add-todo
-- Count of pending todos
-- Reference to .aidlc/todos/pending/
-- Brief list if few, count if many (e.g., "5 pending todos — see __CMD_PREFIX__check-todos")
-
-**Blockers/Concerns:** From "Next Phase Readiness" sections
+**Blockers/Concerns:** From "Next Unit Readiness" sections
 - Issues that affect future work
-- Prefix with originating phase
+- Prefix with originating unit
 - Cleared when addressed
 
 ### Session Continuity

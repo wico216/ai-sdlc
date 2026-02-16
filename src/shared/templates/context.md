@@ -1,29 +1,28 @@
-# Phase Context Template
+# Unit Context Template
 
-Template for `.aidlc/phases/XX-name/{phase}-CONTEXT.md` - captures implementation decisions for a phase.
+Template for `.aidlc/construction/unit-NNN/context.md` - captures implementation decisions for a unit.
 
-**Purpose:** Document decisions that downstream agents need. Researcher uses this to know WHAT to investigate. Planner uses this to know WHAT choices are locked vs flexible.
+**Purpose:** Document decisions that downstream agents need. Planner uses this to know WHAT choices are locked vs flexible.
 
-**Key principle:** Categories are NOT predefined. They emerge from what was actually discussed for THIS phase. A CLI phase has CLI-relevant sections, a UI phase has UI-relevant sections.
+**Key principle:** Categories are NOT predefined. They emerge from what was actually discussed for THIS unit. A CLI unit has CLI-relevant sections, a UI unit has UI-relevant sections.
 
 **Downstream consumers:**
-- `sdlc-phase-researcher` — Reads decisions to focus research (e.g., "card layout" → research card component patterns)
-- `sdlc-planner` — Reads decisions to create specific tasks (e.g., "infinite scroll" → task includes virtualization)
+- `sdlc-bolt-planner` — Reads decisions to create specific tasks (e.g., "infinite scroll" → task includes virtualization)
 
 ---
 
 ## File Template
 
 ```markdown
-# Phase [X]: [Name] - Context
+# Unit [NNN]: [Name] - Context
 
 **Gathered:** [date]
 **Status:** Ready for planning
 
 <domain>
-## Phase Boundary
+## Unit Boundary
 
-[Clear statement of what this phase delivers — the scope anchor. This comes from ROADMAP.md and is fixed. Discussion clarifies implementation within this boundary.]
+[Clear statement of what this unit delivers — the scope anchor. This comes from unit spec and is fixed. Discussion clarifies implementation within this boundary.]
 
 </domain>
 
@@ -57,15 +56,15 @@ Template for `.aidlc/phases/XX-name/{phase}-CONTEXT.md` - captures implementatio
 <deferred>
 ## Deferred Ideas
 
-[Ideas that came up during discussion but belong in other phases. Captured here so they're not lost, but explicitly out of scope for this phase.]
+[Ideas that came up during discussion but belong in other units. Captured here so they're not lost, but explicitly out of scope for this unit.]
 
-[If none: "None — discussion stayed within phase scope"]
+[If none: "None — discussion stayed within unit scope"]
 
 </deferred>
 
 ---
 
-*Phase: XX-name*
+*Unit: NNN*
 *Context gathered: [date]*
 ```
 
@@ -74,15 +73,15 @@ Template for `.aidlc/phases/XX-name/{phase}-CONTEXT.md` - captures implementatio
 **Example 1: Visual feature (Post Feed)**
 
 ```markdown
-# Phase 3: Post Feed - Context
+# Unit 001: Post Feed - Context
 
 **Gathered:** 2025-01-20
 **Status:** Ready for planning
 
 <domain>
-## Phase Boundary
+## Unit Boundary
 
-Display posts from followed users in a scrollable feed. Users can view posts and see engagement counts. Creating posts and interactions are separate phases.
+Display posts from followed users in a scrollable feed. Users can view posts and see engagement counts. Creating posts and interactions are separate units.
 
 </domain>
 
@@ -121,29 +120,29 @@ Display posts from followed users in a scrollable feed. Users can view posts and
 <deferred>
 ## Deferred Ideas
 
-- Commenting on posts — Phase 5
+- Commenting on posts — Unit 005
 - Bookmarking posts — add to backlog
 
 </deferred>
 
 ---
 
-*Phase: 03-post-feed*
+*Unit: 001*
 *Context gathered: 2025-01-20*
 ```
 
 **Example 2: CLI tool (Database backup)**
 
 ```markdown
-# Phase 2: Backup Command - Context
+# Unit 002: Backup Command - Context
 
 **Gathered:** 2025-01-20
 **Status:** Ready for planning
 
 <domain>
-## Phase Boundary
+## Unit Boundary
 
-CLI command to backup database to local file or S3. Supports full and incremental backups. Restore command is a separate phase.
+CLI command to backup database to local file or S3. Supports full and incremental backups. Restore command is a separate unit.
 
 </domain>
 
@@ -183,29 +182,29 @@ CLI command to backup database to local file or S3. Supports full and incrementa
 <deferred>
 ## Deferred Ideas
 
-- Scheduled backups — separate phase
+- Scheduled backups — separate unit
 - Backup rotation/retention — add to backlog
 
 </deferred>
 
 ---
 
-*Phase: 02-backup-command*
+*Unit: 002*
 *Context gathered: 2025-01-20*
 ```
 
 **Example 3: Organization task (Photo library)**
 
 ```markdown
-# Phase 1: Photo Organization - Context
+# Unit 003: Photo Organization - Context
 
 **Gathered:** 2025-01-20
 **Status:** Ready for planning
 
 <domain>
-## Phase Boundary
+## Unit Boundary
 
-Organize existing photo library into structured folders. Handle duplicates and apply consistent naming. Tagging and search are separate phases.
+Organize existing photo library into structured folders. Handle duplicates and apply consistent naming. Tagging and search are separate units.
 
 </domain>
 
@@ -245,14 +244,14 @@ Organize existing photo library into structured folders. Handle duplicates and a
 <deferred>
 ## Deferred Ideas
 
-- Face detection grouping — future phase
+- Face detection grouping — future unit
 - Cloud sync — out of scope for now
 
 </deferred>
 
 ---
 
-*Phase: 01-photo-organization*
+*Unit: 003*
 *Context gathered: 2025-01-20*
 ```
 
@@ -261,7 +260,7 @@ Organize existing photo library into structured folders. Handle duplicates and a
 <guidelines>
 **This template captures DECISIONS for downstream agents.**
 
-The output should answer: "What does the researcher need to investigate? What choices are locked for the planner?"
+The output should answer: "What choices are locked for the bolt planner?"
 
 **Good content (concrete decisions):**
 - "Card-based layout, not timeline"
@@ -276,8 +275,7 @@ The output should answer: "What does the researcher need to investigate? What ch
 - "Easy to use"
 
 **After creation:**
-- File lives in phase directory: `.aidlc/phases/XX-name/{phase}-CONTEXT.md`
-- `sdlc-phase-researcher` uses decisions to focus investigation
-- `sdlc-planner` uses decisions + research to create executable tasks
+- File lives in unit directory: `.aidlc/construction/unit-NNN/context.md`
+- `sdlc-bolt-planner` uses decisions to create executable tasks
 - Downstream agents should NOT need to ask the user again about captured decisions
 </guidelines>

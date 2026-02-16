@@ -168,7 +168,7 @@ Template for `.aidlc/codebase/ARCHITECTURE.md` - captures conceptual code organi
 
 **Command:**
 - Purpose: CLI command definition
-- Examples: `src/commands/new-project.ts`, `src/commands/plan-phase.ts`
+- Examples: `src/commands/new-project.ts`, `src/commands/plan-unit.ts`
 - Pattern: Commander.js command registration
 
 **Template:**

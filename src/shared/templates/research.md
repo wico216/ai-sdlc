@@ -526,4 +526,4 @@ function useVehicleControls(rigidBodyRef) {
 **After creation:**
 - File lives in phase directory: `.aidlc/phases/XX-name/{phase}-RESEARCH.md`
 - Referenced during planning workflow
-- plan-phase loads it automatically when present
+- plan-unit loads it automatically when present

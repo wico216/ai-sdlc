@@ -119,7 +119,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 **Last Updated:**
 - Always note when and why the document was updated
-- Format: `after Phase 2` or `after v1.0 milestone`
+- Format: `after Unit 002` or `after [trigger]`
 - Triggers review of whether content is still accurate
 
 </guidelines>
@@ -128,14 +128,14 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 PROJECT.md evolves throughout the project lifecycle.
 
-**After each phase transition:**
+**After each unit completion:**
 1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
+2. Requirements validated? → Move to Validated with unit reference
 3. New requirements emerged? → Add to Active
 4. Decisions to log? → Add to Key Decisions
 5. "What This Is" still accurate? → Update if drifted
 
-**After each milestone:**
+**Periodically (after major checkpoints):**
 1. Full review of all sections
 2. Core Value check — still the right priority?
 3. Audit Out of Scope — reasons still valid?
@@ -176,7 +176,7 @@ STATE.md references PROJECT.md:
 See: .aidlc/PROJECT.md (updated [date])
 
 **Core value:** [One-liner from Core Value section]
-**Current focus:** [Current phase name]
+**Current focus:** [Current unit]
 ```
 
 This ensures Claude reads current PROJECT.md context.
