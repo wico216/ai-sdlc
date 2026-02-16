@@ -1,6 +1,6 @@
 # UAT Template
 
-Template for `.aidlc/phases/XX-name/{phase}-UAT.md` — persistent UAT session tracking.
+Template for `.aidlc/construction/unit-NNN/UAT.md` — persistent UAT session tracking.
 
 ---
 
@@ -9,8 +9,8 @@ Template for `.aidlc/phases/XX-name/{phase}-UAT.md` — persistent UAT session t
 ```markdown
 ---
 status: testing | complete | diagnosed
-phase: XX-name
-source: [list of SUMMARY.md files tested]
+unit: NNN
+source: [list of bolt-summary.md files tested]
 started: [ISO timestamp]
 updated: [ISO timestamp]
 ---
@@ -75,8 +75,8 @@ skipped: [N]
 
 **Frontmatter:**
 - `status`: OVERWRITE - "testing" or "complete"
-- `phase`: IMMUTABLE - set on creation
-- `source`: IMMUTABLE - SUMMARY files being tested
+- `unit`: IMMUTABLE - set on creation
+- `source`: IMMUTABLE - bolt-summary files being tested
 - `started`: IMMUTABLE - set on creation
 - `updated`: OVERWRITE - update on every change
 
@@ -157,7 +157,7 @@ skipped: [N]
 - Present summary with next steps
 
 **Resume after /clear:**
-1. Read frontmatter → know phase and status
+1. Read frontmatter → know unit and status
 2. Read Current Test → know where we are
 3. Find first [pending] result → continue from there
 4. Summary shows progress so far
@@ -183,8 +183,8 @@ Default: **major** (safe default, user can clarify if wrong)
 ```markdown
 ---
 status: diagnosed
-phase: 04-comments
-source: 04-01-SUMMARY.md, 04-02-SUMMARY.md
+unit: 004
+source: bolt-001-summary.md, bolt-002-summary.md
 started: 2025-01-15T10:30:00Z
 updated: 2025-01-15T10:45:00Z
 ---

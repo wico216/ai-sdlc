@@ -1,6 +1,6 @@
 # Research Summary Template
 
-Template for `.aidlc/research/SUMMARY.md` — executive summary of project research with roadmap implications.
+Template for `.aidlc/inception/research/SUMMARY.md` — executive summary of project research with unit decomposition implications.
 
 <template>
 
@@ -63,29 +63,29 @@ Template for `.aidlc/research/SUMMARY.md` — executive summary of project resea
 2. **[Pitfall]** — [how to avoid]
 3. **[Pitfall]** — [how to avoid]
 
-## Implications for Roadmap
+## Implications for Unit Decomposition
 
-Based on research, suggested phase structure:
+Based on research, suggested unit structure:
 
-### Phase 1: [Name]
+### Unit 001: [Name]
 **Rationale:** [why this comes first based on research]
-**Delivers:** [what this phase produces]
+**Delivers:** [what this unit produces]
 **Addresses:** [features from FEATURES.md]
 **Avoids:** [pitfall from PITFALLS.md]
 
-### Phase 2: [Name]
+### Unit 002: [Name]
 **Rationale:** [why this order]
-**Delivers:** [what this phase produces]
+**Delivers:** [what this unit produces]
 **Uses:** [stack elements from STACK.md]
 **Implements:** [architecture component]
 
-### Phase 3: [Name]
+### Unit 003: [Name]
 **Rationale:** [why this order]
-**Delivers:** [what this phase produces]
+**Delivers:** [what this unit produces]
 
-[Continue for suggested phases...]
+[Continue for suggested units...]
 
-### Phase Ordering Rationale
+### Unit Ordering Rationale
 
 - [Why this order based on dependencies discovered]
 - [Why this grouping based on architecture patterns]
@@ -93,12 +93,12 @@ Based on research, suggested phase structure:
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase [X]:** [reason — e.g., "complex integration, needs API research"]
-- **Phase [Y]:** [reason — e.g., "niche domain, sparse documentation"]
+Units likely needing deeper research during planning:
+- **Unit [NNN]:** [reason — e.g., "complex integration, needs API research"]
+- **Unit [NNN]:** [reason — e.g., "niche domain, sparse documentation"]
 
-Phases with standard patterns (skip research-phase):
-- **Phase [X]:** [reason — e.g., "well-documented, established patterns"]
+Units with standard patterns (skip additional research):
+- **Unit [NNN]:** [reason — e.g., "well-documented, established patterns"]
 
 ## Confidence Assessment
 
@@ -132,7 +132,7 @@ Phases with standard patterns (skip research-phase):
 
 ---
 *Research completed: [date]*
-*Ready for roadmap: yes*
+*Ready for unit decomposition: yes*
 ```
 
 </template>
@@ -147,13 +147,13 @@ Phases with standard patterns (skip research-phase):
 **Key Findings:**
 - Summarize, don't duplicate full documents
 - Link to detailed docs (STACK.md, FEATURES.md, etc.)
-- Focus on what matters for roadmap decisions
+- Focus on what matters for unit decomposition decisions
 
-**Implications for Roadmap:**
+**Implications for Unit Decomposition:**
 - This is the most important section
-- Directly informs roadmap creation
-- Be explicit about phase suggestions and rationale
-- Include research flags for each suggested phase
+- Directly informs unit decomposition
+- Be explicit about unit suggestions and rationale
+- Include research flags for each suggested unit
 
 **Confidence Assessment:**
 - Be honest about uncertainty
@@ -162,9 +162,9 @@ Phases with standard patterns (skip research-phase):
 - MEDIUM = community consensus, multiple sources agree
 - LOW = single source or inference
 
-**Integration with roadmap creation:**
-- This file is loaded as context during roadmap creation
-- Phase suggestions here become starting point for roadmap
-- Research flags inform phase planning
+**Integration with unit decomposition:**
+- This file is loaded as context during inception elaboration
+- Unit suggestions here become starting point for decomposition
+- Research flags inform unit planning
 
 </guidelines>

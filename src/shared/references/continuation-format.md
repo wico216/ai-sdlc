@@ -153,16 +153,16 @@ When there's no clear primary action:
 
 ## Pulling Context
 
-### For phases (from ROADMAP.md):
+### For units (from execution-plan.md):
 
 ```markdown
-### Phase 2: Authentication
+### Unit 002: Authentication
 **Goal**: JWT login flow with refresh tokens
 ```
 
-Extract: `**Phase 2: Authentication** — JWT login flow with refresh tokens`
+Extract: `**Unit 002: Authentication** — JWT login flow with refresh tokens`
 
-### For plans (from ROADMAP.md):
+### For bolt plans (from execution-plan.md):
 
 ```markdown
 Plans:

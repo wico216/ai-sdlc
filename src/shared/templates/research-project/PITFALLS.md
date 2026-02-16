@@ -27,8 +27,8 @@ Template for `.aidlc/research/PITFALLS.md` — common mistakes to avoid in the p
 **Warning signs:**
 [How to detect this early before it becomes a problem]
 
-**Phase to address:**
-[Which roadmap phase should prevent this]
+**Unit to address:**
+[Which unit should prevent this]
 
 ---
 
@@ -46,8 +46,8 @@ Template for `.aidlc/research/PITFALLS.md` — common mistakes to avoid in the p
 **Warning signs:**
 [How to detect this early before it becomes a problem]
 
-**Phase to address:**
-[Which roadmap phase should prevent this]
+**Unit to address:**
+[Which unit should prevent this]
 
 ---
 
@@ -65,8 +65,8 @@ Template for `.aidlc/research/PITFALLS.md` — common mistakes to avoid in the p
 **Warning signs:**
 [How to detect this early before it becomes a problem]
 
-**Phase to address:**
-[Which roadmap phase should prevent this]
+**Unit to address:**
+[Which unit should prevent this]
 
 ---
 
@@ -141,15 +141,15 @@ When pitfalls occur despite prevention, how to recover.
 | [pitfall] | LOW/MEDIUM/HIGH | [what to do] |
 | [pitfall] | LOW/MEDIUM/HIGH | [what to do] |
 
-## Pitfall-to-Phase Mapping
+## Pitfall-to-Unit Mapping
 
-How roadmap phases should address these pitfalls.
+How units should address these pitfalls.
 
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
+| Pitfall | Prevention Unit | Verification |
+|---------|-----------------|--------------|
+| [pitfall] | Unit [NNN] | [how to verify prevention worked] |
+| [pitfall] | Unit [NNN] | [how to verify prevention worked] |
+| [pitfall] | Unit [NNN] | [how to verify prevention worked] |
 
 ## Sources
 
@@ -192,9 +192,9 @@ How roadmap phases should address these pitfalls.
 - Common in demos vs. production
 - Prevents "it works on my machine" issues
 
-**Pitfall-to-Phase Mapping:**
-- Critical for roadmap creation
-- Each pitfall should map to a phase that prevents it
-- Informs phase ordering and success criteria
+**Pitfall-to-Unit Mapping:**
+- Critical for unit decomposition
+- Each pitfall should map to a unit that prevents it
+- Informs unit ordering and acceptance criteria
 
 </guidelines>

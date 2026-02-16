@@ -291,7 +291,7 @@ Template for `.aidlc/codebase/CONVENTIONS.md` - captures coding style and patter
 - Note deviations: "Legacy code uses Y, new code should use X"
 - Keep under ~150 lines total
 
-**Useful for phase planning when:**
+**Useful for unit planning when:**
 - Writing new code (match existing style)
 - Adding features (follow naming patterns)
 - Refactoring (apply consistent conventions)

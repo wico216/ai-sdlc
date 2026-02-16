@@ -38,8 +38,8 @@ Each TDD plan implements **one feature** through the full RED-GREEN-REFACTOR cyc
 
 ```markdown
 ---
-phase: XX-name
-plan: NN
+unit: NNN
+bolt: NN
 type: tdd
 ---
 
@@ -96,18 +96,18 @@ After completion, create SUMMARY.md with:
 2. Write test describing expected behavior (from `<behavior>` element)
 3. Run test - it MUST fail
 4. If test passes: feature exists or test is wrong. Investigate.
-5. Commit: `test({phase}-{plan}): add failing test for [feature]`
+5. Commit: `test({unit}-{bolt}): add failing test for [feature]`
 
 **GREEN - Implement to pass:**
 1. Write minimal code to make test pass
 2. No cleverness, no optimization - just make it work
 3. Run test - it MUST pass
-4. Commit: `feat({phase}-{plan}): implement [feature]`
+4. Commit: `feat({unit}-{bolt}): implement [feature]`
 
 **REFACTOR (if needed):**
 1. Clean up implementation if obvious improvements exist
 2. Run tests - MUST still pass
-3. Only commit if changes made: `refactor({phase}-{plan}): clean up [feature]`
+3. Only commit if changes made: `refactor({unit}-{bolt}): clean up [feature]`
 
 **Result:** Each TDD plan produces 2-3 atomic commits.
 </execution_flow>
@@ -238,7 +238,7 @@ refactor(08-02): extract regex to constant (optional)
 - Standard plans: 1 commit per task, 2-4 commits per plan
 - TDD plans: 2-3 commits for single feature
 
-Both follow same format: `{type}({phase}-{plan}): {description}`
+Both follow same format: `{type}({unit}-{bolt}): {description}`
 
 **Benefits:**
 - Each commit independently revertable

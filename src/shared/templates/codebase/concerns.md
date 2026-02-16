@@ -297,7 +297,7 @@ Template for `.aidlc/codebase/CONCERNS.md` - captures known issues and areas req
 - Risk-focused ("Could expose user data" not "security is bad")
 - Factual ("3.5s load time" not "really slow")
 
-**Useful for phase planning when:**
+**Useful for unit planning when:**
 - Deciding what to work on next
 - Estimating risk of changes
 - Understanding where to be careful

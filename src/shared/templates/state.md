@@ -1,31 +1,60 @@
 # State Template
 
-Template for `.aidlc/STATE.md` — the project's living memory.
-
-> **Naming note:** The AI-SDLC methodology spec references `aidlc-state.md`. This framework uses the shorter `STATE.md` for consistency with other top-level artifacts (`PROJECT.md`, `REQUIREMENTS.md`). The content and purpose are identical.
+Template for `.aidlc/state.md` — the project's living memory.
 
 ---
 
 ## File Template
 
 ```markdown
+---
+type: state
+project: "{project-name}"
+phase: "{inception | construction | operations}"
+updated: "{YYYY-MM-DD}"
+---
+
 # Project State
 
 ## Project Reference
 
-See: .aidlc/PROJECT.md (updated [date])
+See: .aidlc/inception/intent.md (updated [date])
 
-**Core value:** [One-liner from PROJECT.md Core Value section]
-**Current focus:** [Current unit name]
+**Core value:** [One-liner from intent.md]
+**Current focus:** [Current unit name or "Inception"]
 
 ## Current Position
 
-Unit: [X] of [Y] ([Unit name])
-Bolt: [A] of [B] in current unit
-Status: [Ready to plan / Planning / Ready to build / In progress / Unit complete]
+Phase: [Inception | Construction | Operations]
+Stage: [Current stage within phase]
+Unit: [X] of [Y] ([Unit name]) — or "N/A" during inception
+Bolt: [A] of [B] in current unit — or "N/A"
+Status: [Elaborating | Ready to plan | Planning | Ready to build | In progress | Verifying | Unit complete]
 Last activity: [YYYY-MM-DD] — [What happened]
 
 Progress: [░░░░░░░░░░] 0%
+
+## Gate Status
+
+### Inception Gates
+
+| Gate | Status | Date | Approver | Evidence |
+|------|--------|------|----------|----------|
+| Requirements Approved | {not_started \| pending \| passed \| failed} | | | |
+| Inception Exit | {not_started \| pending \| passed \| failed} | | | |
+
+### Construction Gates (per unit)
+
+| Unit | Design Approved | Unit Complete |
+|------|-----------------|---------------|
+| UNIT-001 | {not_started \| passed} ({date}) | {not_started \| passed} ({date}) |
+| UNIT-002 | {not_started} | {not_started} |
+
+### Operations Gate
+
+| Gate | Status | Date | Approver | Evidence |
+|------|--------|------|----------|----------|
+| Production Ready | {not_started \| pending \| passed \| failed} | | | |
 
 ## Performance Metrics
 
@@ -50,8 +79,7 @@ Progress: [░░░░░░░░░░] 0%
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+Recent decisions affecting current work (full log in audit.md):
 
 - [Unit X]: [Decision summary]
 - [Unit Y]: [Decision summary]
@@ -71,7 +99,7 @@ Resume file: [Path to .continue-here*.md if exists, otherwise "None"]
 
 <purpose>
 
-STATE.md is the project's short-term memory spanning all units and sessions.
+state.md is the project's short-term memory spanning all units and sessions.
 
 **Problem it solves:** Information is captured in summaries, issues, and decisions but not systematically consumed. Sessions start without context.
 
@@ -80,87 +108,61 @@ STATE.md is the project's short-term memory spanning all units and sessions.
 - Updated after every significant action
 - Contains digest of accumulated context
 - Enables instant session restoration
+- Tracks gate status for enforcement
 
 </purpose>
 
 <lifecycle>
 
-**Creation:** After execution-plan.md is created (during init)
-- Reference PROJECT.md (read it for current context)
+**Creation:** After execution-plan.md is created (during new-project)
+- Reference intent.md (read it for current context)
 - Initialize empty accumulated context sections
-- Set position to "Unit 1 ready to plan"
+- Initialize all gates as "not_started"
+- Set position to "Inception — Elaborating"
 
 **Reading:** First step of every workflow
 - status: Present status to user
-- plan: Inform planning decisions
-- build: Know current position
-- unit-complete: Know what's complete
+- plan-unit: Inform planning decisions, check gates
+- build-unit: Know current position
+- approve-*: Update gate status
+- All commands: Check gate prerequisites
 
 **Writing:** After every significant action
-- build: After bolt-summary.md created
+- build-unit: After bolt-summary.md created
   - Update position (unit, bolt, status)
-  - Note new decisions (detail in PROJECT.md)
+  - Note new decisions (detail in audit.md)
   - Add blockers/concerns
-- unit-complete: After unit marked complete
+- approve-*: After gate approval
+  - Update gate status table
+  - Record approver and date
+- Unit complete: After unit marked complete
   - Update progress bar
   - Clear resolved blockers
   - Refresh Project Reference date
 
 </lifecycle>
 
-<sections>
+<gate_enforcement>
 
-### Project Reference
-Points to PROJECT.md for full context. Includes:
-- Core value (the ONE thing that matters)
-- Current focus (which unit)
-- Last update date (triggers re-read if stale)
+Gate status in state.md drives workflow enforcement:
 
-Claude reads PROJECT.md directly for requirements, constraints, and decisions.
+- `__CMD_PREFIX__plan-unit` requires Inception Exit = passed
+- `__CMD_PREFIX__build-unit` requires Design Approved = passed for that unit
+- `__CMD_PREFIX__operations` requires all units complete
+- `__CMD_PREFIX__approve-release` requires Production Ready checklist
 
-### Current Position
-Where we are right now:
-- Unit X of Y — which unit
-- Bolt A of B — which bolt within unit
-- Status — current state
-- Last activity — what happened most recently
-- Progress bar — visual indicator of overall completion
+Agents MUST check gate status before proceeding. If a gate is not passed, the agent should refuse and explain what's needed.
 
-Progress calculation: (completed bolts) / (total bolts across all units) × 100%
-
-### Performance Metrics
-Track velocity to understand execution patterns:
-- Total bolts completed
-- Average duration per bolt
-- Per-unit breakdown
-- Recent trend (improving/stable/degrading)
-
-Updated after each bolt completion.
-
-### Accumulated Context
-
-**Decisions:** Reference to PROJECT.md Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
-
-**Blockers/Concerns:** From "Next Unit Readiness" sections
-- Issues that affect future work
-- Prefix with originating unit
-- Cleared when addressed
-
-### Session Continuity
-Enables instant resumption:
-- When was last session
-- What was last completed
-- Is there a .continue-here file to resume from
-
-</sections>
+</gate_enforcement>
 
 <size_constraint>
 
-Keep STATE.md under 100 lines.
+Keep state.md under 120 lines.
 
 It's a DIGEST, not an archive. If accumulated context grows too large:
-- Keep only 3-5 recent decisions in summary (full log in PROJECT.md)
+- Keep only 3-5 recent decisions in summary (full log in audit.md)
 - Keep only active blockers, remove resolved ones
+- Gate status tables grow with units but stay compact
 
 The goal is "read once, know where we are" — if it's too long, that fails.
 

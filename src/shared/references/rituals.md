@@ -53,7 +53,7 @@ Work in focused sessions (2-3 hours). Review AI-generated code carefully — you
 
 ## Guardrail Retro
 
-**When:** After completing a unit (Unit Complete gate) or milestone
+**When:** After completing a unit (Unit Complete gate) or release (Production Ready gate)
 **Who:** Full team
 **Duration:** 30-60 minutes
 **Command:** `__CMD_PREFIX__retro`

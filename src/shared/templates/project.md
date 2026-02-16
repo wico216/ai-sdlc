@@ -85,7 +85,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 **Requirements — Validated:**
 - Requirements that shipped and proved valuable
-- Format: `- ✓ [Requirement] — [version/phase]`
+- Format: `- ✓ [Requirement] — [version/unit]`
 - These are locked — changing them requires explicit discussion
 
 **Requirements — Active:**

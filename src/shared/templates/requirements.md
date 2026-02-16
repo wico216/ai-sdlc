@@ -1,45 +1,64 @@
 # Requirements Template
 
-Template for `.aidlc/REQUIREMENTS.md` — checkable requirements that define "done."
+Template for `.aidlc/inception/requirements.md` — checkable requirements that define "done."
 
-<template>
+> Requirements use MUST/SHOULD/MAY classification (RFC 2119 style).
+> Every requirement has a REQ-ID for traceability through the Golden Thread.
+
+## Instructions for agents
+
+- Generate during `__CMD_PREFIX__new-project` (initial draft)
+- Refine during `__CMD_PREFIX__elaborate` (Requirements Refinement stage)
+- Use Reverse Conversation pattern: AI proposes, human refines
+- Every requirement MUST be testable and atomic
+- Traceability maps requirements to units (not phases)
+
+## Template
 
 ```markdown
-# Requirements: [Project Name]
+---
+type: requirements
+project: "{project-name}"
+status: "{draft | reviewed | approved}"
+created: "{YYYY-MM-DD}"
+updated: "{YYYY-MM-DD}"
+traces_to:
+  intent: "inception/intent.md"
+---
 
-**Defined:** [date]
-**Core Value:** [from PROJECT.md]
+# Requirements: {Project Name}
+
+**Core Value:** {from intent.md — the ONE thing this project must deliver}
 
 ## v1 Requirements
 
-Requirements for initial release. Each maps to roadmap phases.
+Requirements for initial release. Each maps to units.
 
-### Authentication
+### {Category 1}
 
-- [ ] **AUTH-01**: User can sign up with email and password
-- [ ] **AUTH-02**: User receives email verification after signup
-- [ ] **AUTH-03**: User can reset password via email link
-- [ ] **AUTH-04**: User session persists across browser refresh
+- [ ] **{CAT}-01** [MUST]: {Requirement description — testable, atomic}
+- [ ] **{CAT}-02** [MUST]: {Requirement description}
+- [ ] **{CAT}-03** [SHOULD]: {Requirement description}
+- [ ] **{CAT}-04** [MAY]: {Requirement description}
 
-### [Category 2]
+### {Category 2}
 
-- [ ] **[CAT]-01**: [Requirement description]
-- [ ] **[CAT]-02**: [Requirement description]
-- [ ] **[CAT]-03**: [Requirement description]
+- [ ] **{CAT}-01** [MUST]: {Requirement description}
+- [ ] **{CAT}-02** [SHOULD]: {Requirement description}
 
-### [Category 3]
+### {Category 3}
 
-- [ ] **[CAT]-01**: [Requirement description]
-- [ ] **[CAT]-02**: [Requirement description]
+- [ ] **{CAT}-01** [MUST]: {Requirement description}
+- [ ] **{CAT}-02** [MAY]: {Requirement description}
 
 ## v2 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+Deferred to future release. Tracked but not in current scope.
 
-### [Category]
+### {Category}
 
-- **[CAT]-01**: [Requirement description]
-- **[CAT]-02**: [Requirement description]
+- **{CAT}-01**: {Requirement description}
+- **{CAT}-02**: {Requirement description}
 
 ## Out of Scope
 
@@ -47,185 +66,84 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| [Feature] | [Why excluded] |
-| [Feature] | [Why excluded] |
+| {Feature} | {Why excluded} |
+| {Feature} | {Why excluded} |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
+Which units cover which requirements. Updated during unit decomposition.
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| [REQ-ID] | Phase [N] | Pending |
+| Requirement | Priority | Unit | Status |
+|-------------|----------|------|--------|
+| {CAT}-01 | MUST | UNIT-001 | {pending | in-progress | complete | blocked} |
+| {CAT}-02 | MUST | UNIT-001 | pending |
+| {CAT}-03 | SHOULD | UNIT-002 | pending |
+| {CAT}-04 | MAY | UNIT-003 | pending |
 
 **Coverage:**
-- v1 requirements: [X] total
-- Mapped to phases: [Y]
-- Unmapped: [Z] ⚠️
+- v1 requirements: {X} total ({M} MUST, {S} SHOULD, {Y} MAY)
+- Mapped to units: {N}
+- Unmapped: {Z} ⚠️
 
 ---
-*Requirements defined: [date]*
-*Last updated: [date] after [trigger]*
+*Requirements defined: {date}*
+*Last updated: {date} after {trigger}*
+*Approved at gate: Requirements Approved*
 ```
-
-</template>
 
 <guidelines>
 
 **Requirement Format:**
-- ID: `[CATEGORY]-[NUMBER]` (AUTH-01, CONTENT-02, SOCIAL-03)
+- ID: `[CATEGORY]-[NUMBER]` (AUTH-01, CONT-02, SOCL-03)
+- Priority: `[MUST]`, `[SHOULD]`, or `[MAY]` — RFC 2119 style
 - Description: User-centric, testable, atomic
 - Checkbox: Only for v1 requirements (v2 are not yet actionable)
 
+**Priority Classification (RFC 2119):**
+- **MUST:** Required for v1. Project fails without it.
+- **SHOULD:** Expected for v1 but can ship without. Strong justification needed to skip.
+- **MAY:** Nice-to-have for v1. Include if time permits.
+
 **Categories:**
-- Derive from research FEATURES.md categories
+- Derive from project domain and intent.md scope
 - Keep consistent with domain conventions
 - Typical: Authentication, Content, Social, Notifications, Moderation, Payments, Admin
 
 **v1 vs v2:**
-- v1: Committed scope, will be in roadmap phases
-- v2: Acknowledged but deferred, not in current roadmap
-- Moving v2 → v1 requires roadmap update
-
-**Out of Scope:**
-- Explicit exclusions with reasoning
-- Prevents "why didn't you include X?" later
-- Anti-features from research belong here with warnings
+- v1: Committed scope, will be decomposed into units
+- v2: Acknowledged but deferred, not in current units
+- Moving v2 → v1 requires re-elaboration
 
 **Traceability:**
-- Empty initially, populated during roadmap creation
-- Each requirement maps to exactly one phase
-- Unmapped requirements = roadmap gap
+- Empty initially, populated during unit decomposition (elaborate)
+- Each requirement maps to exactly one unit
+- Unmapped requirements = unit decomposition gap
 
 **Status Values:**
-- Pending: Not started
-- In Progress: Phase is active
-- Complete: Requirement verified
-- Blocked: Waiting on external factor
+- pending: Not started
+- in-progress: Unit is active
+- complete: Requirement verified
+- blocked: Waiting on external factor
 
 </guidelines>
 
 <evolution>
 
-**After each phase completes:**
-1. Mark covered requirements as Complete
+**After each unit completes:**
+1. Mark covered requirements as complete
 2. Update traceability status
 3. Note any requirements that changed scope
 
-**After roadmap updates:**
+**After re-elaboration:**
 1. Verify all v1 requirements still mapped
 2. Add new requirements if scope expanded
 3. Move requirements to v2/out of scope if descoped
 
 **Requirement completion criteria:**
-- Requirement is "Complete" when:
+- Requirement is "complete" when:
   - Feature is implemented
-  - Feature is verified (tests pass, manual check done)
+  - Feature is verified (tests pass, acceptance criteria met)
   - Feature is committed
+  - Validation report confirms it
 
 </evolution>
-
-<example>
-
-```markdown
-# Requirements: CommunityApp
-
-**Defined:** 2025-01-14
-**Core Value:** Users can share and discuss content with people who share their interests
-
-## v1 Requirements
-
-### Authentication
-
-- [ ] **AUTH-01**: User can sign up with email and password
-- [ ] **AUTH-02**: User receives email verification after signup
-- [ ] **AUTH-03**: User can reset password via email link
-- [ ] **AUTH-04**: User session persists across browser refresh
-
-### Profiles
-
-- [ ] **PROF-01**: User can create profile with display name
-- [ ] **PROF-02**: User can upload avatar image
-- [ ] **PROF-03**: User can write bio (max 500 chars)
-- [ ] **PROF-04**: User can view other users' profiles
-
-### Content
-
-- [ ] **CONT-01**: User can create text post
-- [ ] **CONT-02**: User can upload image with post
-- [ ] **CONT-03**: User can edit own posts
-- [ ] **CONT-04**: User can delete own posts
-- [ ] **CONT-05**: User can view feed of posts
-
-### Social
-
-- [ ] **SOCL-01**: User can follow other users
-- [ ] **SOCL-02**: User can unfollow users
-- [ ] **SOCL-03**: User can like posts
-- [ ] **SOCL-04**: User can comment on posts
-- [ ] **SOCL-05**: User can view activity feed (followed users' posts)
-
-## v2 Requirements
-
-### Notifications
-
-- **NOTF-01**: User receives in-app notifications
-- **NOTF-02**: User receives email for new followers
-- **NOTF-03**: User receives email for comments on own posts
-- **NOTF-04**: User can configure notification preferences
-
-### Moderation
-
-- **MODR-01**: User can report content
-- **MODR-02**: User can block other users
-- **MODR-03**: Admin can view reported content
-- **MODR-04**: Admin can remove content
-- **MODR-05**: Admin can ban users
-
-## Out of Scope
-
-| Feature | Reason |
-|---------|--------|
-| Real-time chat | High complexity, not core to community value |
-| Video posts | Storage/bandwidth costs, defer to v2+ |
-| OAuth login | Email/password sufficient for v1 |
-| Mobile app | Web-first, mobile later |
-
-## Traceability
-
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| PROF-01 | Phase 2 | Pending |
-| PROF-02 | Phase 2 | Pending |
-| PROF-03 | Phase 2 | Pending |
-| PROF-04 | Phase 2 | Pending |
-| CONT-01 | Phase 3 | Pending |
-| CONT-02 | Phase 3 | Pending |
-| CONT-03 | Phase 3 | Pending |
-| CONT-04 | Phase 3 | Pending |
-| CONT-05 | Phase 3 | Pending |
-| SOCL-01 | Phase 4 | Pending |
-| SOCL-02 | Phase 4 | Pending |
-| SOCL-03 | Phase 4 | Pending |
-| SOCL-04 | Phase 4 | Pending |
-| SOCL-05 | Phase 4 | Pending |
-
-**Coverage:**
-- v1 requirements: 18 total
-- Mapped to phases: 18
-- Unmapped: 0 ✓
-
----
-*Requirements defined: 2025-01-14*
-*Last updated: 2025-01-14 after initial definition*
-```
-
-</example>
