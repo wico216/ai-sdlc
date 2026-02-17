@@ -610,3 +610,35 @@ Key principles:
 - Error handling: fix broken environment before checkpoint, never present checkpoint with failed setup
 
 </checkpoint_automation_reference>
+
+<frontend_behaviour_preservation>
+
+## Frontend Behaviour Preservation
+
+When modifying existing frontend code (brownfield), standard verification is insufficient. Working behaviour must be proven preserved, not just assumed from passing builds.
+
+### Required Evidence for Frontend Changes
+
+#### Level 1: Visual Regression (Minimum)
+- Screenshot comparison of affected pages/components before and after
+- Acceptable diff threshold: < 0.1% pixel difference (excluding intended changes)
+- Tool-agnostic: any visual regression tool (Percy, Chromatic, Playwright screenshots, manual screenshots)
+
+#### Level 2: Interaction Validation (Recommended)
+- Key user flows exercised in a real or headless browser
+- Click paths, form submissions, navigation — not just render checks
+- Document which flows were tested in `validation-report.md`
+
+#### Level 3: Runtime Behaviour Proof (High-risk changes)
+- Side-by-side runtime comparison: old behaviour vs new
+- Console error monitoring during test flows
+- Network request comparison (no unexpected API calls added/removed)
+- Performance budget: page load within 10% of baseline
+
+### When This Applies
+- Any modification to existing UI components
+- Any change to routing, navigation, or page structure
+- Any dependency update that touches frontend packages
+- NOT required for: new pages/components with no existing behaviour to preserve
+
+</frontend_behaviour_preservation>

@@ -63,6 +63,11 @@ The AI-SDLC lifecycle consists of three macro-phases, each with specific goals, 
 - **Design Approved** — Design document reviewed before implementation
 - **UNIT COMPLETE** — Tests passing + validation report accepted
 
+### Brownfield & Frontend
+- For brownfield projects: regression baseline must exist before construction begins
+- For frontend changes: behaviour preservation evidence required at Gate 4 (Unit Complete)
+- See: verification-patterns.md § Frontend Behaviour Preservation
+
 ---
 
 ## Phase 3: OPERATIONS (WHERE/WHEN)
