@@ -248,3 +248,39 @@ Each bolt produces 2-4 commits (tasks + metadata). Clear, granular, bisectable.
 - "Commit noise" irrelevant when consumer is Claude, not humans
 
 </commit_strategy_rationale>
+
+<pr_discipline>
+
+## PR Discipline
+
+### Size Limits
+- **Target:** ≤ 400 lines changed per PR (excluding generated files, lock files, tests)
+- **Hard ceiling:** 600 lines. If a bolt produces more, split into sub-PRs before review
+- **Why:** Large PRs get rubber-stamped. Small PRs get real review
+
+### One Bolt = One PR
+- Each bolt produces exactly one PR
+- Never bundle multiple bolts into a single PR
+- If a bolt is too large for one PR, split the bolt first (`/sdlc:plan-unit` adjustment), not the PR after the fact
+
+### Batch Rules
+- Maximum 2 PRs open per unit at any time
+- A bolt's PR must be merged before its dependent bolt starts construction
+- Exception: independent bolts in the same wave MAY have concurrent open PRs
+
+### Merge Discipline
+- Squash merge by default (clean history)
+- PR title format: `[UNIT-NNN/bolt-NN] <description>`
+- PR body must reference: unit ID, bolt ID, and acceptance criteria addressed
+- All CI checks green before merge — no "merge and fix later"
+
+### AI-Generated PR Review Checklist
+Before approving any AI-generated PR, the reviewer MUST check:
+1. No hallucinated imports or dependencies
+2. No dead code or unused variables introduced
+3. No "defensive complexity" — code that handles impossible states
+4. Tests actually test behaviour, not just exist for coverage
+5. No hardcoded values that should be configuration
+6. Diff matches what the bolt plan said would change — nothing more, nothing less
+
+</pr_discipline>
