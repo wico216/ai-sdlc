@@ -32,10 +32,19 @@ This is the most leveraged moment in any project. Deep questioning here means be
 @__SDLC_REFS__/error-handling.md
 @__SDLC_REFS__/content-validation.md
 @__SDLC_TEMPLATES__/intent.md
+@__SDLC_TEMPLATES__/welcome-message.md
 
 </execution_context>
 
 <process>
+
+## Phase 0: Welcome Message (First-Time Only)
+
+**Display the welcome message on first use.** If the user has never interacted with AI-SDLC before (no `.aidlc/` directory exists anywhere in the current project), display the welcome message from `welcome-message.md` template before proceeding to Phase 1.
+
+**Skip if:** User has previously run `__CMD_PREFIX__new-project` (even in a different directory), or explicitly says they know the framework. The welcome message is informational — do not block on it.
+
+After displaying (or skipping), proceed directly to Phase 1.
 
 ## Phase 1: Setup
 
