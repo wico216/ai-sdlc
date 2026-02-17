@@ -51,7 +51,7 @@ Normalize to three-digit format (`NNN`).
 ls .aidlc/construction/ 2>/dev/null
 ```
 
-**If no construction directory:** Error — run `__CMD_PREFIX__inception` first.
+**If no construction directory:** Error — run `__CMD_PREFIX__new-project` to initialize, then `__CMD_PREFIX__elaborate` to decompose.
 
 Set `UNIT_DIR=.aidlc/construction/unit-{NNN}`.
 

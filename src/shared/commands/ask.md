@@ -10,4 +10,4 @@ The user's question is: __ARGUMENTS__
 
 If no question provided, greet the user and offer help. Read .aidlc/STATE.md to provide context-aware guidance.
 
-When suggesting commands, use the `__CMD_PREFIX__` prefix (e.g., `__CMD_PREFIX__inception`, `__CMD_PREFIX__bolt`).
+When suggesting commands, use the `__CMD_PREFIX__` prefix (e.g., `__CMD_PREFIX__elaborate`, `__CMD_PREFIX__build-unit`).

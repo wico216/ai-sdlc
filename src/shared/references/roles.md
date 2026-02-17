@@ -31,7 +31,7 @@
 **Key actions:**
 - Executes bolts (plan → build → test)
 - Works with AI on code generation and review
-- Runs `__CMD_PREFIX__bolt` and validates AI output
+- Runs `__CMD_PREFIX__build-unit` and validates AI output
 - Reports deviations and blockers
 
 ### QA / Reviewer

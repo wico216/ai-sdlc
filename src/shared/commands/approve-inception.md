@@ -19,7 +19,7 @@ Approve the two Inception-phase gates. This command checks prerequisites, spawns
 **Gate 2 — INCEPTION EXIT:** Units decomposed, risks identified, execution plan approved.
 
 **When to use:**
-- After `__CMD_PREFIX__inception` completes its stages
+- After `__CMD_PREFIX__elaborate` completes its stages
 - Standalone, when inception artifacts exist and you want to formally gate-check
 
 **Principles in play:**
@@ -201,7 +201,7 @@ Append to audit.md **Gate Records** section with type `gate-rejection` and the r
 Gate 1 rejected. What needs to change before requirements can be approved?
 ```
 
-Wait for user input. Route back to `__CMD_PREFIX__inception` or address specific gaps.
+Wait for user input. Route back to `__CMD_PREFIX__elaborate` or address specific gaps.
 Exit command.
 
 ### If BLOCKED:

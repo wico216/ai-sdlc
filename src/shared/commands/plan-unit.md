@@ -48,12 +48,12 @@ Create executable bolt plans for a unit with integrated research and verificatio
 - `content-validation.md` — Validate diagrams and complex content before writing
 - `depth-levels.md` — Calibrate bolt detail based on risk level
 
-**Key difference from old plan-phase.md:**
-- Plans target UNITS (not phases)
-- Bolt plans live at `.aidlc/construction/unit-NNN/bolt-NN-plan.md` (not `.aidlc/phases/`)
-- Uses `sdlc-bolt-planner` agent (not `sdlc-planner`)
+**Key conventions:**
+- Plans target UNITS
+- Bolt plans live at `.aidlc/construction/unit-NNN/bolt-NN-plan.md`
+- Uses `sdlc-bolt-planner` agent
 - Design document at `.aidlc/construction/unit-NNN/design.md`
-- Produces bolt-plan.md files (not XX-YY-PLAN.md)
+- Produces `bolt-NN-plan.md` files
 
 > **Note:** This command is the internal planning engine for units. It does NOT enforce AI-SDLC gates (Design Approved, Unit Complete). For the full gate-enforced workflow, use `__CMD_PREFIX__build-unit <unit>` which calls this internally. Use this command directly only when you need fine-grained control over planning.
 </objective>

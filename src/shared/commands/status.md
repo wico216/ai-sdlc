@@ -120,8 +120,8 @@ CONTEXT: [✓ if CONTEXT.md exists | - if not]
 List files in the current unit directory:
 
 ```bash
-ls -1 .aidlc/construction/unit-NNN/*-PLAN.md 2>/dev/null | wc -l
-ls -1 .aidlc/construction/unit-NNN/*-SUMMARY.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/unit-NNN/bolt-*-plan.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/unit-NNN/bolt-*-summary.md 2>/dev/null | wc -l
 ls -1 .aidlc/construction/unit-NNN/*-UAT.md 2>/dev/null | wc -l
 ```
 
@@ -152,7 +152,7 @@ Track:
 
 **Route A: Unexecuted plan exists**
 
-Find the first PLAN.md without matching SUMMARY.md.
+Find the first bolt-plan.md without matching bolt-summary.md.
 Read its `<objective>` section.
 
 ```
@@ -160,7 +160,7 @@ Read its `<objective>` section.
 
 ## ▶ Next Up
 
-**{unit}-{plan}: [Plan Name]** — [objective summary from PLAN.md]
+**{unit}-{plan}: [Plan Name]** — [objective summary from bolt-plan.md]
 
 `__CMD_PREFIX__build-unit {unit}`
 

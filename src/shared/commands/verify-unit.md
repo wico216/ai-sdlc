@@ -405,8 +405,8 @@ Review the issues above and either:
 - Do NOT present full checklist upfront — one test at a time
 - Do NOT run automated tests — this is manual user validation
 - Do NOT fix issues during testing — log as gaps, diagnose after all tests complete
-- Do NOT reference `.aidlc/phases/` paths — all artifacts live in `.aidlc/construction/unit-NNN/`
-- Do NOT reference old naming like `XX-YY-SUMMARY.md` — use `bolt-NN-summary.md`
+- All artifacts live in `.aidlc/construction/unit-NNN/` — use current paths only
+- Use current naming: `bolt-NN-summary.md` (not legacy uppercase naming)
 </anti_patterns>
 
 <success_criteria>
