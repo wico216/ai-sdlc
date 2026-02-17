@@ -23,8 +23,8 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | # | Check | How |
 |---|-------|-----|
 | 1 | `.aidlc/intent.md` exists and has project description | File exists, 5+ lines |
-| 2 | `.aidlc/requirements.md` exists | File exists |
-| 3 | Requirements have MUST/SHOULD/MAY classification | Grep for `MUST` in requirements.md |
+| 2 | `.aidlc/inception/requirements.md` exists | File exists |
+| 3 | Requirements have MUST/SHOULD/MAY classification | Grep for `MUST` in inception/requirements.md |
 | 4 | At least 1 MUST requirement defined | Count MUST occurrences >= 1 |
 | 5 | `.aidlc/execution-plan.md` exists with unit decomposition | File exists, contains "unit" or "UNIT" |
 | 6 | Each MUST requirement mapped to at least one unit | Cross-reference requirements to execution plan |
@@ -36,11 +36,11 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | # | Check | How |
 |---|-------|-----|
 | 1 | Gate 1 passed | Check state.md for Requirements Approved = passed |
-| 2 | `.aidlc/application-design.md` exists OR single-unit project | File exists or execution-plan has only 1 unit |
+| 2 | `.aidlc/inception/application-design.md` exists OR single-unit project | File exists or execution-plan has only 1 unit |
 | 3 | Execution plan has risk levels per unit | Grep for risk/low/medium/high in execution-plan.md |
 | 4 | No pending inception research | No open TODOs/TBDs in inception artifacts |
 | 5 | `.aidlc/state.md` updated with inception results | state.md exists and has inception gate entries |
-| 6 | Security considerations carried forward from Gate 1 | Grep for "security" in nfr.md or risk-register.md; WARN if absent |
+| 6 | Security considerations carried forward from Gate 1 | Grep for "security" in inception/nfr.md or inception/risk-register.md; WARN if absent |
 
 ### Gate 3: Design Approved
 **Trigger:** `__CMD_PREFIX__approve-unit` (before building)
@@ -60,11 +60,11 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | # | Check | How |
 |---|-------|-----|
 | 1 | All bolts have summary files | Count bolt-NN-summary.md vs expected bolt count |
-| 2 | VERIFICATION.md exists with status: passed | File exists and contains "status: passed" |
-| 3 | No unresolved gaps in verification | No "gaps_found" or "FAILED" in VERIFICATION.md |
+| 2 | validation-report.md exists with status: passed | File exists and contains "status: passed" |
+| 3 | No unresolved gaps in verification | No "gaps_found" or "FAILED" in validation-report.md |
 | 4 | MUST requirements for this unit satisfied | Cross-reference verification with requirements |
 | 5 | state.md shows unit progress | state.md references this unit |
-| 6 | Security review completed | Grep for "security" in VERIFICATION.md or bolt summaries; WARN if absent |
+| 6 | Security review completed | Grep for "security" in validation-report.md or bolt summaries; WARN if absent |
 
 ### Gate 5: Production Ready
 **Trigger:** `__CMD_PREFIX__approve-release`
@@ -75,7 +75,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 2 | All MUST requirements satisfied | No unsatisfied MUST requirements across all units |
 | 3 | UAT completed (if required) | Check rigor level; if high, grep for UAT evidence |
 | 4 | Deployment plan exists (if required) | Check rigor level; if high, deployment artifact exists |
-| 5 | No critical issues in any VERIFICATION.md | No "FAILED" on critical items across verifications |
+| 5 | No critical issues in any validation-report.md | No "FAILED" on critical items across verifications |
 | 6 | Security in deployment plan | Grep for "HTTPS" or "secrets" or "security" in deployment/operations artifacts; WARN if absent |
 
 </gates>
@@ -123,13 +123,13 @@ lines=$(wc -l < ".aidlc/intent.md" 2>/dev/null || echo 0)
 
 **Content grep:**
 ```bash
-grep -c "MUST" .aidlc/requirements.md 2>/dev/null || echo 0
+grep -c "MUST" .aidlc/inception/requirements.md 2>/dev/null || echo 0
 ```
 
 **Cross-reference (requirements to units):**
 ```bash
 # Extract MUST requirements
-grep "MUST" .aidlc/requirements.md 2>/dev/null
+grep "MUST" .aidlc/inception/requirements.md 2>/dev/null
 # Check they appear in execution plan
 grep -l "MUST\|REQ-" .aidlc/execution-plan.md 2>/dev/null
 ```
@@ -159,7 +159,7 @@ Return a structured checklist to the orchestrator. Use the exact format below.
 | # | Check | Status | Evidence |
 |---|-------|--------|----------|
 | 1 | intent.md exists | PASS | .aidlc/intent.md (42 lines) |
-| 2 | requirements.md exists | PASS | .aidlc/requirements.md (89 lines) |
+| 2 | requirements.md exists | PASS | .aidlc/inception/requirements.md (89 lines) |
 | ... | ... | ... | ... |
 
 **Result:** Gate prerequisites met. Ready for approval.

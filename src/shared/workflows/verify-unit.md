@@ -546,10 +546,10 @@ Group related gaps into fix plans:
 </step>
 
 <step name="create_report">
-**Generate VERIFICATION.md using template.**
+**Generate validation-report.md using template.**
 
 ```bash
-REPORT_PATH="$PHASE_DIR/${PHASE_NUM}-VERIFICATION.md"
+REPORT_PATH="$PHASE_DIR/${PHASE_NUM}-validation-report.md"
 ```
 
 Fill template sections:
@@ -577,7 +577,7 @@ See __SDLC_TEMPLATES__/verification-report.md for complete template.
 
 **Status:** {passed | gaps_found | human_needed}
 **Score:** {N}/{M} must-haves verified
-**Report:** .aidlc/construction/{phase_dir}/{phase}-VERIFICATION.md
+**Report:** .aidlc/construction/{phase_dir}/{phase}-validation-report.md
 
 {If passed:}
 All must-haves verified. Phase goal achieved. Ready to proceed.
@@ -623,6 +623,6 @@ The orchestrator will:
 - [ ] Human verification items identified
 - [ ] Overall status determined
 - [ ] Fix plans generated (if gaps_found)
-- [ ] VERIFICATION.md created with complete report
+- [ ] validation-report.md created with complete report
 - [ ] Results returned to orchestrator
 </success_criteria>

@@ -483,7 +483,7 @@ Task(
 Phase directory: {phase_dir}
 Phase goal: {goal from execution-plan.md}
 
-Check must_haves against actual codebase. Create VERIFICATION.md.
+Check must_haves against actual codebase. Create validation-report.md.
 Verify what actually exists in the code.",
   subagent_type="sdlc-unit-verifier",
   model="{verifier_model}"
@@ -493,7 +493,7 @@ Verify what actually exists in the code.",
 **Read verification status:**
 
 ```bash
-grep "^status:" "$PHASE_DIR"/*-VERIFICATION.md | cut -d: -f2 | tr -d ' '
+grep "^status:" "$PHASE_DIR"/*-validation-report.md | cut -d: -f2 | tr -d ' '
 ```
 
 **Route by status:**
@@ -517,7 +517,7 @@ All automated checks passed. {N} items need human testing:
 
 ### Human Verification Checklist
 
-{Extract from VERIFICATION.md human_verification section}
+{Extract from validation-report.md human_verification section}
 
 ---
 
@@ -537,11 +537,11 @@ Present gaps and offer next command:
 ## ⚠ Phase {X}: {Name} — Gaps Found
 
 **Score:** {N}/{M} must-haves verified
-**Report:** {phase_dir}/{phase}-VERIFICATION.md
+**Report:** {phase_dir}/{phase}-validation-report.md
 
 ### What's Missing
 
-{Extract gap summaries from VERIFICATION.md gaps section}
+{Extract gap summaries from validation-report.md gaps section}
 
 ---
 
@@ -556,12 +556,12 @@ Present gaps and offer next command:
 ---
 
 **Also available:**
-- `cat {phase_dir}/{phase}-VERIFICATION.md` — see full report
+- `cat {phase_dir}/{phase}-validation-report.md` — see full report
 - `__CMD_PREFIX__verify-unit {X}` — manual testing before planning
 ```
 
 User runs `__CMD_PREFIX__plan-unit {X} --gaps` which:
-1. Reads VERIFICATION.md gaps
+1. Reads validation-report.md gaps
 2. Creates additional plans (04, 05, etc.) with `gap_closure: true` to close gaps
 3. User then runs `__CMD_PREFIX__build-unit {X} --gaps-only`
 4. Execute-phase runs only gap closure plans (04-05)
@@ -592,7 +592,7 @@ If `COMMIT_PLANNING_DOCS=true` (default):
 
 Commit phase completion (roadmap, state, verification):
 ```bash
-git add .aidlc/execution-plan.md .aidlc/STATE.md .aidlc/construction/{phase_dir}/*-VERIFICATION.md
+git add .aidlc/execution-plan.md .aidlc/STATE.md .aidlc/construction/{phase_dir}/*-validation-report.md
 git add .aidlc/REQUIREMENTS.md  # if updated
 git commit -m "docs(phase-{X}): complete phase execution"
 ```

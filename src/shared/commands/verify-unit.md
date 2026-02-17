@@ -19,7 +19,7 @@ Purpose: Confirm what was built actually works from the user's perspective. One 
 
 Output:
 - `.aidlc/construction/unit-NNN/UAT.md` tracking all test results
-- `.aidlc/construction/unit-NNN/test-instructions.md` with build, unit test, integration test, performance test instructions, and test summary (produced by sdlc-unit-verifier alongside VERIFICATION.md)
+- `.aidlc/construction/unit-NNN/test-instructions.md` with build, unit test, integration test, performance test instructions, and test summary (produced by sdlc-unit-verifier alongside validation-report.md)
 
 If issues found: diagnosed gaps, verified fix plans ready for `__CMD_PREFIX__build-unit --gaps-only`.
 </objective>

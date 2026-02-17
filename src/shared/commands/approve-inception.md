@@ -38,7 +38,7 @@ Approve the two Inception-phase gates. This command checks prerequisites, spawns
 <context>
 @.aidlc/state.md
 @.aidlc/intent.md
-@.aidlc/requirements.md
+@.aidlc/inception/requirements.md
 @.aidlc/execution-plan.md
 @.aidlc/audit.md
 </context>
@@ -130,7 +130,7 @@ Check Gate 1: Requirements Approved.
 
 Project state: @.aidlc/state.md
 Intent: @.aidlc/intent.md
-Requirements: @.aidlc/requirements.md
+Requirements: @.aidlc/inception/requirements.md
 Execution plan: @.aidlc/execution-plan.md
 
 Run all prerequisite checks for Gate 1 and return the structured checklist result.
@@ -171,7 +171,7 @@ Append to audit.md **Gate Records** section:
 - **Phase:** Inception
 - **Context:** Gate 1 — Requirements Approved
 - **Decision:** Approved — intent, requirements, and success criteria confirmed
-- **Evidence:** .aidlc/intent.md, .aidlc/requirements.md, .aidlc/execution-plan.md
+- **Evidence:** .aidlc/intent.md, .aidlc/inception/requirements.md, .aidlc/execution-plan.md
 - **Traces to:** All MUST requirements
 ```
 
@@ -248,9 +248,9 @@ Check Gate 2: Inception Exit.
 
 Project state: @.aidlc/state.md
 Intent: @.aidlc/intent.md
-Requirements: @.aidlc/requirements.md
+Requirements: @.aidlc/inception/requirements.md
 Execution plan: @.aidlc/execution-plan.md
-Application design: @.aidlc/application-design.md (if exists)
+Application design: @.aidlc/inception/application-design.md (if exists)
 
 Run all prerequisite checks for Gate 2 and return the structured checklist result.
 ", subagent_type="sdlc-gate-checker", model="{gate_checker_model}", description="Gate 2 check: Inception Exit")
@@ -290,7 +290,7 @@ Append to audit.md **Gate Records** section:
 - **Phase:** Inception
 - **Context:** Gate 2 — INCEPTION EXIT
 - **Decision:** Inception complete. Units decomposed, risks identified, execution plan approved.
-- **Evidence:** .aidlc/execution-plan.md, .aidlc/application-design.md, .aidlc/state.md
+- **Evidence:** .aidlc/execution-plan.md, .aidlc/inception/application-design.md, .aidlc/state.md
 - **Traces to:** All v1 requirements, all UNIT-IDs
 ```
 

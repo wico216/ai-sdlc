@@ -244,7 +244,7 @@ Bolt summaries:
 {summaries}
 
 Check must_haves against actual codebase (not summary claims).
-Create .aidlc/construction/unit-{NNN}/VERIFICATION.md with detailed report.
+Create .aidlc/construction/unit-{NNN}/validation-report.md with detailed report.
 ", subagent_type="sdlc-unit-verifier", model="{verifier_model}")
 ```
 
@@ -281,7 +281,7 @@ If true: Bundle all unit metadata updates in one commit:
 ```bash
 git add .aidlc/state.md
 git add .aidlc/execution-plan.md
-git add .aidlc/construction/unit-{NNN}/VERIFICATION.md
+git add .aidlc/construction/unit-{NNN}/validation-report.md
 # Add requirements.md if updated
 git add .aidlc/inception/requirements.md 2>/dev/null
 git commit -m "docs({NNN}): complete unit {NNN} construction"
@@ -375,11 +375,11 @@ All unit goals verified ✓
 **Unit {NNN}: {Name}**
 
 Score: {N}/{M} must-haves verified
-Report: .aidlc/construction/unit-{NNN}/VERIFICATION.md
+Report: .aidlc/construction/unit-{NNN}/validation-report.md
 
 ### What's Missing
 
-{Extract gap summaries from VERIFICATION.md}
+{Extract gap summaries from validation-report.md}
 
 ───────────────────────────────────────────────────────────────
 
@@ -394,7 +394,7 @@ Report: .aidlc/construction/unit-{NNN}/VERIFICATION.md
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- Review full report: `.aidlc/construction/unit-{NNN}/VERIFICATION.md`
+- Review full report: `.aidlc/construction/unit-{NNN}/validation-report.md`
 - `__CMD_PREFIX__verify-unit {NNN}` — manual testing before planning
 
 ───────────────────────────────────────────────────────────────
@@ -402,7 +402,7 @@ Report: .aidlc/construction/unit-{NNN}/VERIFICATION.md
 ---
 
 After user runs `__CMD_PREFIX__plan-unit {NNN} --gaps`:
-1. Planner reads VERIFICATION.md gaps
+1. Planner reads validation-report.md gaps
 2. Creates additional bolt plans (bolt-04, bolt-05, etc.) to close gaps
 3. User runs `__CMD_PREFIX__build-unit {NNN} --gaps-only`
 4. build-unit executes only gap closure plans
@@ -445,7 +445,7 @@ After all tasks in a bolt complete:
 **Unit Completion Commit:**
 
 After all bolts in unit complete (step 10):
-1. Stage: state.md, execution-plan.md, VERIFICATION.md, requirements.md (if updated)
+1. Stage: state.md, execution-plan.md, validation-report.md, requirements.md (if updated)
 2. Commit with format: `docs({unit}): complete unit {NNN} construction`
 3. Bundles all unit-level state updates in one commit
 
@@ -470,7 +470,7 @@ See `@__SDLC_REFS__/checkpoints.md` for complete checkpoint protocol.
 - [ ] All incomplete bolt plans in unit executed
 - [ ] Each bolt plan has bolt-summary.md
 - [ ] Unit goal verified (must_haves checked against codebase)
-- [ ] VERIFICATION.md created in unit directory
+- [ ] validation-report.md created in unit directory
 - [ ] state.md reflects unit completion
 - [ ] execution-plan.md updated
 - [ ] requirements.md updated (unit requirements marked Complete)

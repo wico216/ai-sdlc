@@ -89,8 +89,8 @@ Read all relevant artifacts:
 - `.aidlc/inception/units/{UNIT-ID}-design.md` — design decisions
 - `.aidlc/audit.md` — filter entries related to this unit
 - `.aidlc/construction/{unit-dir}/*-SUMMARY.md` — what was built
-- `.aidlc/construction/{unit-dir}/*-VERIFICATION.md` — what passed/failed
-- `.aidlc/risk-register.md` — risks related to this unit
+- `.aidlc/construction/{unit-dir}/*-validation-report.md` — what passed/failed
+- `.aidlc/inception/risk-register.md` — risks related to this unit
 - `.aidlc/GUARDRAILS.md` — current guardrails (if exists)
 
 **For release retro:**
@@ -252,7 +252,7 @@ If `.aidlc/GUARDRAILS.md` does not exist, ask: "Should I create a GUARDRAILS.md 
 
 Ask: "Should I add these new risks to the risk register for the next unit?"
 
-If yes, append new RISK-IDs to `.aidlc/risk-register.md`.
+If yes, append new RISK-IDs to `.aidlc/inception/risk-register.md`.
 
 ## 7. Completion
 

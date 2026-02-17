@@ -158,7 +158,7 @@ Check Gate 3: Design Approved for UNIT-{NNN}.
 
 Project state: @.aidlc/state.md
 Unit design: @.aidlc/construction/unit-{NNN}/design.md
-Requirements: @.aidlc/requirements.md
+Requirements: @.aidlc/inception/requirements.md
 Execution plan: @.aidlc/execution-plan.md
 
 Run all prerequisite checks for Gate 3 and return the structured checklist result.
@@ -297,8 +297,8 @@ Project state: @.aidlc/state.md
 Unit construction dir: .aidlc/construction/unit-{NNN}/
 Bolt summaries: .aidlc/construction/unit-{NNN}/bolt-*-summary.md
 Bolt plans: .aidlc/construction/unit-{NNN}/bolt-*-plan.md
-Verification: .aidlc/construction/unit-{NNN}/VERIFICATION.md
-Requirements: @.aidlc/requirements.md
+Verification: .aidlc/construction/unit-{NNN}/validation-report.md
+Requirements: @.aidlc/inception/requirements.md
 
 Run all prerequisite checks for Gate 4 and return the structured checklist result.
 ", subagent_type="sdlc-gate-checker", model="{gate_checker_model}", description="Gate 4 check: Unit Complete for UNIT-{NNN}")
@@ -339,7 +339,7 @@ Append to audit.md **Gate Records** section:
 - **Phase:** Construction
 - **Context:** Gate 4 — UNIT COMPLETE for UNIT-{NNN}
 - **Decision:** Unit complete. All acceptance criteria met, tests passing, no regressions.
-- **Evidence:** .aidlc/construction/unit-{NNN}/VERIFICATION.md, bolt summaries
+- **Evidence:** .aidlc/construction/unit-{NNN}/validation-report.md, bolt summaries
 - **Traces to:** UNIT-{NNN}, {REQ-IDs satisfied}
 ```
 

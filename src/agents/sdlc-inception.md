@@ -100,7 +100,7 @@ Read intent.md and existing artifacts to determine which stages to run.
 | Requirements | .aidlc/inception/requirements.md | Always (core artifact) | Already complete and approved (Gate 1 passed) |
 | User Stories | .aidlc/inception/user-stories.md | UI-facing apps, multi-persona systems | CLI tools, APIs, libraries, scripts, single-user tools |
 | Application Design | .aidlc/inception/application-design.md | Multi-unit projects, complex architecture, multiple components | Single-unit projects, simple scripts, single-file tools |
-| Execution Plan | .aidlc/inception/execution-plan.md | Always (defines units and construction roadmap) | Already exists and is current |
+| Execution Plan | .aidlc/execution-plan.md | Always (defines units and construction roadmap) | Already exists and is current |
 
 ## Detection Heuristic
 
@@ -133,7 +133,7 @@ Check what inception artifacts already exist:
 ls .aidlc/inception/requirements.md 2>/dev/null
 ls .aidlc/inception/user-stories.md 2>/dev/null
 ls .aidlc/inception/application-design.md 2>/dev/null
-ls .aidlc/inception/execution-plan.md 2>/dev/null
+ls .aidlc/execution-plan.md 2>/dev/null
 ls .aidlc/inception/research/ 2>/dev/null
 ```
 
@@ -466,7 +466,7 @@ Present to user for review. Incorporate feedback.
 <step name="execution_plan">
 **Trigger:** Always (this is the roadmap for construction).
 
-Create `.aidlc/inception/execution-plan.md`.
+Create `.aidlc/execution-plan.md`.
 
 **Process:**
 
@@ -574,7 +574,7 @@ Commit all inception artifacts:
 
 ```bash
 git add .aidlc/inception/requirements.md
-git add .aidlc/inception/execution-plan.md
+git add .aidlc/execution-plan.md
 # Conditionally add optional artifacts
 git add .aidlc/inception/user-stories.md 2>/dev/null
 git add .aidlc/inception/application-design.md 2>/dev/null
@@ -611,7 +611,7 @@ Quick reference for what each stage produces and where it lives.
 | Requirements | `.aidlc/inception/requirements.md` | `requirements.md` template | draft -> reviewed -> approved |
 | User Stories | `.aidlc/inception/user-stories.md` | `user-stories.md` template | draft -> reviewed -> approved |
 | Application Design | `.aidlc/inception/application-design.md` | `application-design.md` template | draft -> reviewed -> approved |
-| Execution Plan | `.aidlc/inception/execution-plan.md` | `execution-plan.md` template | N/A (always current) |
+| Execution Plan | `.aidlc/execution-plan.md` | `execution-plan.md` template | N/A (always current) |
 | Unit Dependency Matrix | `.aidlc/inception/unit-dependency-matrix.md` | (generated with execution plan) | N/A |
 
 ## Artifact Dependencies
@@ -691,7 +691,7 @@ intent.md (input, already exists)
 | Requirements | .aidlc/inception/requirements.md | [X] MUST, [Y] SHOULD, [Z] MAY |
 | User Stories | .aidlc/inception/user-stories.md | [N] stories, [M] personas |
 | Application Design | .aidlc/inception/application-design.md | [architecture summary] |
-| Execution Plan | .aidlc/inception/execution-plan.md | [N] units, [E] estimated bolts |
+| Execution Plan | .aidlc/execution-plan.md | [N] units, [E] estimated bolts |
 
 ### Traceability
 
