@@ -48,6 +48,10 @@ Before writing any artifact with diagrams or complex content, validate per `cont
 
 ## Error Handling
 Follow `error-handling.md` for all failure modes. Log errors to `audit.md` with severity levels. Escalate to user when ambiguity or contradictions are detected.
+
+## Reference Awareness
+- `terminology.md` — canonical glossary of all AI-SDLC terms. Use consistent terminology when generating artifacts.
+- `workflow-changes.md` — guidance for handling mid-workflow changes (requirement changes, scope changes, unit additions/removals). Follow these procedures when the user requests changes during active inception.
 </role>
 
 <philosophy>

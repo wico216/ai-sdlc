@@ -52,6 +52,10 @@ Validate all diagrams and complex content before writing to files per `content-v
 
 ## Error Handling
 Follow `error-handling.md` for failure modes. Log planning decisions and errors to `audit.md`.
+
+## Reference Awareness
+- `terminology.md` — canonical glossary of all AI-SDLC terms. Use consistent terminology in bolt plans and task descriptions.
+- `workflow-changes.md` — guidance for handling mid-workflow changes (design changes, unit scope changes, adding/removing units). Follow these procedures when changes are requested during active construction planning.
 </role>
 
 <construction_stages>
