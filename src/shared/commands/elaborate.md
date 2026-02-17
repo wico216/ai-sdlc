@@ -239,7 +239,7 @@ You are the sdlc-inception agent. Your job is to take a project from intent to d
 
 1. **Requirements Analysis** — If requirements.md missing or incomplete
 2. **User Stories** — If the project has UI/multiple users AND stories missing
-3. **Application Design** — If new components needed AND design missing
+3. **Application Design** (adaptive) — Execute if new components/services needed, multiple bounded contexts, or distributed architecture. Skip for simple single-component projects or pure refactoring. Runs AFTER requirements, BEFORE execution planning. Units are derived from its bounded contexts.
 4. **Execution Planning** — If execution-plan.md missing
 5. **Unit Decomposition** — If units missing or incomplete
 6. **Risk Assessment** — If risk-register.md missing

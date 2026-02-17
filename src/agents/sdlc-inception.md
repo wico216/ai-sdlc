@@ -314,19 +314,77 @@ Present to user for review. Incorporate feedback.
 </step>
 
 <step name="application_design">
-**Trigger:** Multi-unit project OR complex architecture OR multiple components.
+**Trigger (CONDITIONAL):** Execute this stage when ANY of these apply:
+- New components or services are being introduced
+- Multiple bounded contexts identified in requirements
+- Distributed or multi-service architecture
+- Multi-unit project with complex component interactions
+
+**Skip when ALL of these apply:**
+- Simple single-component project (one service, one database)
+- Pure refactoring with no new architecture
+- No new service boundaries or component interactions
+
+Log skip/execute decision and justification to `audit.md`.
+
+**Execution order:** AFTER Requirements Analysis, BEFORE Execution Plan / Unit Decomposition.
+Units MUST be derived from the bounded contexts and component boundaries identified in this stage.
 
 Using the application design template, create `.aidlc/inception/application-design.md`.
 
 **Process:**
 
 1. Define architecture overview based on requirements and research
-2. Create component breakdown table (component -> responsibility -> technology)
-3. Define data model (core entities, relationships, storage)
-4. Define API contracts (external exposed, internal between components, external consumed)
-5. Document technology decisions with rationale and alternatives considered
-6. Create dependency diagram (text-based, showing build/deploy order)
-7. Draft unit mapping preview (which units build which components)
+2. **Create component inventory** — table with component name, responsibility, technology, owning bounded context, and notes. Every component must map to at least one requirement.
+3. **Define component methods** — for each component, list method signatures with:
+   - Method name and purpose
+   - Input/output types
+   - Which business rules it touches (note: full business logic is deferred to Functional Design in construction)
+4. **Design service layer** — define services that orchestrate component interactions:
+   - Service name and responsibility
+   - Which components it coordinates
+   - Orchestration patterns (saga, choreography, request-response, etc.)
+5. **Create component dependency diagram** — ASCII diagram per `ascii-diagram-standards.md` showing:
+   - Component-to-component dependencies
+   - Direction of dependency (who depends on whom)
+   - Communication protocol at each edge (REST, gRPC, events, direct call)
+   - Validate per `content-validation.md` before writing
+6. **Map data flow between components** — for each major operation:
+   - Entry point (which component receives the request)
+   - Intermediate steps (which components process/transform)
+   - Terminal step (where the result lands)
+   - Data shape at each transition point
+7. Define data model (core entities, relationships, storage)
+8. Define API contracts (external exposed, internal between components, external consumed)
+9. Document technology decisions with rationale and alternatives considered
+10. Create build/deploy dependency diagram (text-based, showing build/deploy order)
+11. Draft unit mapping preview (which units build which components — units derived from bounded contexts)
+
+**Structured Questions:**
+
+Before generating the design artifact, write clarifying questions to `.aidlc/inception/questions/design-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags).
+
+Focus questions on:
+- Component boundary ambiguities
+- Service orchestration decisions
+- Communication pattern choices
+- Technology selection for components (where requirements do not dictate)
+- Ownership of shared concerns (logging, auth, validation)
+
+Inform user: "I've created design-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: -- let me know when done."
+
+Wait for user to complete answers.
+
+**Contradiction Detection (MANDATORY):**
+
+After collecting answers, run contradiction detection per `question-format-guide.md`:
+- Check for logically inconsistent answers (e.g., "stateless" component that "maintains session state")
+- Check for ambiguous responses ("depends", "maybe", "not sure", "mix of")
+- Check for answers that conflict with requirements.md
+- If contradictions found: create `design-clarification-questions.md`, inform user, wait for resolution
+- Apply `overconfidence-prevention.md` — if uncertain about a design decision, ASK rather than assume
+
+Only proceed to artifact generation when all answers are clear and consistent.
 
 **Frontmatter:**
 ```yaml
@@ -344,9 +402,13 @@ traces_to:
 
 **Quality checks:**
 - Every component maps to at least one requirement
+- Component methods are signatures only (no full business logic — that belongs in Functional Design)
+- Service layer covers all cross-component interactions
+- Dependency diagram has no orphaned components (everything connects to something)
+- Data flow covers all major user-facing operations
 - Data model covers all entities referenced in requirements
 - Technology decisions have clear rationale (not just preference)
-- No orphaned components (everything connects to something)
+- All diagrams validated per `content-validation.md` and `ascii-diagram-standards.md`
 
 Present to user for review. Incorporate feedback.
 </step>
