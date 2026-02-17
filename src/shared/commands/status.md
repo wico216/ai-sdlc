@@ -19,7 +19,7 @@ Provides situational awareness before continuing work.
 <process>
 
 <step name="verify">
-**Verify planning structure exists:**
+**Verify planning structure exists and determine project phase:**
 
 Use Bash (not Glob) to check—Glob respects .gitignore but .aidlc/ is often gitignored:
 
@@ -39,11 +39,35 @@ Exit.
 
 If missing state.md: suggest `__CMD_PREFIX__new-project`.
 
-**If execution-plan.md missing but intent.md exists:**
+**Decision tree for routing to next action:**
 
-This means a release was completed and archived. Go to **Route F** (between releases).
+```bash
+# Phase detection checks
+test -f .aidlc/intent.md && echo "intent:yes" || echo "intent:no"
+test -f .aidlc/inception/requirements.md && echo "requirements:yes" || echo "requirements:no"
+test -d .aidlc/inception/units && echo "units:yes" || echo "units:no"
+grep -q "INCEPTION EXIT" .aidlc/state.md 2>/dev/null && echo "inception_exit:yes" || echo "inception_exit:no"
+test -f .aidlc/execution-plan.md && echo "exec_plan:yes" || echo "exec_plan:no"
+ls .aidlc/construction/unit-*/bolt-*-plan.md 2>/dev/null | head -1 && echo "bolt_plans:yes" || echo "bolt_plans:no"
+ls .aidlc/construction/unit-*/validation-report.md 2>/dev/null | head -1 && echo "validation:yes" || echo "validation:no"
+ls .aidlc/operations/ 2>/dev/null | head -1 && echo "operations:yes" || echo "operations:no"
+```
+
+| Condition | Meaning | Action |
+|-----------|---------|--------|
+| No `.aidlc/` | No project | Suggest `__CMD_PREFIX__new-project` |
+| Has `intent.md` but no `inception/requirements.md` | Inception incomplete | Suggest `__CMD_PREFIX__elaborate` |
+| Has `inception/requirements.md` but no `inception/units/` | Units not decomposed | Suggest `__CMD_PREFIX__elaborate` |
+| Has `inception/units/` but no INCEPTION EXIT gate | Inception not approved | Suggest `__CMD_PREFIX__approve-inception` |
+| Has INCEPTION EXIT gate | Construction phase | Suggest `__CMD_PREFIX__plan-unit` for first unbuilt unit |
+| Has bolt plans but no `validation-report.md` | Building/verifying | Suggest `__CMD_PREFIX__build-unit` or `__CMD_PREFIX__verify-unit` |
+| Has UNIT COMPLETE for all units | All units done | Suggest `__CMD_PREFIX__operations` |
+| Has operations artifacts | Release prep | Suggest `__CMD_PREFIX__approve-release` |
+| Has `intent.md` but no `execution-plan.md` | Between releases (archived) | Go to **Route F** |
 
 If missing both execution-plan.md and intent.md: suggest `__CMD_PREFIX__new-project`.
+
+After determining the phase, continue to the **load** step to gather full context before presenting the status report and the routing suggestion.
 </step>
 
 <step name="load">
@@ -58,7 +82,7 @@ If missing both execution-plan.md and intent.md: suggest `__CMD_PREFIX__new-proj
 <step name="recent">
 **Gather recent work context:**
 
-- Find the 2-3 most recent SUMMARY.md files
+- Find the 2-3 most recent `bolt-*-summary.md` files in `.aidlc/construction/unit-*/`
 - Extract from each: what was accomplished, key decisions, any issues logged
 - This shows "what we've been working on"
   </step>
@@ -69,7 +93,7 @@ If missing both execution-plan.md and intent.md: suggest `__CMD_PREFIX__new-proj
 - From state.md: current unit, plan number, status
 - Calculate: total plans, completed plans, remaining plans
 - Note any blockers or concerns
-- Check for CONTEXT.md: For units without PLAN.md files, check if `{unit}-CONTEXT.md` exists in unit directory
+- Check for CONTEXT.md: For units without `bolt-*-plan.md` files, check if `{unit}-CONTEXT.md` exists in unit directory
 - Count pending todos: `ls .aidlc/todos/pending/*.md 2>/dev/null | wc -l`
 - Check for active debug sessions: `ls .aidlc/debug/*.md 2>/dev/null | grep -v resolved | wc -l`
   </step>
@@ -115,35 +139,37 @@ CONTEXT: [✓ if CONTEXT.md exists | - if not]
 <step name="route">
 **Determine next action based on verified counts.**
 
-**Step 1: Count plans, summaries, and issues in current unit**
+If the decision tree from the verify step already identified a pre-construction phase (no inception exit, missing requirements, etc.), use that routing directly. Otherwise, for projects in the construction phase, continue with unit-level routing:
+
+**Step 1: Count plans, summaries, and validation in current unit**
 
 List files in the current unit directory:
 
 ```bash
 ls -1 .aidlc/construction/unit-NNN/bolt-*-plan.md 2>/dev/null | wc -l
 ls -1 .aidlc/construction/unit-NNN/bolt-*-summary.md 2>/dev/null | wc -l
-ls -1 .aidlc/construction/unit-NNN/*-UAT.md 2>/dev/null | wc -l
+[ -f .aidlc/construction/unit-NNN/validation-report.md ] && echo "1" || echo "0"
 ```
 
 State: "This unit has {X} plans, {Y} summaries."
 
-**Step 1.5: Check for unaddressed UAT gaps**
+**Step 1.5: Check for unaddressed validation gaps**
 
-Check for UAT.md files with status "diagnosed" (has gaps needing fixes).
+Check for validation-report.md with status "diagnosed" (has gaps needing fixes).
 
 ```bash
-# Check for diagnosed UAT with gaps
-grep -l "status: diagnosed" .aidlc/construction/unit-NNN/*-UAT.md 2>/dev/null
+# Check for diagnosed validation with gaps
+grep -l "status: diagnosed" .aidlc/construction/unit-NNN/validation-report.md 2>/dev/null
 ```
 
 Track:
-- `uat_with_gaps`: UAT.md files with status "diagnosed" (gaps need fixing)
+- `validation_with_gaps`: validation-report.md with status "diagnosed" (gaps need fixing)
 
 **Step 2: Route based on counts**
 
 | Condition | Meaning | Action |
 |-----------|---------|--------|
-| uat_with_gaps > 0 | UAT gaps need fix plans | Go to **Route E** |
+| validation_with_gaps > 0 | Validation gaps need fix plans | Go to **Route E** |
 | summaries < plans | Unexecuted plans exist | Go to **Route A** |
 | summaries = plans AND plans > 0 | Unit complete | Go to Step 3 |
 | plans = 0 | Unit not yet planned | Go to **Route B** |
@@ -209,23 +235,22 @@ Check if `{unit}-CONTEXT.md` exists in unit directory.
 
 **Also available:**
 - `__CMD_PREFIX__plan-unit {unit}` — skip discussion, plan directly
-- `__CMD_PREFIX__list-unit-assumptions {unit}` — see Claude's assumptions
 
 ---
 ```
 
 ---
 
-**Route E: UAT gaps need fix plans**
+**Route E: Validation gaps need fix plans**
 
-UAT.md exists with gaps (diagnosed issues). User needs to plan fixes.
+validation-report.md exists with gaps (diagnosed issues). User needs to plan fixes.
 
 ```
 ---
 
-## ⚠ UAT Gaps Found
+## ⚠ Validation Gaps Found
 
-**{unit}-UAT.md** has {N} gaps requiring fixes.
+**validation-report.md** has {N} gaps requiring fixes.
 
 `__CMD_PREFIX__plan-unit {unit} --gaps`
 
@@ -235,7 +260,7 @@ UAT.md exists with gaps (diagnosed issues). User needs to plan fixes.
 
 **Also available:**
 - `__CMD_PREFIX__build-unit {unit}` — execute unit plans
-- `__CMD_PREFIX__verify-unit {unit}` — run more UAT testing
+- `__CMD_PREFIX__verify-unit {unit}` — run validation testing
 
 ---
 ```
