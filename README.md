@@ -69,7 +69,7 @@ This installs commands, agents, and templates into your `~/.claude/` directory. 
 | Location | What | Count |
 |---|---|---|
 | `~/.claude/ai-sdlc/` | References, templates, workflows | ~50 files |
-| `~/.claude/commands/sdlc/` | User-facing commands | 30 commands |
+| `~/.claude/commands/sdlc/` | User-facing commands | 23 commands |
 | `~/.claude/agents/` | Specialized AI agents | 11 agents |
 | `~/.claude/hooks/` | Status line integration | 2 hooks |
 
@@ -77,9 +77,10 @@ This installs commands, agents, and templates into your `~/.claude/` directory. 
 
 1. Open your project directory in Claude Code
 2. Run `/sdlc:new-project` to initialize
-3. Run `/sdlc:inception` to decompose into units
-4. Run `/sdlc:bolt 1` to build the first unit
-5. Run `/sdlc:deploy` when ready for production
+3. Run `/sdlc:elaborate` to decompose into units
+4. Run `/sdlc:approve-inception` to approve gates
+5. Run `/sdlc:build-unit 1` to build the first unit
+6. Run `/sdlc:deploy` when ready for production
 
 ## Three Phases — Step by Step
 
@@ -91,15 +92,15 @@ Convert intent into testable, decomposed work. This is the most important phase 
 
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
-| Capture Intent | Document the problem, vision, success criteria, and constraints | `/sdlc:new-project` | `PROJECT.md`, `intent.md` |
-| Research Domain | Investigate ecosystem, standard stacks, common pitfalls | `/sdlc:new-project` (optional) | `research/STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md` |
-| Requirements Analysis | Scope what's in v1 vs v2 vs out, assign REQ-IDs | `/sdlc:new-project` | `REQUIREMENTS.md` |
-| Workflow Planning | Determine which stages to run based on complexity (Adaptive Depth) | `/sdlc:inception` | `execution-plan.md` |
-| User Stories | Define personas and user journeys (if UI/users involved) | `/sdlc:inception` | Stories in `REQUIREMENTS.md` |
-| Unit Decomposition | Break into parallel-deliverable chunks using DDD bounded contexts | `/sdlc:inception` | `units/UNIT-001.md`, `UNIT-002.md`, ... |
-| Risk Assessment | Identify risks, assign mitigations and owners | `/sdlc:inception` | `risk-register.md` |
-| **Gate: Requirements Approved** | Evidence: intent + requirements + success criteria reviewed | `/sdlc:inception` (Stage 8) | `audit.md` entry |
-| **Gate: INCEPTION EXIT** | Evidence: all units defined, risks identified, human approves | `/sdlc:inception` (Stage 9) | `audit.md` entry |
+| Capture Intent | Document the problem, vision, success criteria, and constraints | `/sdlc:new-project` | `intent.md` |
+| Research Domain | Investigate ecosystem, standard stacks, common pitfalls | `/sdlc:new-project` (optional) | `inception/research/STACK.md`, `FEATURES.md`, `ARCHITECTURE.md`, `PITFALLS.md` |
+| Requirements Analysis | Scope what's in v1 vs v2 vs out, assign REQ-IDs | `/sdlc:elaborate` | `inception/requirements.md` |
+| Workflow Planning | Determine which stages to run based on complexity (Adaptive Depth) | `/sdlc:elaborate` | `execution-plan.md` |
+| User Stories | Define personas and user journeys (if UI/users involved) | `/sdlc:elaborate` | Stories in `inception/requirements.md` |
+| Unit Decomposition | Break into parallel-deliverable chunks using DDD bounded contexts | `/sdlc:elaborate` | `units/UNIT-001.md`, `UNIT-002.md`, ... |
+| Risk Assessment | Identify risks, assign mitigations and owners | `/sdlc:elaborate` | `inception/risk-register.md` |
+| **Gate: Requirements Approved** | Evidence: intent + requirements + success criteria reviewed | `/sdlc:approve-inception` | `audit.md` entry |
+| **Gate: INCEPTION EXIT** | Evidence: all units defined, risks identified, human approves | `/sdlc:approve-inception` | `audit.md` entry |
 
 ### Phase 2: Construction (HOW)
 
@@ -107,13 +108,13 @@ Build units with proof via Bolts — rapid iterations of AI generation + human v
 
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
-| Design Review | Architecture and data model for each unit | `/sdlc:bolt <unit>` (Stage 1) | `units/UNIT-NNN-design.md` |
-| **Gate: Design Approved** | Evidence: design document reviewed, no conflicts with other units | `/sdlc:bolt <unit>` (Stage 1) | `audit.md` entry |
-| Plan Bolt | Break unit work into small plans (2-3 tasks each) | `/sdlc:bolt <unit>` (Stage 2) | `phases/NN-name/NN-MM-PLAN.md` |
-| Execute Bolt | AI generates code, human reviews, tests run | `/sdlc:bolt <unit>` (Stage 3) | `phases/NN-name/NN-MM-SUMMARY.md` |
-| Validate | Automated tests + manual verification | `/sdlc:verify-work` | `VERIFICATION.md` |
-| **Gate: UNIT COMPLETE** | Evidence: all acceptance criteria met, tests passing | `/sdlc:bolt <unit>` (Stage 4) | `audit.md` entry |
-| Repeat | Run another bolt if unit needs more work | `/sdlc:bolt <unit> --skip-design-gate` | — |
+| Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `units/UNIT-NNN-design.md` |
+| **Gate: Design Approved** | Evidence: design document reviewed, no conflicts with other units | `/sdlc:approve-unit <unit>` | `audit.md` entry |
+| Plan Bolt | Break unit work into small plans (2-3 tasks each) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/bolt-NN-plan.md` |
+| Execute Bolt | AI generates code, human reviews, tests run | `/sdlc:build-unit <unit>` | `construction/unit-NNN/bolt-NN-summary.md` |
+| Validate | Automated tests + manual verification | `/sdlc:verify-unit <unit>` | Verification report |
+| **Gate: UNIT COMPLETE** | Evidence: all acceptance criteria met, tests passing | `/sdlc:approve-unit <unit>` | `audit.md` entry |
+| Repeat | Run another bolt if unit needs more work | `/sdlc:build-unit <unit>` | — |
 
 ### Phase 3: Operations (WHERE/WHEN)
 
@@ -124,7 +125,7 @@ Productionize with safety and observability.
 | Deployment Planning | Strategy, pre-deployment checklist, rollback procedure | `/sdlc:deploy` (Stage 1) | `deployment-plan.md` |
 | Runbook Generation | Operational playbooks for incidents, scaling, maintenance | `/sdlc:deploy` (Stage 2) | `runbooks/` |
 | Observability Setup | Logging, metrics, alerting, tracing configuration | `/sdlc:deploy` (Stage 3) | `observability-config.md` |
-| **Gate: PRODUCTION READY** | Evidence: deployable + observable + rollbackable | `/sdlc:deploy` (Stage 4) | `audit.md` entry |
+| **Gate: PRODUCTION READY** | Evidence: deployable + observable + rollbackable | `/sdlc:approve-release` | `audit.md` entry |
 
 ## The Golden Thread
 
@@ -135,7 +136,7 @@ Intent (intent.md)
   └── "What problem are we solving and why?"
        │
        ▼
-Requirements (REQUIREMENTS.md)
+Requirements (inception/requirements.md)
   └── REQ-001, REQ-002... — scoped, testable, with IDs
        │
        ▼
@@ -147,7 +148,7 @@ Design (units/UNIT-001-design.md)
   └── Architecture, data models, interfaces per unit
        │
        ▼
-Code (via /sdlc:bolt)
+Code (via /sdlc:build-unit)
   └── Implementation with atomic commits per task
        │
        ▼
@@ -165,12 +166,12 @@ The `audit.md` file records every transition between these stages. If someone as
 
 | # | Principle | What it means | How the framework implements it |
 |---|---|---|---|
-| 1 | **Reimagine, Don't Retrofit** | AI enables Bolts (hours/days), not Sprints (weeks). Build AI-native. | `/sdlc:bolt` runs rapid iterations. Parallel unit execution via wave-based agents. No sprint ceremonies. |
+| 1 | **Reimagine, Don't Retrofit** | AI enables Bolts (hours/days), not Sprints (weeks). Build AI-native. | `/sdlc:build-unit` runs rapid iterations. Parallel unit execution via wave-based agents. No sprint ceremonies. |
 | 2 | **Reverse Conversation** | AI proposes, Human approves. Human states intent, AI proposes plans. | Every command presents proposals at gates. AI drafts intent, requirements, units — human reviews and approves. |
-| 3 | **Design Core (DDD)** | Domain-Driven Design produces bounded contexts for parallel delivery. | `/sdlc:inception` decomposes requirements into DDD-aligned units. Each unit owns a bounded context. |
+| 3 | **Design Core (DDD)** | Domain-Driven Design produces bounded contexts for parallel delivery. | `/sdlc:elaborate` decomposes requirements into DDD-aligned units. Each unit owns a bounded context. |
 | 4 | **Align with AI Capability** | AI does heavy lifting, Humans make judgment calls. Trust but verify. | 5 gates require human approval with evidence. AI never auto-approves. Confidence levels on proposals. |
 | 5 | **Cater to Complex Systems** | Designed for real projects — regulated, distributed, brownfield. | Adaptive Depth scales rigor to complexity. Brownfield detection + codebase mapping. Risk register for constraints. |
-| 6 | **User Stories as Contract** | Stories bridge human intent and AI execution. Risk registers constrain AI. | `/sdlc:inception` generates stories tracing to requirements. Risk register limits what AI can do without approval. |
+| 6 | **User Stories as Contract** | Stories bridge human intent and AI execution. Risk registers constrain AI. | `/sdlc:elaborate` generates stories tracing to requirements. Risk register limits what AI can do without approval. |
 | 7 | **Transition via Familiarity** | Learnable in a day. Bolts feel like focused work sessions, not alien processes. | Commands use familiar patterns (plan → execute → verify). Terminology maps to known concepts. |
 | 8 | **Streamline Responsibilities** | Collapse silos. One person + AI per unit. Minimize handoffs. | Each unit is self-contained and completable by one developer + AI. No cross-unit dependencies in artifacts. |
 | 9 | **Minimize Stages, Maximize Flow** | Every gate must catch errors. If a step doesn't add value, skip it. | Adaptive Depth skips unnecessary stages. Gates have explicit evidence criteria — no rubber-stamping. |
@@ -211,19 +212,27 @@ Gates are the "Proof over Prose" mechanism. Each gate requires evidence before p
 
 | Command | Phase | Description |
 |---|---|---|
-| `/sdlc:new-project` | Inception | Initialize project with deep questioning, research, requirements, roadmap |
-| `/sdlc:inception` | Inception | Full Inception flow: intent, units, risk register, gates |
-| `/sdlc:bolt <unit>` | Construction | Design gate → plan → execute → unit complete gate |
-| `/sdlc:deploy` | Operations | Deployment plan, runbooks, observability, Production Ready gate |
-| `/sdlc:plan-phase <N>` | Construction | Create detailed execution plans for a roadmap phase |
-| `/sdlc:execute-phase <N>` | Construction | Execute all plans in a phase with parallel agents |
-| `/sdlc:verify-work` | Construction | Verify deliverables against phase goals |
-| `/sdlc:discuss-phase <N>` | Any | Capture context and vision before planning |
-| `/sdlc:research-phase <N>` | Any | Deep domain research before planning |
-| `/sdlc:progress` | Any | Check project status and next steps |
+| `/sdlc:new-project` | Inception | Initialize project with questioning and intent capture |
+| `/sdlc:elaborate` | Inception | Full inception: requirements, units, risk register, gates |
+| `/sdlc:approve-inception` | Inception | Approve Requirements (Gate 1) and Inception Exit (Gate 2) |
+| `/sdlc:plan-unit <unit>` | Construction | Create bolt plans for a unit with research and verification |
+| `/sdlc:build-unit <unit>` | Construction | Execute bolts with wave-based parallel agents |
+| `/sdlc:verify-unit <unit>` | Construction | Verify deliverables through conversational UAT |
+| `/sdlc:approve-unit <unit>` | Construction | Approve Design (Gate 3) and Unit Complete (Gate 4) |
+| `/sdlc:deploy` | Operations | Deployment plan, runbooks, observability |
+| `/sdlc:approve-release` | Operations | Approve Production Ready (Gate 5) |
+| `/sdlc:progress` | Any | Check project status and route to next action |
 | `/sdlc:quick` | Any | Quick task execution (skip full ceremony) |
 | `/sdlc:debug` | Any | Systematic bug investigation with persistent state |
+| `/sdlc:map-codebase` | Any | Analyze codebase with parallel mapper agents |
 | `/sdlc:settings` | Any | Configure workflow preferences |
+| `/sdlc:set-profile` | Any | Switch model profile (quality/balanced/budget) |
+| `/sdlc:pause-work` | Any | Save context for later resumption |
+| `/sdlc:resume-work` | Any | Restore project context from previous session |
+| `/sdlc:retro` | Any | Guardrail retrospective on completed work |
+| `/sdlc:add-todo` | Any | Capture idea as pending todo |
+| `/sdlc:check-todos` | Any | Review pending todos |
+| `/sdlc:audit-compliance` | Any | Verify audit trail compliance |
 | `/sdlc:help` | Any | Full command reference |
 
 ## Project Structure
@@ -233,35 +242,33 @@ When you run AI-SDLC on a project, it creates a `.aidlc/` directory with all art
 ```
 your-project/
 ├── .aidlc/                        # All AI-SDLC artifacts
-│   ├── PROJECT.md                 # Project context and vision
-│   ├── REQUIREMENTS.md            # Scoped requirements with REQ-IDs
-│   ├── ROADMAP.md                 # Phase structure mapped to requirements
-│   ├── STATE.md                   # Project memory (current position, metrics)
-│   ├── config.json                # Workflow preferences (mode, depth, agents)
-│   │
 │   ├── intent.md                  # Golden Thread starting point
-│   ├── execution-plan.md          # Adaptive depth settings
-│   ├── risk-register.md           # Identified risks with mitigations
+│   ├── config.json                # Workflow preferences
+│   ├── state.md                   # Project memory (current position)
+│   ├── execution-plan.md          # Unit structure and execution order
 │   ├── audit.md                   # Append-only decision log
 │   │
-│   ├── units/                     # Parallel-deliverable work chunks
+│   ├── inception/                 # Inception phase artifacts
+│   │   ├── requirements.md        # Scoped requirements with REQ-IDs
+│   │   ├── risk-register.md       # Identified risks with mitigations
+│   │   └── research/              # Domain research (optional)
+│   │       ├── STACK.md
+│   │       ├── FEATURES.md
+│   │       ├── ARCHITECTURE.md
+│   │       └── PITFALLS.md
+│   │
+│   ├── units/                     # Unit definitions (DDD-aligned)
 │   │   ├── UNIT-001.md            # Unit definition + acceptance criteria
 │   │   ├── UNIT-001-design.md     # Architecture for this unit
-│   │   ├── UNIT-002.md
 │   │   └── ...
 │   │
-│   ├── phases/                    # Execution plans and summaries
-│   │   ├── 01-phase-name/
-│   │   │   ├── 01-01-PLAN.md      # Bolt plan (2-3 tasks)
-│   │   │   ├── 01-01-SUMMARY.md   # What was built
-│   │   │   └── 01-VERIFICATION.md # Goal-backward verification
-│   │   └── ...
-│   │
-│   ├── research/                  # Domain research (optional)
-│   │   ├── STACK.md               # Technology recommendations
-│   │   ├── FEATURES.md            # Feature analysis
-│   │   ├── ARCHITECTURE.md        # System structure patterns
-│   │   └── PITFALLS.md            # Common mistakes to avoid
+│   ├── construction/              # Bolt plans and summaries
+│   │   ├── unit-001/
+│   │   │   ├── bolt-01-plan.md    # Bolt plan (2-3 tasks)
+│   │   │   ├── bolt-01-summary.md # What was built
+│   │   │   └── ...
+│   │   └── unit-002/
+│   │       └── ...
 │   │
 │   ├── deployment-plan.md         # Operations: how to deploy
 │   ├── runbooks/                  # Operations: playbooks

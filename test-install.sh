@@ -42,8 +42,8 @@ check "build.sh exits cleanly" "$([ $BUILD_EXIT -eq 0 ] && echo true || echo fal
 
 CLAUDE_COUNT=$(ls "${SCRIPT_DIR}/src/claude/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
 CURSOR_COUNT=$(ls "${SCRIPT_DIR}/src/cursor/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
-check "Claude commands generated (>30): ${CLAUDE_COUNT}" "$([ "$CLAUDE_COUNT" -ge 30 ] && echo true || echo false)"
-check "Cursor commands generated (>28): ${CURSOR_COUNT}" "$([ "$CURSOR_COUNT" -ge 28 ] && echo true || echo false)"
+check "Claude commands generated (>=23): ${CLAUDE_COUNT}" "$([ "$CLAUDE_COUNT" -ge 23 ] && echo true || echo false)"
+check "Cursor commands generated (>=23): ${CURSOR_COUNT}" "$([ "$CURSOR_COUNT" -ge 23 ] && echo true || echo false)"
 
 # Check no raw placeholders in generated files
 RAW_PLACEHOLDERS=$(grep -rl '__[A-Z_]*__' "${SCRIPT_DIR}/src/claude/commands/" "${SCRIPT_DIR}/src/cursor/commands/" 2>/dev/null | wc -l | tr -d ' ')
@@ -70,15 +70,15 @@ echo -e "${YELLOW}Test 2: Source File Integrity${NC}"
 
 # Check shared commands use placeholders
 SHARED_PLACEHOLDER=$(grep -rl '__SDLC_REFS__\|__CMD_PREFIX__\|__ARGUMENTS__' "${SCRIPT_DIR}/src/shared/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
-check "Shared commands have placeholders (>20): ${SHARED_PLACEHOLDER}" "$([ "$SHARED_PLACEHOLDER" -ge 20 ] && echo true || echo false)"
+check "Shared commands have placeholders (>=15): ${SHARED_PLACEHOLDER}" "$([ "$SHARED_PLACEHOLDER" -ge 15 ] && echo true || echo false)"
 
 # Check agents are path-agnostic (no __SDLC_HOME__)
 AGENT_OLD_PATHS=$(grep -rl '__SDLC_HOME__\|__CLAUDE_HOME__' "${SCRIPT_DIR}/src/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
 check "Agents have no old path placeholders: ${AGENT_OLD_PATHS}" "$([ "$AGENT_OLD_PATHS" -eq 0 ] && echo true || echo false)"
 
-# Check all 12 shared agents exist
+# Check all 11 shared agents exist
 AGENT_COUNT=$(ls "${SCRIPT_DIR}/src/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
-check "Shared agents count (12): ${AGENT_COUNT}" "$([ "$AGENT_COUNT" -eq 12 ] && echo true || echo false)"
+check "Shared agents count (11): ${AGENT_COUNT}" "$([ "$AGENT_COUNT" -eq 11 ] && echo true || echo false)"
 
 # Check 7 Cursor subagent wrappers exist
 CURSOR_AGENT_COUNT=$(ls "${SCRIPT_DIR}/src/cursor/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
@@ -105,58 +105,43 @@ check "nfr.md template exists" "$([ -f "${SCRIPT_DIR}/src/shared/templates/nfr.m
 
 echo ""
 
-# ----- Test 3: Prompt Quality Fixes -----
-echo -e "${YELLOW}Test 3: Prompt Quality Fixes (P0-P6)${NC}"
+# ----- Test 3: V2 Agent/Command Structure -----
+echo -e "${YELLOW}Test 3: V2 Agent/Command Structure${NC}"
 
-# P0: Gate bypass warnings
-P0_EXEC=$(grep -c "does NOT enforce AI-SDLC gates" "${SCRIPT_DIR}/src/shared/commands/execute-phase.md" 2>/dev/null || echo 0)
-P0_PLAN=$(grep -c "does NOT enforce AI-SDLC gates" "${SCRIPT_DIR}/src/shared/commands/plan-phase.md" 2>/dev/null || echo 0)
-check "P0: execute-phase has gate bypass warning" "$([ "$P0_EXEC" -ge 1 ] && echo true || echo false)"
-check "P0: plan-phase has gate bypass warning" "$([ "$P0_PLAN" -ge 1 ] && echo true || echo false)"
+# New agents exist with expected content
+BOLT_PLANNER_TRACES=$(grep -c "traces_to" "${SCRIPT_DIR}/src/agents/sdlc-bolt-planner.md" 2>/dev/null || echo 0)
+check "sdlc-bolt-planner exists and has golden thread (traces_to)" "$([ "$BOLT_PLANNER_TRACES" -ge 1 ] && echo true || echo false)"
 
-# P1: DDD protocol reference
-P1=$(grep -c "ddd-decomposition" "${SCRIPT_DIR}/src/shared/commands/inception.md" 2>/dev/null || echo 0)
-check "P1: inception references DDD protocol" "$([ "$P1" -ge 1 ] && echo true || echo false)"
+BOLT_EXEC_AUDIT=$(grep -c "Audit Trail" "${SCRIPT_DIR}/src/agents/sdlc-bolt-executor.md" 2>/dev/null || echo 0)
+check "sdlc-bolt-executor exists and has Audit Trail" "$([ "$BOLT_EXEC_AUDIT" -ge 1 ] && echo true || echo false)"
 
-# P2: Audit trail in agents
-P2_EXEC=$(grep -c "Audit Trail" "${SCRIPT_DIR}/src/agents/sdlc-executor.md" 2>/dev/null || echo 0)
-P2_VER=$(grep -c "Audit Trail" "${SCRIPT_DIR}/src/agents/sdlc-verifier.md" 2>/dev/null || echo 0)
-P2_PLAN=$(grep -c "Audit Trail" "${SCRIPT_DIR}/src/agents/sdlc-planner.md" 2>/dev/null || echo 0)
-check "P2: executor has audit trail" "$([ "$P2_EXEC" -ge 1 ] && echo true || echo false)"
-check "P2: verifier has audit trail" "$([ "$P2_VER" -ge 1 ] && echo true || echo false)"
-check "P2: planner has audit trail" "$([ "$P2_PLAN" -ge 1 ] && echo true || echo false)"
+UNIT_VER_AUDIT=$(grep -c "Audit Trail" "${SCRIPT_DIR}/src/agents/sdlc-unit-verifier.md" 2>/dev/null || echo 0)
+check "sdlc-unit-verifier exists and has Audit Trail" "$([ "$UNIT_VER_AUDIT" -ge 1 ] && echo true || echo false)"
 
-# P3: Golden thread
-P3=$(grep -c "traces_to" "${SCRIPT_DIR}/src/agents/sdlc-planner.md" 2>/dev/null || echo 0)
-check "P3: planner requires traces_to" "$([ "$P3" -ge 1 ] && echo true || echo false)"
+INCEPTION_DECOMP=$(grep -c "decompos" "${SCRIPT_DIR}/src/agents/sdlc-inception.md" 2>/dev/null || echo 0)
+check "sdlc-inception exists and has unit decomposition" "$([ "$INCEPTION_DECOMP" -ge 1 ] && echo true || echo false)"
 
-# P4: Mob rituals
-P4_INC=$(grep -c "Mob Elaboration" "${SCRIPT_DIR}/src/shared/commands/inception.md" 2>/dev/null || echo 0)
-P4_BOLT=$(grep -c "Mob Construction" "${SCRIPT_DIR}/src/shared/commands/bolt.md" 2>/dev/null || echo 0)
-check "P4: inception suggests Mob Elaboration" "$([ "$P4_INC" -ge 1 ] && echo true || echo false)"
-check "P4: bolt suggests Mob Construction" "$([ "$P4_BOLT" -ge 1 ] && echo true || echo false)"
+check "sdlc-gate-checker exists" "$([ -f "${SCRIPT_DIR}/src/agents/sdlc-gate-checker.md" ] && echo true || echo false)"
 
-# P5: Role-specific gates
-P5_PO=$(grep -c "Product Owner" "${SCRIPT_DIR}/src/shared/commands/inception.md" 2>/dev/null || echo 0)
-P5_TL=$(grep -c "Tech Lead" "${SCRIPT_DIR}/src/shared/commands/bolt.md" 2>/dev/null || echo 0)
-check "P5: inception gate has PO role" "$([ "$P5_PO" -ge 1 ] && echo true || echo false)"
-check "P5: bolt gate has Tech Lead role" "$([ "$P5_TL" -ge 1 ] && echo true || echo false)"
+# New commands exist with expected agent references
+ELABORATE_REF=$(grep -c "sdlc-inception" "${SCRIPT_DIR}/src/shared/commands/elaborate.md" 2>/dev/null || echo 0)
+check "elaborate.md exists and references sdlc-inception" "$([ "$ELABORATE_REF" -ge 1 ] && echo true || echo false)"
 
-# P6: Adaptive depth consumption
-P6_EXEC=$(grep -c "Adaptive Depth" "${SCRIPT_DIR}/src/agents/sdlc-executor.md" 2>/dev/null || echo 0)
-P6_VER=$(grep -c "Adaptive Depth" "${SCRIPT_DIR}/src/agents/sdlc-verifier.md" 2>/dev/null || echo 0)
-P6_PLAN=$(grep -c "Adaptive Depth" "${SCRIPT_DIR}/src/agents/sdlc-planner.md" 2>/dev/null || echo 0)
-P6_RES=$(grep -c "Adaptive Depth" "${SCRIPT_DIR}/src/agents/sdlc-phase-researcher.md" 2>/dev/null || echo 0)
-check "P6: executor reads adaptive depth" "$([ "$P6_EXEC" -ge 1 ] && echo true || echo false)"
-check "P6: verifier reads adaptive depth" "$([ "$P6_VER" -ge 1 ] && echo true || echo false)"
-check "P6: planner reads adaptive depth" "$([ "$P6_PLAN" -ge 1 ] && echo true || echo false)"
-check "P6: researcher reads adaptive depth" "$([ "$P6_RES" -ge 1 ] && echo true || echo false)"
+PLAN_UNIT_REF=$(grep -c "sdlc-bolt-planner" "${SCRIPT_DIR}/src/shared/commands/plan-unit.md" 2>/dev/null || echo 0)
+check "plan-unit.md exists and references sdlc-bolt-planner" "$([ "$PLAN_UNIT_REF" -ge 1 ] && echo true || echo false)"
 
-# P6 in commands
-P6_BOLT_CMD=$(grep -c "adaptive_depth" "${SCRIPT_DIR}/src/shared/commands/bolt.md" 2>/dev/null || echo 0)
-P6_EXEC_CMD=$(grep -c "adaptive_depth" "${SCRIPT_DIR}/src/shared/commands/execute-phase.md" 2>/dev/null || echo 0)
-check "P6: bolt command has adaptive depth section" "$([ "$P6_BOLT_CMD" -ge 1 ] && echo true || echo false)"
-check "P6: execute-phase has adaptive depth section" "$([ "$P6_EXEC_CMD" -ge 1 ] && echo true || echo false)"
+BUILD_UNIT_REF=$(grep -c "sdlc-bolt-executor" "${SCRIPT_DIR}/src/shared/commands/build-unit.md" 2>/dev/null || echo 0)
+check "build-unit.md exists and references sdlc-bolt-executor" "$([ "$BUILD_UNIT_REF" -ge 1 ] && echo true || echo false)"
+
+check "verify-unit.md exists" "$([ -f "${SCRIPT_DIR}/src/shared/commands/verify-unit.md" ] && echo true || echo false)"
+
+APPROVE_INC_REF=$(grep -c "sdlc-gate-checker" "${SCRIPT_DIR}/src/shared/commands/approve-inception.md" 2>/dev/null || echo 0)
+check "approve-inception.md exists and references sdlc-gate-checker" "$([ "$APPROVE_INC_REF" -ge 1 ] && echo true || echo false)"
+
+APPROVE_UNIT_REF=$(grep -c "sdlc-gate-checker" "${SCRIPT_DIR}/src/shared/commands/approve-unit.md" 2>/dev/null || echo 0)
+check "approve-unit.md exists and references sdlc-gate-checker" "$([ "$APPROVE_UNIT_REF" -ge 1 ] && echo true || echo false)"
+
+check "approve-release.md exists" "$([ -f "${SCRIPT_DIR}/src/shared/commands/approve-release.md" ] && echo true || echo false)"
 
 echo ""
 
