@@ -24,11 +24,13 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 |---|-------|-----|
 | 1 | `.aidlc/intent.md` exists and has project description | File exists, 5+ lines |
 | 2 | `.aidlc/inception/requirements.md` exists | File exists |
-| 3 | Requirements have MUST/SHOULD/MAY classification | Grep for `MUST` in inception/requirements.md |
-| 4 | At least 1 MUST requirement defined | Count MUST occurrences >= 1 |
-| 5 | `.aidlc/execution-plan.md` exists with unit decomposition | File exists, contains "unit" or "UNIT" |
-| 6 | Each MUST requirement mapped to at least one unit | Cross-reference requirements to execution plan |
-| 7 | Security considerations documented | Grep for "security" or "threat" in inception artifacts; WARN if absent (not blocking for low-risk) |
+| 3 | `inception/requirements.md` is substantive | File size >= 100 bytes AND 5+ lines (not a stub) |
+| 4 | Requirements contain at least one REQ-ID | Grep for `[A-Z]+-[0-9]+` or `REQ-` pattern; count >= 1 |
+| 5 | Requirements have MUST/SHOULD/MAY classification | Grep for `MUST` in inception/requirements.md |
+| 6 | At least 1 MUST requirement defined | Count MUST occurrences >= 1 |
+| 7 | `.aidlc/execution-plan.md` exists with unit decomposition | File exists, contains "unit" or "UNIT" |
+| 8 | Each MUST requirement mapped to at least one unit | Cross-reference requirements to execution plan |
+| 9 | Security considerations documented | Grep for "security" or "threat" in inception artifacts; WARN if absent (not blocking for low-risk) |
 
 ### Gate 2: Inception Exit
 **Trigger:** `__CMD_PREFIX__approve-inception` (after Gate 1 passed)
@@ -37,10 +39,11 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 |---|-------|-----|
 | 1 | Gate 1 passed | Check state.md for Requirements Approved = passed |
 | 2 | `.aidlc/inception/application-design.md` exists OR single-unit project | File exists or execution-plan has only 1 unit |
-| 3 | Execution plan has risk levels per unit | Grep for risk/low/medium/high in execution-plan.md |
-| 4 | No pending inception research | No open TODOs/TBDs in inception artifacts |
-| 5 | `.aidlc/state.md` updated with inception results | state.md exists and has inception gate entries |
-| 6 | Security considerations carried forward from Gate 1 | Grep for "security" in inception/nfr.md or inception/risk-register.md; WARN if absent |
+| 3 | `inception/application-design.md` is substantive (if exists) | File size >= 100 bytes (not a stub) |
+| 4 | Execution plan has risk levels per unit | Grep for risk/low/medium/high in execution-plan.md |
+| 5 | No unresolved placeholders in inception artifacts | Grep for TODO/TBD/PLACEHOLDER in inception/*.md; count must be 0 |
+| 6 | `.aidlc/state.md` updated with inception results | state.md exists and has inception gate entries |
+| 7 | Security considerations carried forward from Gate 1 | Grep for "security" in inception/nfr.md or inception/risk-register.md; WARN if absent |
 
 ### Gate 3: Design Approved
 **Trigger:** `__CMD_PREFIX__approve-unit` (before building)
@@ -48,11 +51,14 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | # | Check | How |
 |---|-------|-----|
 | 1 | Unit design.md exists | `.aidlc/construction/unit-NNN/design.md` exists |
-| 2 | Design references requirements | Grep for requirement IDs or "requirement" in design |
-| 3 | Acceptance criteria defined | Grep for "acceptance criteria" or checklist patterns |
-| 4 | Bolt decomposition present | Grep for "bolt" in design |
-| 5 | NFR compliance section present | Grep for "NFR" or "non-functional" in design |
-| 6 | Security Considerations section present in design | Grep for "Security Considerations" or "Authentication" in design.md; WARN if absent |
+| 2 | `design.md` is substantive | File size >= 100 bytes (not a stub) |
+| 3 | Design references requirements | Grep for `REQ-` or `[A-Z]+-[0-9]+` or "requirement" in design |
+| 4 | Acceptance criteria defined | Grep for "acceptance criteria" or checklist patterns |
+| 5 | Bolt decomposition present | Grep for "bolt" in design |
+| 6 | NFR compliance section present | Grep for "NFR" or "non-functional" in design |
+| 7 | Security Considerations section present in design | Grep for "Security Considerations" or "Authentication" in design.md; WARN if absent |
+
+> **High-risk security hardening (check 7):** If the unit's risk level is "High" (per `inception/risk-register.md` or `execution-plan.md`), the Security Considerations check is REQUIRED (FAIL, not WARN). For Low/Medium risk, keep as WARN.
 
 ### Gate 4: Unit Complete
 **Trigger:** `__CMD_PREFIX__approve-unit` (after building)
@@ -61,10 +67,15 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 |---|-------|-----|
 | 1 | All bolts have summary files | Count bolt-NN-summary.md vs expected bolt count |
 | 2 | validation-report.md exists with status: passed | File exists and contains "status: passed" |
-| 3 | No unresolved gaps in verification | No "gaps_found" or "FAILED" in validation-report.md |
-| 4 | MUST requirements for this unit satisfied | Cross-reference verification with requirements |
-| 5 | state.md shows unit progress | state.md references this unit |
-| 6 | Security review completed | Grep for "security" in validation-report.md or bolt summaries; WARN if absent |
+| 3 | validation-report.md contains PASS/VERIFIED results | Grep for "PASS" or "VERIFIED" in validation-report.md; count >= 1 |
+| 4 | No unresolved gaps in verification | No "gaps_found" or "FAILED" in validation-report.md |
+| 5 | `test-instructions.md` exists and is non-empty | File exists in unit dir, size >= 100 bytes |
+| 6 | Acceptance criteria coverage | Extract criteria from `inception/units/UNIT-NNN.md`, verify each has a corresponding entry in `validation-report.md` |
+| 7 | MUST requirements for this unit satisfied | Cross-reference verification with requirements |
+| 8 | state.md shows unit progress | state.md references this unit |
+| 9 | Security review completed | Grep for "security" in validation-report.md or bolt summaries; WARN if absent |
+
+> **High-risk security hardening (check 9):** If the unit's risk level is "High" (per `inception/risk-register.md` or `execution-plan.md`), the security review check is REQUIRED (FAIL, not WARN). Additionally, security review in `validation-report.md` must show "passed" — FAIL if "N/A". For Low/Medium risk, keep as WARN.
 
 ### Gate 5: Production Ready
 **Trigger:** `__CMD_PREFIX__approve-release`
@@ -72,11 +83,16 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | # | Check | How |
 |---|-------|-----|
 | 1 | All units complete | All units in state.md show passed for Unit Complete |
-| 2 | All MUST requirements satisfied | No unsatisfied MUST requirements across all units |
-| 3 | UAT completed (if required) | Check rigor level; if high, grep for UAT evidence |
-| 4 | Deployment plan exists (if required) | Check rigor level; if high, deployment artifact exists |
-| 5 | No critical issues in any validation-report.md | No "FAILED" on critical items across verifications |
-| 6 | Security in deployment plan | Grep for "HTTPS" or "secrets" or "security" in deployment/operations artifacts; WARN if absent |
+| 2 | All unit gates have passed | Check `audit.md` for gate-approval entries for every unit |
+| 3 | All MUST requirements satisfied | No unsatisfied MUST requirements across all units |
+| 4 | UAT completed (if required) | Check rigor level; if high, grep for UAT evidence |
+| 5 | `operations/deployment-plan.md` exists (if required) | Check rigor level; if high, deployment artifact exists |
+| 6 | Deployment plan contains rollback section | Grep for "rollback" in `operations/deployment-plan.md` |
+| 7 | `operations/runbooks.md` is non-empty | File exists, size >= 100 bytes |
+| 8 | No critical issues in any validation-report.md | No "FAILED" on critical items across verifications |
+| 9 | Security in deployment plan | Grep for "HTTPS" or "secrets" or "security" in deployment/operations artifacts; WARN if absent |
+
+> **High-risk security hardening (check 9):** If ANY unit's risk level is "High" (per `inception/risk-register.md` or `execution-plan.md`), the security in deployment plan check is REQUIRED (FAIL, not WARN). For projects with only Low/Medium risk units, keep as WARN.
 
 </gates>
 
@@ -132,6 +148,41 @@ grep -c "MUST" .aidlc/inception/requirements.md 2>/dev/null || echo 0
 grep "MUST" .aidlc/inception/requirements.md 2>/dev/null
 # Check they appear in execution plan
 grep -l "MUST\|REQ-" .aidlc/execution-plan.md 2>/dev/null
+```
+
+**Content substantive check (non-empty, beyond stub):**
+```bash
+size=$(wc -c < ".aidlc/inception/requirements.md" 2>/dev/null || echo 0)
+[ "$size" -ge 100 ] && echo "SUBSTANTIVE ($size bytes)" || echo "THIN ($size bytes)"
+```
+
+**REQ-ID pattern check:**
+```bash
+grep -cE '[A-Z]+-[0-9]+|REQ-' .aidlc/inception/requirements.md 2>/dev/null || echo 0
+```
+
+**Unresolved placeholder check:**
+```bash
+grep -ciE 'TODO|TBD|PLACEHOLDER' .aidlc/inception/requirements.md 2>/dev/null || echo 0
+```
+
+**Acceptance criteria coverage (Gate 4):**
+```bash
+# Extract acceptance criteria IDs/lines from unit spec
+grep -iE 'acceptance|criteria|AC-' .aidlc/inception/units/UNIT-NNN.md 2>/dev/null
+# Check each appears in validation-report
+grep -iE 'acceptance|criteria|AC-' .aidlc/construction/unit-NNN/validation-report.md 2>/dev/null
+```
+
+**Rollback section check (Gate 5):**
+```bash
+grep -ci "rollback" .aidlc/operations/deployment-plan.md 2>/dev/null || echo 0
+```
+
+**Risk level check (for security hardening):**
+```bash
+# Check if unit risk is High in risk-register or execution-plan
+grep -iE 'high.*(risk|security)|risk.*high' .aidlc/inception/risk-register.md .aidlc/execution-plan.md 2>/dev/null
 ```
 
 ## Step 3: Determine Result
