@@ -28,17 +28,23 @@ traces_to:
 
 # User Stories: {Project Name}
 
-## Personas
+## Persona Definitions
 
 ### {Persona 1 Name}
 - **Role:** {role description}
 - **Goal:** {what they want to achieve}
 - **Context:** {relevant background — technical skill, frequency of use, etc.}
+- **Demographics:** {age range, technical proficiency, domain experience}
+- **Pain Points:** {current frustrations, unmet needs, workflow bottlenecks}
+- **Success Criteria:** {what "success" looks like for this persona}
 
 ### {Persona 2 Name}
 - **Role:** {role description}
 - **Goal:** {what they want to achieve}
 - **Context:** {relevant background}
+- **Demographics:** {age range, technical proficiency, domain experience}
+- **Pain Points:** {current frustrations, unmet needs, workflow bottlenecks}
+- **Success Criteria:** {what "success" looks like for this persona}
 
 ---
 
@@ -79,6 +85,41 @@ traces_to:
 - **Given** {precondition}
   **When** {action}
   **Then** {expected result}
+
+---
+
+## INVEST Validation
+
+Validate each story against the INVEST criteria before approval.
+
+| Story | Independent | Negotiable | Valuable | Estimable | Small | Testable | Pass? |
+|-------|:-----------:|:----------:|:--------:|:---------:|:-----:|:--------:|:-----:|
+| STORY-001 | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} |
+| STORY-002 | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} | {Y/N} |
+
+**Criteria definitions:**
+- **Independent** — Can be developed and delivered without depending on another story
+- **Negotiable** — Details can be discussed; not a rigid contract
+- **Valuable** — Delivers clear value to the user or business
+- **Estimable** — Enough detail to estimate effort
+- **Small** — Completable within a single unit or bolt
+- **Testable** — Acceptance criteria are verifiable (Given/When/Then)
+
+**Remediation:** Stories failing any criterion MUST be revised before proceeding. Split large stories, add missing acceptance criteria, or clarify scope as needed.
+
+---
+
+## Story-to-Requirement Traceability
+
+| Story ID | Story Title | REQ-ID(s) | Requirement Description | Priority |
+|----------|-------------|-----------|------------------------|----------|
+| STORY-001 | {title} | {REQ-ID(s)} | {brief requirement description} | {MUST/SHOULD/MAY} |
+| STORY-002 | {title} | {REQ-ID(s)} | {brief requirement description} | {MUST/SHOULD/MAY} |
+
+**Coverage check:**
+- **Requirements with stories:** {N} of {M} ({percentage}%)
+- **Requirements without stories:** {list REQ-IDs or "None"}
+- **Stories without requirements:** {list STORY-IDs or "None" — these may indicate scope creep}
 
 ---
 
@@ -126,6 +167,17 @@ traces_to:
 **Persona quality:**
 - Based on real user research or reasonable assumptions
 - Include enough context to inform design decisions
+- Define demographics, goals, pain points, and success criteria for each persona
 - 2-4 personas for most projects (more = probably too granular)
+
+**INVEST validation:**
+- Every story MUST pass all 6 INVEST criteria before approval
+- Fill in the INVEST Validation table for each story
+- Stories failing criteria must be revised (split, clarified, or rescoped)
+
+**Traceability:**
+- Every MUST requirement should have at least one story
+- Fill in the Story-to-Requirement Traceability table
+- Flag requirements without stories and stories without requirements
 
 </guidelines>

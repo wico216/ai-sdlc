@@ -17,7 +17,11 @@ Validate built features through conversational testing with persistent state for
 
 Purpose: Confirm what was built actually works from the user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
 
-Output: `.aidlc/construction/unit-NNN/UAT.md` tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for `__CMD_PREFIX__build-unit --gaps-only`.
+Output:
+- `.aidlc/construction/unit-NNN/UAT.md` tracking all test results
+- `.aidlc/construction/unit-NNN/test-instructions.md` with build, unit test, integration test, performance test instructions, and test summary (produced by sdlc-unit-verifier alongside VERIFICATION.md)
+
+If issues found: diagnosed gaps, verified fix plans ready for `__CMD_PREFIX__build-unit --gaps-only`.
 </objective>
 
 <execution_context>
@@ -156,10 +160,11 @@ Update UAT.md:
 - Set Current Test to "[testing complete]"
 - Final Summary counts
 
-Commit UAT.md:
+Commit UAT.md and test-instructions.md:
 
 ```bash
 git add .aidlc/construction/unit-{NNN}/UAT.md
+git add .aidlc/construction/unit-{NNN}/test-instructions.md
 git commit -m "docs({NNN}): complete UAT session ({passed}/{total} passed)"
 ```
 
@@ -406,6 +411,7 @@ Review the issues above and either:
 
 <success_criteria>
 - [ ] UAT.md created at `.aidlc/construction/unit-{NNN}/UAT.md` with tests from bolt summaries
+- [ ] test-instructions.md created at `.aidlc/construction/unit-{NNN}/test-instructions.md` with build and test instructions
 - [ ] Tests presented one at a time with expected behavior
 - [ ] Plain text responses (no structured forms or AskUserQuestion)
 - [ ] Severity inferred from description, never asked

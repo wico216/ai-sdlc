@@ -23,6 +23,11 @@ allowed-tools:
 @__SDLC_REFS__/ui-brand.md
 @__SDLC_REFS__/questioning.md
 @__SDLC_REFS__/ddd-decomposition.md
+@__SDLC_REFS__/question-format-guide.md
+@__SDLC_REFS__/overconfidence-prevention.md
+@__SDLC_REFS__/error-handling.md
+@__SDLC_REFS__/content-validation.md
+@__SDLC_REFS__/depth-levels.md
 @__SDLC_TEMPLATES__/intent.md
 @__SDLC_TEMPLATES__/requirements.md
 @__SDLC_TEMPLATES__/user-stories.md
@@ -234,7 +239,7 @@ You are the sdlc-inception agent. Your job is to take a project from intent to d
 
 1. **Requirements Analysis** — If requirements.md missing or incomplete
 2. **User Stories** — If the project has UI/multiple users AND stories missing
-3. **Application Design** — If new components needed AND design missing
+3. **Application Design** (adaptive) — Execute if new components/services needed, multiple bounded contexts, or distributed architecture. Skip for simple single-component projects or pure refactoring. Runs AFTER requirements, BEFORE execution planning. Units are derived from its bounded contexts.
 4. **Execution Planning** — If execution-plan.md missing
 5. **Unit Decomposition** — If units missing or incomplete
 6. **Risk Assessment** — If risk-register.md missing
@@ -243,7 +248,12 @@ Skip stages where artifacts already exist and are complete. Present your assessm
 
 **For each stage you run:**
 - Use the Reverse Conversation pattern (Principle #2): propose, present, get approval
-- Use AskUserQuestion for key decisions
+- Write clarifying questions to `.aidlc/inception/questions/` using structured format from `question-format-guide.md`
+- Run contradiction detection on answers before proceeding (see `question-format-guide.md`)
+- Apply overconfidence prevention: default to asking, never assume (see `overconfidence-prevention.md`)
+- Validate content before writing (see `content-validation.md`); use `depth-levels.md` for detail calibration
+- Handle errors per `error-handling.md` — log to audit.md
+- Use AskUserQuestion only for binary decisions (proceed/revise, gate approval)
 - Write artifacts to `.aidlc/inception/` (requirements, stories, design, units)
 - Write cross-cutting artifacts to `.aidlc/` (execution-plan, risk-register, state, audit)
 - Commit after each stage (if commit_docs is true)

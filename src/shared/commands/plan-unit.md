@@ -19,6 +19,14 @@ allowed-tools:
 @__SDLC_REFS__/principles.md
 @__SDLC_REFS__/gates.md
 @__SDLC_REFS__/planning-config.md
+@__SDLC_REFS__/question-format-guide.md
+@__SDLC_REFS__/overconfidence-prevention.md
+@__SDLC_REFS__/error-handling.md
+@__SDLC_REFS__/content-validation.md
+@__SDLC_REFS__/depth-levels.md
+@__SDLC_REFS__/construction/nfr-requirements.md
+@__SDLC_REFS__/construction/nfr-design.md
+@__SDLC_REFS__/construction/infrastructure-design.md
 @__SDLC_TEMPLATES__/bolt-plan.md
 @__SDLC_TEMPLATES__/research.md
 @__SDLC_TEMPLATES__/design.md
@@ -32,6 +40,13 @@ Create executable bolt plans for a unit with integrated research and verificatio
 **Orchestrator role:** Parse arguments, validate unit, ensure construction directory exists, research domain (unless skipped or exists), spawn sdlc-bolt-planner agent, verify plans with sdlc-plan-checker, iterate until plans pass or max iterations reached, present results.
 
 **Why subagents:** Research and planning burn context fast. Verification uses fresh context. User sees the flow between agents in main context.
+
+**Cross-cutting rules:** All agents spawned by this command must follow:
+- `question-format-guide.md` — Write planning questions to `unit-NNN/questions/` as structured files
+- `overconfidence-prevention.md` — Present options when multiple approaches exist, never pick silently
+- `error-handling.md` — Log errors to audit.md, escalate to user when blocked
+- `content-validation.md` — Validate diagrams and complex content before writing
+- `depth-levels.md` — Calibrate bolt detail based on risk level
 
 **Key difference from old plan-phase.md:**
 - Plans target UNITS (not phases)
@@ -171,6 +186,10 @@ ls "${UNIT_DIR}"/research.md 2>/dev/null
 ls "${UNIT_DIR}"/design.md 2>/dev/null
 # Check for CONTEXT.md (from discuss-phase equivalent or prior work)
 ls "${UNIT_DIR}"/CONTEXT.md 2>/dev/null
+# Check for existing construction stage artifacts
+ls "${UNIT_DIR}"/nfr-requirements.md 2>/dev/null
+ls "${UNIT_DIR}"/nfr-design.md 2>/dev/null
+ls "${UNIT_DIR}"/infrastructure-design.md 2>/dev/null
 ```
 
 **CRITICAL:** Load CONTEXT.md immediately if it exists. It must be passed to:
@@ -202,6 +221,59 @@ DEPS=$(grep -A5 "dependencies\|depends_on" .aidlc/inception/units/${UNIT_ID}.md 
 ```
 
 Do NOT block — just warn. The user may be planning ahead.
+
+## 5b. Check Pre-Planning Construction Stages
+
+Before bolt planning, check if NFR or infrastructure stages need to execute.
+
+```bash
+# Detect NFR signals from unit spec and requirements
+NFR_SIGNALS=$(grep -ci "performance\|security\|scale\|avail\|compliance\|NFR" .aidlc/inception/units/${UNIT_ID}.md .aidlc/inception/requirements.md 2>/dev/null)
+INFRA_SIGNALS=$(grep -ci "infrastructure\|deploy\|cloud\|database\|server\|container" .aidlc/inception/units/${UNIT_ID}.md 2>/dev/null)
+HAS_INCEPTION_NFR=$([ -f .aidlc/inception/nfr.md ] && echo "yes" || echo "no")
+
+# Check if construction stage artifacts already exist
+HAS_NFR_REQ=$([ -f "${UNIT_DIR}/nfr-requirements.md" ] && echo "yes" || echo "no")
+HAS_NFR_DESIGN=$([ -f "${UNIT_DIR}/nfr-design.md" ] && echo "yes" || echo "no")
+HAS_INFRA_DESIGN=$([ -f "${UNIT_DIR}/infrastructure-design.md" ] && echo "yes" || echo "no")
+```
+
+**Determine which stages are needed:**
+
+| Stage | Needed When | Already Done? |
+|-------|------------|---------------|
+| NFR Requirements | `NFR_SIGNALS > 0` OR `HAS_INCEPTION_NFR = yes` | Skip if `HAS_NFR_REQ = yes` |
+| NFR Design | NFR Requirements was/will be executed | Skip if `HAS_NFR_DESIGN = yes` |
+| Infrastructure Design | `INFRA_SIGNALS > 0` | Skip if `HAS_INFRA_DESIGN = yes` |
+
+**If any pre-planning stages are needed AND artifacts don't exist:**
+
+Inform user:
+```
+Pre-planning stages detected for this unit:
+- [x] NFR Requirements — performance/security signals found
+- [x] NFR Design — NFR patterns needed
+- [ ] Infrastructure Design — skipped (no infrastructure signals)
+
+These stages produce artifacts that feed into bolt planning.
+Running NFR Requirements stage first...
+```
+
+Execute each needed stage in order per its reference document in `src/shared/references/construction/`:
+1. Write questions to `unit-NNN/questions/` per `question-format-guide.md`
+2. Collect and analyze answers
+3. Generate artifact
+4. Get user approval
+5. Proceed to next stage
+
+**If all needed artifacts already exist:** Load them as context and proceed directly to research/planning.
+
+```bash
+# Load existing construction stage artifacts for planner context
+NFR_REQ_CONTENT=$(cat "${UNIT_DIR}/nfr-requirements.md" 2>/dev/null)
+NFR_DESIGN_CONTENT=$(cat "${UNIT_DIR}/nfr-design.md" 2>/dev/null)
+INFRA_DESIGN_CONTENT=$(cat "${UNIT_DIR}/infrastructure-design.md" 2>/dev/null)
+```
 
 ## 6. Handle Research
 
@@ -364,6 +436,11 @@ DESIGN_CONTENT=$(cat "${UNIT_DIR}"/design.md 2>/dev/null)
 RESEARCH_CONTENT=$(cat "${UNIT_DIR}"/research.md 2>/dev/null)
 # CONTEXT_CONTENT already loaded in step 4
 
+# Read construction stage artifacts (from step 5b or pre-existing)
+NFR_REQ_CONTENT=$(cat "${UNIT_DIR}"/nfr-requirements.md 2>/dev/null)
+NFR_DESIGN_CONTENT=$(cat "${UNIT_DIR}"/nfr-design.md 2>/dev/null)
+INFRA_DESIGN_CONTENT=$(cat "${UNIT_DIR}"/infrastructure-design.md 2>/dev/null)
+
 # Read prior bolt summaries for this unit (for continuation)
 PRIOR_BOLT_SUMMARIES=$(cat "${UNIT_DIR}"/bolt-*-summary.md 2>/dev/null)
 
@@ -414,8 +491,17 @@ Fill prompt with inlined content and spawn:
 **Requirements:**
 {requirements_content}
 
-**NFR Requirements (if exists):**
+**Inception NFR (if exists):**
 {nfr_content}
+
+**Unit NFR Requirements (if exists):**
+{nfr_req_content}
+
+**Unit NFR Design (if exists):**
+{nfr_design_content}
+
+**Unit Infrastructure Design (if exists):**
+{infra_design_content}
 
 **Unit Design (if exists):**
 {design_content}

@@ -29,13 +29,77 @@ Example:
 }
 ```
 
-## Components
+## Component Inventory
 
-| Component | Responsibility | Technology | Notes |
-|-----------|---------------|------------|-------|
-| {Component 1} | {what it does} | {tech choice} | {rationale or constraints} |
-| {Component 2} | {what it does} | {tech choice} | |
-| {Component 3} | {what it does} | {tech choice} | |
+| Component | Responsibility | Technology | Bounded Context | Traces To (REQ-IDs) | Notes |
+|-----------|---------------|------------|-----------------|---------------------|-------|
+| {Component 1} | {what it does} | {tech choice} | {which bounded context} | {REQ-XXX} | {rationale or constraints} |
+| {Component 2} | {what it does} | {tech choice} | {which bounded context} | {REQ-XXX} | |
+| {Component 3} | {what it does} | {tech choice} | {which bounded context} | {REQ-XXX} | |
+
+## Component Methods
+
+> Method signatures and purpose only. Full business logic is defined in Functional Design (per-unit, construction phase).
+
+### {Component 1}
+
+| Method | Purpose | Inputs | Outputs | Business Rules Touched |
+|--------|---------|--------|---------|----------------------|
+| {methodName()} | {what it does} | {input types} | {output types} | {which rules — detailed later in Functional Design} |
+
+### {Component 2}
+
+| Method | Purpose | Inputs | Outputs | Business Rules Touched |
+|--------|---------|--------|---------|----------------------|
+| {methodName()} | {what it does} | {input types} | {output types} | {which rules} |
+
+## Service Layer Design
+
+> Services orchestrate interactions between components. Each service owns a specific coordination concern.
+
+| Service | Responsibility | Components Coordinated | Orchestration Pattern | Notes |
+|---------|---------------|----------------------|----------------------|-------|
+| {Service 1} | {what it coordinates} | {Component A, Component B} | {saga / choreography / request-response} | |
+| {Service 2} | {what it coordinates} | {Component B, Component C} | {pattern} | |
+
+## Component Dependency Diagram
+
+> ASCII diagram per `ascii-diagram-standards.md`. Shows component-to-component dependencies with communication protocols.
+
+```
+{Text-based component dependency diagram.
+Example:
+  [Auth Component] --REST--> [User Component]
+  [Order Component] --events--> [Inventory Component]
+  [API Gateway] --gRPC--> [Order Component]
+                --REST--> [Auth Component]
+}
+```
+
+## Data Flow Between Components
+
+> Trace major operations through the component chain. Shows how data moves for each key user-facing operation.
+
+### {Operation 1: e.g., "User places an order"}
+
+```
+Entry:    [API Gateway] receives POST /orders
+Step 1:   [Auth Component] validates token --> passes user context
+Step 2:   [Order Component] creates order record --> emits OrderCreated event
+Step 3:   [Inventory Component] reserves stock --> confirms availability
+Terminal: [Order Component] returns order confirmation to caller
+```
+
+**Data shape at each transition:**
+
+| Transition | From | To | Data Shape |
+|-----------|------|----|------------|
+| {Step 1 -> 2} | {Auth} | {Order} | {UserContext: { id, roles }} |
+| {Step 2 -> 3} | {Order} | {Inventory} | {OrderCreated: { orderId, items[] }} |
+
+### {Operation 2: e.g., "..."}
+
+{Same pattern as above}
 
 ## Data Model
 

@@ -36,6 +36,22 @@ Simple projects get lightweight inception (requirements + execution plan only). 
 
 ## Proof Over Prose (P1)
 Requirements must be verifiable, not aspirational. Every requirement gets a testable description. If you cannot define how to verify a requirement, it is not specific enough.
+
+## Overconfidence Prevention
+Before generating any artifact, verify you have sufficient clarity. Default to ASKING, not assuming. When uncertain about requirements, ASK — never fill in blanks. When multiple approaches exist, PRESENT OPTIONS — never pick silently. See `overconfidence-prevention.md` for full guidelines.
+
+## Structured Questions
+During elaboration stages (requirements, stories, design), write clarifying questions to `.aidlc/inception/questions/` as structured multiple-choice files per `question-format-guide.md`. Run contradiction detection on all answers before proceeding. Intent discovery in `new-project` remains conversational.
+
+## Content Validation
+Before writing any artifact with diagrams or complex content, validate per `content-validation.md`. Use ASCII diagram standards from `ascii-diagram-standards.md`. Always provide text alternatives for visual content.
+
+## Error Handling
+Follow `error-handling.md` for all failure modes. Log errors to `audit.md` with severity levels. Escalate to user when ambiguity or contradictions are detected.
+
+## Reference Awareness
+- `terminology.md` — canonical glossary of all AI-SDLC terms. Use consistent terminology when generating artifacts.
+- `workflow-changes.md` — guidance for handling mid-workflow changes (requirement changes, scope changes, unit additions/removals). Follow these procedures when the user requests changes during active inception.
 </role>
 
 <philosophy>
@@ -162,28 +178,30 @@ If user requests changes to the stage list, adjust accordingly.
 <step name="questioning">
 **Trigger:** No requirements.md exists yet, or requirements are draft/incomplete.
 
-Ask the user 3-5 focused questions. Do NOT ask generic questions — derive them from intent.md gaps.
+Derive questions from intent.md gaps — do NOT ask generic questions.
 
-**Question categories (pick the relevant ones):**
+**Question categories (evaluate ALL — skip only with explicit justification):**
 
 1. **Users and pain points** — Who uses this and what's broken for them?
-   - Skip if intent.md already has clear "Who is affected?" section
 2. **Must-have vs nice-to-have** — Which in-scope features are truly v1 vs deferrable?
-   - Skip if intent.md scope section already has clear MUST/SHOULD distinction
 3. **Technical constraints** — Existing stack, hosting, budget, performance targets?
-   - Skip if intent.md constraints section is comprehensive
 4. **Integration requirements** — External services, APIs, data sources?
-   - Skip if no external dependencies mentioned
 5. **Quality requirements** — Performance thresholds, security needs, compliance?
-   - Skip if intent.md non-negotiables section covers this
 
-**Rules:**
-- Ask open-ended questions, not multiple choice
-- Maximum 5 questions per round, prefer 3
-- If answers raise new questions, ask ONE follow-up round maximum
-- Capture answers as structured constraints for subsequent stages
+**Process:**
 
-Store answers in working memory for use in requirements and design stages.
+1. Write structured questions to `.aidlc/inception/questions/requirements-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags)
+2. Inform user: "I've created requirements-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: — let me know when done."
+3. Wait for user completion
+4. Read answers and run **contradiction detection** (see `question-format-guide.md`):
+   - Check for logically inconsistent answers
+   - Check for ambiguous responses ("depends", "maybe", "not sure")
+   - If contradictions found: create `requirements-clarification-questions.md`, inform user, wait for resolution
+5. Only proceed when all answers are clear and consistent
+
+**Overconfidence check:** If intent.md seems comprehensive, STILL write at least 3 verification questions to confirm assumptions. Better to confirm than to assume.
+
+Store validated answers for use in requirements and design stages.
 </step>
 
 <step name="research">
@@ -267,14 +285,57 @@ Incorporate feedback and update the file.
 
 Using the user stories template, create `.aidlc/inception/user-stories.md`.
 
+**Structured Questions (MANDATORY before generating stories):**
+
+Before generating stories, write clarifying questions to `.aidlc/inception/questions/stories-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags).
+
+**Question categories to evaluate (evaluate ALL — skip only with explicit justification per `overconfidence-prevention.md`):**
+- **Persona definition** — Who are the distinct user types? What are their demographics, goals, pain points?
+- **Story granularity** — What level of detail is appropriate? Should stories be feature-level or task-level?
+- **Acceptance criteria depth** — How specific should Given/When/Then criteria be? Testing approach?
+- **User journeys** — What are the key end-to-end workflows? Happy paths and error paths?
+- **Business context** — What business goals drive these stories? Success metrics?
+- **Priority rationale** — What determines MUST vs SHOULD vs MAY for each story?
+- **Edge cases** — What boundary conditions or exception flows should stories cover?
+
+Inform user: "I've created stories-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: — let me know when done."
+
+Wait for user completion.
+
+**Contradiction Detection (MANDATORY):**
+
+After collecting answers, run contradiction detection per `question-format-guide.md`:
+- Check for logically inconsistent answers (e.g., "simple app" but "10+ persona types")
+- Check for ambiguous responses ("depends", "maybe", "not sure", "mix of")
+- Check for answers that conflict with requirements.md
+- If contradictions found: create `stories-clarification-questions.md` in the same `questions/` directory, inform user, wait for resolution
+- Apply `overconfidence-prevention.md` — if uncertain about a story decision, ASK rather than assume
+
+Only proceed to story generation when all answers are clear and consistent.
+
 **Process:**
 
-1. Define personas from intent.md stakeholders and questioning answers
+1. Define personas with full definitions from intent.md stakeholders and questioning answers:
+   - Role, Goal, Context (existing)
+   - Demographics (age range, technical proficiency, domain experience)
+   - Pain Points (current frustrations, unmet needs, workflow bottlenecks)
+   - Success Criteria (what "success" looks like for this persona)
 2. Write stories in As-a / I-want / So-that format
 3. Add acceptance criteria in Given/When/Then format (testable)
 4. Map each story to REQ-IDs from requirements.md
-5. Build story map table (persona x priority)
-6. Build coverage table (story -> requirements -> unit placeholder)
+5. **INVEST validation (MANDATORY):** Before presenting stories, validate each against INVEST criteria:
+   - **Independent** — Can be developed without depending on another story
+   - **Negotiable** — Details can be discussed; not a rigid contract
+   - **Valuable** — Delivers clear value to user or business
+   - **Estimable** — Enough detail to estimate effort
+   - **Small** — Completable within a single unit or bolt
+   - **Testable** — Acceptance criteria are verifiable (Given/When/Then)
+   - Fill in the INVEST Validation table in the template
+   - Stories failing any criterion MUST be revised before presenting to user
+6. Build story map table (persona x priority)
+7. Build story-to-requirement traceability table (story -> REQ-IDs with descriptions)
+8. Build coverage table (story -> requirements -> unit placeholder)
+9. Verify traceability: flag requirements without stories and stories without requirements
 
 **Frontmatter:**
 ```yaml
@@ -294,25 +355,86 @@ traces_to:
 - Every MUST requirement has at least one story covering it
 - Acceptance criteria are specific enough for automated testing
 - Personas are distinct (not just "User Type A" and "User Type B")
+- Personas include demographics, pain points, and success criteria
 - Story count is manageable: 5-15 for most projects
+- All stories pass INVEST validation (check the validation table)
+- Story-to-requirement traceability table is complete with no orphans
 
 Present to user for review. Incorporate feedback.
 </step>
 
 <step name="application_design">
-**Trigger:** Multi-unit project OR complex architecture OR multiple components.
+**Trigger (CONDITIONAL):** Execute this stage when ANY of these apply:
+- New components or services are being introduced
+- Multiple bounded contexts identified in requirements
+- Distributed or multi-service architecture
+- Multi-unit project with complex component interactions
+
+**Skip when ALL of these apply:**
+- Simple single-component project (one service, one database)
+- Pure refactoring with no new architecture
+- No new service boundaries or component interactions
+
+Log skip/execute decision and justification to `audit.md`.
+
+**Execution order:** AFTER Requirements Analysis, BEFORE Execution Plan / Unit Decomposition.
+Units MUST be derived from the bounded contexts and component boundaries identified in this stage.
 
 Using the application design template, create `.aidlc/inception/application-design.md`.
 
 **Process:**
 
 1. Define architecture overview based on requirements and research
-2. Create component breakdown table (component -> responsibility -> technology)
-3. Define data model (core entities, relationships, storage)
-4. Define API contracts (external exposed, internal between components, external consumed)
-5. Document technology decisions with rationale and alternatives considered
-6. Create dependency diagram (text-based, showing build/deploy order)
-7. Draft unit mapping preview (which units build which components)
+2. **Create component inventory** — table with component name, responsibility, technology, owning bounded context, and notes. Every component must map to at least one requirement.
+3. **Define component methods** — for each component, list method signatures with:
+   - Method name and purpose
+   - Input/output types
+   - Which business rules it touches (note: full business logic is deferred to Functional Design in construction)
+4. **Design service layer** — define services that orchestrate component interactions:
+   - Service name and responsibility
+   - Which components it coordinates
+   - Orchestration patterns (saga, choreography, request-response, etc.)
+5. **Create component dependency diagram** — ASCII diagram per `ascii-diagram-standards.md` showing:
+   - Component-to-component dependencies
+   - Direction of dependency (who depends on whom)
+   - Communication protocol at each edge (REST, gRPC, events, direct call)
+   - Validate per `content-validation.md` before writing
+6. **Map data flow between components** — for each major operation:
+   - Entry point (which component receives the request)
+   - Intermediate steps (which components process/transform)
+   - Terminal step (where the result lands)
+   - Data shape at each transition point
+7. Define data model (core entities, relationships, storage)
+8. Define API contracts (external exposed, internal between components, external consumed)
+9. Document technology decisions with rationale and alternatives considered
+10. Create build/deploy dependency diagram (text-based, showing build/deploy order)
+11. Draft unit mapping preview (which units build which components — units derived from bounded contexts)
+
+**Structured Questions:**
+
+Before generating the design artifact, write clarifying questions to `.aidlc/inception/questions/design-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags).
+
+Focus questions on:
+- Component boundary ambiguities
+- Service orchestration decisions
+- Communication pattern choices
+- Technology selection for components (where requirements do not dictate)
+- Ownership of shared concerns (logging, auth, validation)
+
+Inform user: "I've created design-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: -- let me know when done."
+
+Wait for user to complete answers.
+
+**Contradiction Detection (MANDATORY):**
+
+After collecting answers, run contradiction detection per `question-format-guide.md`:
+- Check for logically inconsistent answers (e.g., "stateless" component that "maintains session state")
+- Check for ambiguous responses ("depends", "maybe", "not sure", "mix of")
+- Check for answers that conflict with requirements.md
+- If contradictions found: create `design-clarification-questions.md`, inform user, wait for resolution
+- Apply `overconfidence-prevention.md` — if uncertain about a design decision, ASK rather than assume
+
+Only proceed to artifact generation when all answers are clear and consistent.
 
 **Frontmatter:**
 ```yaml
@@ -330,9 +452,13 @@ traces_to:
 
 **Quality checks:**
 - Every component maps to at least one requirement
+- Component methods are signatures only (no full business logic — that belongs in Functional Design)
+- Service layer covers all cross-component interactions
+- Dependency diagram has no orphaned components (everything connects to something)
+- Data flow covers all major user-facing operations
 - Data model covers all entities referenced in requirements
 - Technology decisions have clear rationale (not just preference)
-- No orphaned components (everything connects to something)
+- All diagrams validated per `content-validation.md` and `ascii-diagram-standards.md`
 
 Present to user for review. Incorporate feedback.
 </step>
@@ -348,14 +474,33 @@ Create `.aidlc/inception/execution-plan.md`.
 2. For each unit define:
    - Name and goal
    - Which requirements it covers (REQ-IDs)
+   - Which user stories it implements (STORY-IDs, if user-stories.md exists)
    - Acceptance criteria (derived from requirement tests)
    - Risk level (Low / Medium / High)
    - Estimated bolts (rough sizing)
    - Dependencies on other units
 3. Build unit dependency graph
-4. Create rigor levels table:
+4. **Generate unit dependency matrix** — create `.aidlc/inception/unit-dependency-matrix.md`:
+   - Table showing unit-to-unit dependencies (rows depend on columns)
+   - Dependency types: `BLOCKS` (hard dependency), `INFORMS` (soft/data dependency), `-` (none)
+   - Critical path identification (longest chain of BLOCKS dependencies)
+   - Recommended build order derived from the matrix
+   - Example format:
+     ```
+     | Unit \ Depends On | UNIT-001 | UNIT-002 | UNIT-003 |
+     |--------------------|----------|----------|----------|
+     | UNIT-001           | -        | -        | -        |
+     | UNIT-002           | BLOCKS   | -        | -        |
+     | UNIT-003           | -        | INFORMS  | -        |
+     ```
+5. **Story-to-unit mapping** (if user-stories.md exists):
+   - In each unit definition, list the STORY-IDs that the unit implements
+   - Update user-stories.md Coverage table with unit assignments
+   - Verify every story maps to at least one unit
+   - Flag unmapped stories as warnings
+6. Create rigor levels table:
    | Unit | Risk | Gate Rigor | Testing Depth | Notes |
-5. Define construction approach (bolt sizing, parallelization, gate rigor)
+7. Define construction approach (bolt sizing, parallelization, gate rigor)
 
 **Frontmatter:**
 ```yaml
@@ -375,13 +520,16 @@ After creating the execution plan, go back and update requirements.md:
 - Update coverage statistics
 - Flag any unmapped requirements as warnings
 
-If user-stories.md exists, update its Coverage table with unit mappings too.
+If user-stories.md exists, update its Coverage table and Story-to-Requirement Traceability table with unit mappings too.
 
 **Quality checks:**
 - Every MUST requirement maps to at least one unit
 - No unit is a catch-all (each has focused scope)
 - Dependencies form a DAG (no circular dependencies)
 - Risk levels are justified, not uniform
+- Unit dependency matrix is complete (all unit pairs evaluated)
+- If stories exist: every story maps to at least one unit, no orphaned stories
+- Critical path is identified in the dependency matrix
 
 Present to user for review.
 </step>
@@ -430,7 +578,9 @@ git add .aidlc/inception/execution-plan.md
 # Conditionally add optional artifacts
 git add .aidlc/inception/user-stories.md 2>/dev/null
 git add .aidlc/inception/application-design.md 2>/dev/null
+git add .aidlc/inception/unit-dependency-matrix.md 2>/dev/null
 git add .aidlc/inception/research/ 2>/dev/null
+git add .aidlc/inception/questions/ 2>/dev/null
 git add .aidlc/state.md
 git add .aidlc/audit.md
 
@@ -462,6 +612,7 @@ Quick reference for what each stage produces and where it lives.
 | User Stories | `.aidlc/inception/user-stories.md` | `user-stories.md` template | draft -> reviewed -> approved |
 | Application Design | `.aidlc/inception/application-design.md` | `application-design.md` template | draft -> reviewed -> approved |
 | Execution Plan | `.aidlc/inception/execution-plan.md` | `execution-plan.md` template | N/A (always current) |
+| Unit Dependency Matrix | `.aidlc/inception/unit-dependency-matrix.md` | (generated with execution plan) | N/A |
 
 ## Artifact Dependencies
 
@@ -479,13 +630,15 @@ intent.md (input, already exists)
     |                   |
     v                   v
 [User Stories] --> user-stories.md (optional, traces to requirements)
-    |
+    |               + INVEST validation table
+    |               + story-to-requirement traceability
     v
 [App Design] --> application-design.md (optional, traces to requirements)
     |
     v
 [Execution Plan] --> execution-plan.md (traces to requirements)
-    |
+    |                + unit-dependency-matrix.md (unit-to-unit dependencies)
+    |                + story-to-unit mapping (if stories exist)
     v
 [Back-fill] --> requirements.md updated with unit traceability
              --> user-stories.md updated with unit coverage (if exists)
@@ -632,9 +785,10 @@ Inception elaboration is complete when:
 - [ ] Research completed and documented (if stage was needed)
 - [ ] requirements.md created with MUST/SHOULD/MAY classification
 - [ ] Every requirement has a unique ID and testable description
-- [ ] user-stories.md created with personas and Given/When/Then criteria (if needed)
+- [ ] user-stories.md created with personas (incl. demographics/pain points), Given/When/Then criteria, INVEST validation, and story-to-requirement traceability (if needed)
 - [ ] application-design.md created with architecture and component breakdown (if needed)
-- [ ] execution-plan.md created with unit decomposition
+- [ ] execution-plan.md created with unit decomposition and story-to-unit mapping
+- [ ] unit-dependency-matrix.md created with unit-to-unit dependencies and critical path
 - [ ] Golden thread established: requirements <-> units bidirectional traceability
 - [ ] All unmapped requirements flagged
 - [ ] Gate 1 checkpoint presented to user

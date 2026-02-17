@@ -54,6 +54,42 @@ complexity: "{low | medium | high}"
 - **Observability:** {Basic logging | Metrics + logging | Full APM}
 - **Rollback:** {Git revert | Blue-green | Canary}
 
+## Unit Dependency Matrix
+
+See `.aidlc/inception/unit-dependency-matrix.md` for the full dependency matrix.
+
+**Summary:**
+
+| Unit \ Depends On | UNIT-001 | UNIT-002 | UNIT-003 |
+|--------------------|----------|----------|----------|
+| UNIT-001           | -        | -        | -        |
+| UNIT-002           | {BLOCKS/INFORMS/-} | -        | -        |
+| UNIT-003           | {BLOCKS/INFORMS/-} | {BLOCKS/INFORMS/-} | -        |
+
+**Dependency types:**
+- `BLOCKS` — Hard dependency: must complete before dependent unit can start
+- `INFORMS` — Soft dependency: output feeds into dependent unit but does not block start
+- `-` — No dependency
+
+**Critical path:** {UNIT-X -> UNIT-Y -> UNIT-Z} ({N} units, {E} estimated bolts)
+
+**Recommended build order:**
+1. {UNIT-NNN} — {reason: no dependencies / foundation unit}
+2. {UNIT-NNN} — {reason: depends on unit above}
+3. {UNIT-NNN} — {reason: can parallelize with unit above}
+
+## Story-to-Unit Mapping
+
+{Include only if user-stories.md exists}
+
+| Unit | Stories Implemented | Story Count |
+|------|-------------------|-------------|
+| UNIT-001 | STORY-001, STORY-003 | {N} |
+| UNIT-002 | STORY-002, STORY-004 | {N} |
+
+**Coverage:** {N} of {M} stories mapped to units ({percentage}%)
+**Unmapped stories:** {list STORY-IDs or "None"}
+
 ## Adaptive Depth Rationale
 
 {Why this level of rigor was chosen. Reference Principle #5 (Complex Systems) and #10 (No Hard-Wired Workflows).}
