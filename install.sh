@@ -130,10 +130,12 @@ install_shared() {
     local tool="$2"
     for dir in references templates workflows; do
         if [ -d "${SRC_DIR}/shared/${dir}" ]; then
-            find "${SRC_DIR}/shared/${dir}" -type d | while read -r subdir; do
-                relative="${subdir#${SRC_DIR}/shared/${dir}}"
-                mkdir -p "${target_dir}/${dir}${relative}"
-            done
+            if [ "$DRY_RUN" = false ]; then
+                find "${SRC_DIR}/shared/${dir}" -type d | while read -r subdir; do
+                    relative="${subdir#${SRC_DIR}/shared/${dir}}"
+                    mkdir -p "${target_dir}/${dir}${relative}"
+                done
+            fi
             find "${SRC_DIR}/shared/${dir}" -type f | while read -r file; do
                 relative="${file#${SRC_DIR}/shared/${dir}/}"
                 install_file_copy "$file" "${target_dir}/${dir}/${relative}" "$tool"
@@ -149,7 +151,13 @@ install_claude() {
     local AGENTS_DIR="${CLAUDE_HOME}/agents"
     local HOOKS_DIR="${CLAUDE_HOME}/hooks"
 
-    echo "Installing for Claude Code..."
+    if [ "$DRY_RUN" = true ]; then
+        echo "Would install for Claude Code..."
+        echo "  Source:  ${SRC_DIR}"
+        echo "  Target:  ${CLAUDE_HOME}"
+    else
+        echo "Installing for Claude Code..."
+    fi
 
     # Check for existing installation
     if [ -d "${SDLC_HOME}" ] && [ "$DRY_RUN" = false ]; then
@@ -162,35 +170,56 @@ install_claude() {
     fi
 
     # Shared content (references, templates, workflows)
+    local ref_count=$(find "${SRC_DIR}/shared/references" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local tpl_count=$(find "${SRC_DIR}/shared/templates" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local wf_count=$(find "${SRC_DIR}/shared/workflows" -type f 2>/dev/null | wc -l | tr -d ' ')
     install_shared "$SDLC_HOME" "claude"
-    print_step "Framework core installed to ${SDLC_HOME}/"
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install framework core: ${ref_count} references, ${tpl_count} templates, ${wf_count} workflows"
+    else
+        print_step "Framework core installed to ${SDLC_HOME}/"
+    fi
 
-    # Generated Claude commands
-    for cmd in "${SRC_DIR}/claude/commands/"*.md; do
-        [ -f "$cmd" ] && install_file_copy "$cmd" "${COMMANDS_DIR}/$(basename "$cmd")" "claude"
-    done
-    local cmd_count=$(ls "${SRC_DIR}/claude/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
-    print_step "${cmd_count} commands installed to ${COMMANDS_DIR}/"
+    # Generated Claude commands (in dry-run, count source commands since build is skipped)
+    if [ "$DRY_RUN" = true ]; then
+        local cmd_count=$(ls "${SRC_DIR}/shared/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
+        print_step "Would install ${cmd_count} commands to ${COMMANDS_DIR}/"
+    else
+        for cmd in "${SRC_DIR}/claude/commands/"*.md; do
+            [ -f "$cmd" ] && install_file_copy "$cmd" "${COMMANDS_DIR}/$(basename "$cmd")" "claude"
+        done
+        local cmd_count=$(ls "${SRC_DIR}/claude/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
+        print_step "${cmd_count} commands installed to ${COMMANDS_DIR}/"
+    fi
 
     # Shared agents (path-agnostic — no substitution needed)
     for agent in "${SRC_DIR}/agents/"*.md; do
         [ -f "$agent" ] && install_file_copy "$agent" "${AGENTS_DIR}/$(basename "$agent")" "claude"
     done
     local agent_count=$(ls "${SRC_DIR}/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
-    print_step "${agent_count} agents installed to ${AGENTS_DIR}/"
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install ${agent_count} agents to ${AGENTS_DIR}/"
+    else
+        print_step "${agent_count} agents installed to ${AGENTS_DIR}/"
+    fi
 
     # Claude hooks
+    local hook_count=$(ls "${SRC_DIR}/claude/hooks/"*.js 2>/dev/null | wc -l | tr -d ' ')
     for hook in "${SRC_DIR}/claude/hooks/"*.js; do
         [ -f "$hook" ] && install_file_copy "$hook" "${HOOKS_DIR}/$(basename "$hook")" "claude"
     done
-    print_step "Hooks installed to ${HOOKS_DIR}/"
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install ${hook_count} hooks to ${HOOKS_DIR}/"
+    else
+        print_step "Hooks installed to ${HOOKS_DIR}/"
+    fi
 
     # VERSION
     if [ "$DRY_RUN" = false ]; then
         echo "${VERSION}" > "${SDLC_HOME}/VERSION"
         track_file "claude" "${SDLC_HOME}/VERSION"
     fi
-    print_step "Claude Code: installed (v${VERSION})"
+    print_step "Claude Code: $([ "$DRY_RUN" = true ] && echo "would install" || echo "installed") (v${VERSION})"
 }
 
 # --- Cursor installation ---
@@ -201,15 +230,28 @@ install_cursor() {
     local RULES_DIR="${CURSOR_HOME}/rules"
     local SHARED_AGENTS_DIR="${CLAUDE_HOME}/agents"
 
-    echo "Installing for Cursor..."
+    if [ "$DRY_RUN" = true ]; then
+        echo "Would install for Cursor..."
+        echo "  Source:  ${SRC_DIR}"
+        echo "  Target:  ${CURSOR_HOME}"
+    else
+        echo "Installing for Cursor..."
+    fi
 
     if [ "$DRY_RUN" = false ]; then
         mkdir -p "${SKILL_DIR}" "${COMMANDS_DIR}" "${AGENTS_DIR}" "${RULES_DIR}" "${SHARED_AGENTS_DIR}"
     fi
 
     # Shared content
+    local ref_count=$(find "${SRC_DIR}/shared/references" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local tpl_count=$(find "${SRC_DIR}/shared/templates" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local wf_count=$(find "${SRC_DIR}/shared/workflows" -type f 2>/dev/null | wc -l | tr -d ' ')
     install_shared "$SKILL_DIR" "cursor"
-    print_step "Framework core installed to ${SKILL_DIR}/"
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install framework core: ${ref_count} references, ${tpl_count} templates, ${wf_count} workflows"
+    else
+        print_step "Framework core installed to ${SKILL_DIR}/"
+    fi
 
     # Generate SKILL.md
     if [ "$DRY_RUN" = false ]; then
@@ -234,17 +276,22 @@ Always read `references/gates.md` and `references/principles.md` when enforcing 
 SKILL_EOF
         track_file "cursor" "${SKILL_DIR}/SKILL.md"
     fi
-    print_step "SKILL.md generated"
+    print_step "SKILL.md $([ "$DRY_RUN" = true ] && echo "would be generated" || echo "generated")"
 
     # Generated Cursor commands (prefixed with sdlc-)
-    for cmd in "${SRC_DIR}/cursor/commands/"*.md; do
-        if [ -f "$cmd" ]; then
-            local filename=$(basename "$cmd")
-            install_file_copy "$cmd" "${COMMANDS_DIR}/sdlc-${filename}" "cursor"
-        fi
-    done
-    local cmd_count=$(ls "${SRC_DIR}/cursor/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
-    print_step "${cmd_count} commands installed to ${COMMANDS_DIR}/"
+    if [ "$DRY_RUN" = true ]; then
+        local cmd_count=$(ls "${SRC_DIR}/shared/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
+        print_step "Would install ${cmd_count} commands to ${COMMANDS_DIR}/"
+    else
+        for cmd in "${SRC_DIR}/cursor/commands/"*.md; do
+            if [ -f "$cmd" ]; then
+                local filename=$(basename "$cmd")
+                install_file_copy "$cmd" "${COMMANDS_DIR}/sdlc-${filename}" "cursor"
+            fi
+        done
+        local cmd_count=$(ls "${SRC_DIR}/cursor/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
+        print_step "${cmd_count} commands installed to ${COMMANDS_DIR}/"
+    fi
 
     # Cursor subagent wrappers
     for agent in "${SRC_DIR}/cursor/agents/"*.md; do
@@ -258,12 +305,22 @@ SKILL_EOF
     for agent in "${SRC_DIR}/agents/"*.md; do
         [ -f "$agent" ] && install_file_copy "$agent" "${SHARED_AGENTS_DIR}/$(basename "$agent")" "cursor"
     done
-    print_step "Agents installed"
+    local agent_count=$(ls "${SRC_DIR}/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
+    local cursor_agent_count=$(ls "${SRC_DIR}/cursor/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install ${agent_count} shared agents + ${cursor_agent_count} cursor agents"
+    else
+        print_step "Agents installed"
+    fi
 
     # Cursor rules
+    local rule_count=$(ls "${SRC_DIR}/cursor/rules/"*.mdc 2>/dev/null | wc -l | tr -d ' ')
     for rule in "${SRC_DIR}/cursor/rules/"*.mdc; do
         [ -f "$rule" ] && install_file_copy "$rule" "${RULES_DIR}/$(basename "$rule")" "cursor"
     done
+    if [ "$DRY_RUN" = true ]; then
+        print_step "Would install ${rule_count} rules to ${RULES_DIR}/"
+    fi
 
     # Merge hooks (not replace!)
     merge_cursor_hooks
@@ -273,7 +330,7 @@ SKILL_EOF
         echo "${VERSION}" > "${SKILL_DIR}/VERSION"
         track_file "cursor" "${SKILL_DIR}/VERSION"
     fi
-    print_step "Cursor: installed (v${VERSION})"
+    print_step "Cursor: $([ "$DRY_RUN" = true ] && echo "would install" || echo "installed") (v${VERSION})"
 }
 
 # --- Hooks merge ---
@@ -407,10 +464,20 @@ if [ "$UNINSTALL" = true ]; then
     exit 0
 fi
 
-check_permissions
+if [ "$DRY_RUN" != "true" ]; then
+    check_permissions
+fi
 
 # Build commands from single source
-build_commands
+if [ "$DRY_RUN" = "true" ]; then
+    # In dry-run mode, verify source files exist but don't build
+    if [ ! -d "${SRC_DIR}/shared/commands" ]; then
+        print_error "Source commands directory not found at ${SRC_DIR}/shared/commands"
+        exit 1
+    fi
+else
+    build_commands
+fi
 
 # Install
 [ "$INSTALL_CLAUDE" = true ] && install_claude
@@ -419,24 +486,39 @@ build_commands
 # Summary
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}${BOLD}  AI-SDLC Framework installed successfully!${NC}"
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-
-if [ "$INSTALL_CLAUDE" = true ]; then
-    echo "  Claude Code Quick Start:"
-    echo "  1. Open a project directory in Claude Code"
-    echo "  2. Run: /sdlc:new-project"
-    echo "  3. Follow the Inception flow"
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${GREEN}${BOLD}  AI-SDLC Framework dry-run complete!${NC}"
+    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-fi
-
-if [ "$INSTALL_CURSOR" = true ]; then
-    echo "  Cursor Quick Start:"
-    echo "  1. Open a project in Cursor"
-    echo "  2. Run: /sdlc-new-project"
-    echo "  3. Follow the Inception flow"
+    echo "  No files were written. Run without --dry-run to install."
     echo ""
+    # Warn about potential issues in real mode
+    if [ "$INSTALL_CLAUDE" = true ] && [ -d "${CLAUDE_HOME}" ] && [ ! -w "${CLAUDE_HOME}" ]; then
+        print_warn "${CLAUDE_HOME} is not writable — real install may fail"
+    fi
+    if [ "$INSTALL_CURSOR" = true ] && [ -d "${CURSOR_HOME}" ] && [ ! -w "${CURSOR_HOME}" ]; then
+        print_warn "${CURSOR_HOME} is not writable — real install may fail"
+    fi
+else
+    echo -e "${GREEN}${BOLD}  AI-SDLC Framework installed successfully!${NC}"
+    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+
+    if [ "$INSTALL_CLAUDE" = true ]; then
+        echo "  Claude Code Quick Start:"
+        echo "  1. Open a project directory in Claude Code"
+        echo "  2. Run: /sdlc:new-project"
+        echo "  3. Follow the Inception flow"
+        echo ""
+    fi
+
+    if [ "$INSTALL_CURSOR" = true ]; then
+        echo "  Cursor Quick Start:"
+        echo "  1. Open a project in Cursor"
+        echo "  2. Run: /sdlc-new-project"
+        echo "  3. Follow the Inception flow"
+        echo ""
+    fi
 fi
 
 echo "  Learn more: https://ai-sdlc-explainer.vercel.app/"
