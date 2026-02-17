@@ -55,17 +55,50 @@ Follow `error-handling.md` for failure modes. Log planning decisions and errors 
 </role>
 
 <construction_stages>
-Before creating bolt plans, check which construction stages apply to this unit:
+Before creating bolt plans, check which construction stages apply to this unit.
 
-1. **Functional Design** (CONDITIONAL) — Include if complex business logic, multi-step workflows, or domain-specific rules
-2. **NFR Requirements** (CONDITIONAL) — Include if performance, scalability, or security requirements exist for this unit
-3. **NFR Design** (CONDITIONAL) — Include if NFR requirements identified above need architectural decisions
-4. **Infrastructure Design** (CONDITIONAL) — Include if cloud resources, databases, or external services need provisioning
-5. **Code Generation** (ALWAYS) — Implementation of the unit
-6. **Build and Test** (ALWAYS) — Verification that implementation meets acceptance criteria
+**Detection logic — check these files:**
 
-Check `.aidlc/inception/nfr.md` and `.aidlc/inception/units/UNIT-{NNN}.md` to determine which conditional stages apply.
-Incorporate relevant stages into bolt plan tasks rather than creating separate plans for each stage.
+```bash
+# Check for inception-level NFR
+cat .aidlc/inception/nfr.md 2>/dev/null
+
+# Check unit spec for NFR signals
+grep -i "performance\|security\|scale\|avail\|compliance\|infrastructure\|deploy" .aidlc/inception/units/UNIT-NNN.md
+
+# Check requirements for NFR-related REQ-IDs
+grep -i "NFR\|performance\|security\|scale" .aidlc/inception/requirements.md 2>/dev/null
+
+# Check if NFR/infrastructure artifacts already exist for this unit
+ls .aidlc/construction/unit-NNN/nfr-requirements.md 2>/dev/null
+ls .aidlc/construction/unit-NNN/nfr-design.md 2>/dev/null
+ls .aidlc/construction/unit-NNN/infrastructure-design.md 2>/dev/null
+```
+
+**Stage checklist:**
+
+| # | Stage | Condition | Reference |
+|---|-------|-----------|-----------|
+| 1 | **NFR Requirements** | Performance, security, scalability, or compliance requirements exist AND `nfr-requirements.md` doesn't exist yet | `construction/nfr-requirements.md` |
+| 2 | **NFR Design** | NFR Requirements was executed (nfr-requirements.md exists) AND design patterns needed AND `nfr-design.md` doesn't exist yet | `construction/nfr-design.md` |
+| 3 | **Infrastructure Design** | Cloud resources, databases, or deployment architecture needed AND `infrastructure-design.md` doesn't exist yet | `construction/infrastructure-design.md` |
+| 4 | **Code Generation** | ALWAYS | (bolt planning core) |
+| 5 | **Build and Test** | ALWAYS | (bolt planning core) |
+
+**If conditional stages need to execute:**
+
+1. Inform user which pre-planning stages are needed before bolt creation
+2. Execute each stage in order (NFR Requirements → NFR Design → Infrastructure Design)
+3. Each stage follows its reference document workflow (questions → answers → artifact → approval)
+4. Feed resulting artifacts into bolt planning context
+
+**If conditional stage artifacts already exist:** Load them as planning context without re-executing the stage.
+
+**Integration into bolt plans:**
+- NFR requirements become verification criteria in bolt tasks
+- NFR design patterns become implementation tasks within bolts
+- Infrastructure design feeds into setup/deployment bolts and user_setup frontmatter
+- Do NOT create separate bolt plans for each construction stage — weave stage outputs into the unit's bolt plans
 </construction_stages>
 
 <philosophy>
