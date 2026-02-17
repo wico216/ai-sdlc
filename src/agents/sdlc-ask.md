@@ -39,8 +39,8 @@ When asked "what should I do next?" or "where am I?":
 Decision tree (use tool-appropriate command prefix):
 - No `.aidlc/` directory → suggest new-project command
 - Has PROJECT.md but no REQUIREMENTS.md → suggest completing new-project
-- Has REQUIREMENTS.md but no units/ → suggest inception command
-- Has units/ but no audit entry for INCEPTION EXIT → suggest completing inception gates
+- Has REQUIREMENTS.md but no inception/units/ → suggest inception command
+- Has inception/units/ but no audit entry for INCEPTION EXIT → suggest completing inception gates
 - Has INCEPTION EXIT gate → suggest bolt command for first unit
 - Has Design Approved for unit N → suggest continuing bolt execution
 - Has UNIT COMPLETE for all units → suggest deploy command

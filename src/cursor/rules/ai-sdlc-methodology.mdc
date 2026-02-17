@@ -20,7 +20,7 @@ All AI-SDLC artifacts live in `.aidlc/` in the project root. Key files:
 - `.aidlc/REQUIREMENTS.md` — scoped requirements with REQ-IDs
 - `.aidlc/audit.md` — append-only decision log
 - `.aidlc/execution-plan.md` — rigor levels and project config
-- `.aidlc/units/` — unit definitions with acceptance criteria
+- `.aidlc/inception/units/` — unit definitions with acceptance criteria
 
 ## Gate Protocol
 

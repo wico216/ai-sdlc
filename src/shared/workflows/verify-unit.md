@@ -1,7 +1,7 @@
 <purpose>
 Verify phase goal achievement through goal-backward analysis. Check that the codebase actually delivers what the phase promised, not just that tasks were completed.
 
-This workflow is executed by a verification subagent spawned from execute-phase.md.
+This workflow is executed by a verification subagent spawned from build-unit.md.
 </purpose>
 
 <core_principle>
@@ -30,10 +30,10 @@ Then verify each level against the actual codebase.
 ```bash
 # Phase directory (match both zero-padded and unpadded)
 PADDED_PHASE=$(printf "%02d" ${PHASE_ARG} 2>/dev/null || echo "${PHASE_ARG}")
-PHASE_DIR=$(ls -d .aidlc/phases/${PADDED_PHASE}-* .aidlc/phases/${PHASE_ARG}-* 2>/dev/null | head -1)
+PHASE_DIR=$(ls -d .aidlc/construction/${PADDED_PHASE}-* .aidlc/construction/${PHASE_ARG}-* 2>/dev/null | head -1)
 
 # Phase goal from ROADMAP
-grep -A 5 "Phase ${PHASE_NUM}" .aidlc/ROADMAP.md
+grep -A 5 "Phase ${PHASE_NUM}" .aidlc/execution-plan.md
 
 # Requirements mapped to this phase
 grep -E "^| ${PHASE_NUM}" .aidlc/REQUIREMENTS.md 2>/dev/null
@@ -45,7 +45,7 @@ ls "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null
 ls "$PHASE_DIR"/*-PLAN.md 2>/dev/null
 ```
 
-**Extract phase goal:** Parse ROADMAP.md for this phase's goal/description. This is the outcome to verify, not the tasks.
+**Extract phase goal:** Parse execution-plan.md for this phase's goal/description. This is the outcome to verify, not the tasks.
 
 **Extract requirements:** If REQUIREMENTS.md exists, find requirements mapped to this phase. These become additional verification targets.
 </step>
@@ -80,7 +80,7 @@ must_haves:
 
 If no must_haves in frontmatter, derive using goal-backward process:
 
-1. **State the goal:** Take phase goal from ROADMAP.md
+1. **State the goal:** Take phase goal from execution-plan.md
 
 2. **Derive truths:** Ask "What must be TRUE for this goal to be achieved?"
    - List 3-7 observable behaviors from user perspective
@@ -96,7 +96,7 @@ If no must_haves in frontmatter, derive using goal-backward process:
 
 5. **Document derived must-haves** before proceeding to verification.
 
-<!-- Goal-backward derivation expertise is baked into the sdlc-verifier agent -->
+<!-- Goal-backward derivation expertise is baked into the sdlc-unit-verifier agent -->
 </step>
 
 <step name="verify_truths">
@@ -568,7 +568,7 @@ See __SDLC_TEMPLATES__/verification-report.md for complete template.
 </step>
 
 <step name="return_to_orchestrator">
-**Return results to execute-phase orchestrator.**
+**Return results to build-unit orchestrator.**
 
 **Return format:**
 
@@ -577,7 +577,7 @@ See __SDLC_TEMPLATES__/verification-report.md for complete template.
 
 **Status:** {passed | gaps_found | human_needed}
 **Score:** {N}/{M} must-haves verified
-**Report:** .aidlc/phases/{phase_dir}/{phase}-VERIFICATION.md
+**Report:** .aidlc/construction/{phase_dir}/{phase}-VERIFICATION.md
 
 {If passed:}
 All must-haves verified. Phase goal achieved. Ready to proceed.

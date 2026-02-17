@@ -17,11 +17,11 @@ Use for major workflow transitions.
 - `RESEARCHING`
 - `DEFINING REQUIREMENTS`
 - `CREATING ROADMAP`
-- `PLANNING PHASE {N}`
+- `PLANNING UNIT {NNN}`
 - `EXECUTING WAVE {N}`
 - `VERIFYING`
-- `PHASE {N} COMPLETE ✓`
-- `MILESTONE COMPLETE 🎉`
+- `UNIT {NNN} COMPLETE ✓`
+- `RELEASE COMPLETE 🎉`
 
 ---
 
@@ -57,14 +57,14 @@ User action required. 62-character width.
 ○  Pending
 ⚡ Auto-approved
 ⚠  Warning
-🎉 Milestone complete (only in banner)
+🎉 Release complete (only in banner)
 ```
 
 ---
 
 ## Progress Display
 
-**Phase/milestone level:**
+**Unit/release level:**
 ```
 Progress: ████████░░ 80%
 ```

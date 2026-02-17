@@ -10,8 +10,8 @@ Configuration options for `.aidlc/` directory behavior.
 },
 "git": {
   "branching_strategy": "none",
-  "phase_branch_template": "sdlc/phase-{phase}-{slug}",
-  "milestone_branch_template": "sdlc/{milestone}-{slug}"
+  "unit_branch_template": "sdlc/unit-{unit}-{slug}",
+  "project_branch_template": "sdlc/{project}-{slug}"
 }
 ```
 
@@ -19,16 +19,16 @@ Configuration options for `.aidlc/` directory behavior.
 |--------|---------|-------------|
 | `commit_docs` | `true` | Whether to commit planning artifacts to git |
 | `search_gitignored` | `false` | Add `--no-ignore` to broad rg searches |
-| `git.branching_strategy` | `"none"` | Git branching approach: `"none"`, `"phase"`, or `"milestone"` |
-| `git.phase_branch_template` | `"sdlc/phase-{phase}-{slug}"` | Branch template for phase strategy |
-| `git.milestone_branch_template` | `"sdlc/{milestone}-{slug}"` | Branch template for milestone strategy |
+| `git.branching_strategy` | `"none"` | Git branching approach: `"none"`, `"unit"`, or `"project"` |
+| `git.unit_branch_template` | `"sdlc/unit-{unit}-{slug}"` | Branch template for unit strategy |
+| `git.project_branch_template` | `"sdlc/{project}-{slug}"` | Branch template for project strategy |
 </config_schema>
 
 <commit_docs_behavior>
 
 **When `commit_docs: true` (default):**
 - Planning files committed normally
-- SUMMARY.md, STATE.md, ROADMAP.md tracked in git
+- state.md, audit.md, execution-plan.md tracked in git
 - Full history of planning decisions preserved
 
 **When `commit_docs: false`:**
@@ -52,7 +52,7 @@ git check-ignore -q .aidlc 2>/dev/null && COMMIT_DOCS=false
 
 ```bash
 if [ "$COMMIT_DOCS" = "true" ]; then
-  git add .aidlc/STATE.md
+  git add .aidlc/state.md
   git commit -m "docs: update state"
 fi
 ```
@@ -106,33 +106,33 @@ To use uncommitted mode:
 | Strategy | When branch created | Branch scope | Merge point |
 |----------|---------------------|--------------|-------------|
 | `none` | Never | N/A | N/A |
-| `phase` | At `execute-phase` start | Single phase | User merges after phase |
-| `milestone` | At first `execute-phase` of milestone | Entire milestone | At `complete-milestone` |
+| `unit` | At `build-unit` start | Single unit | User merges after unit |
+| `project` | At first `build-unit` of project | Entire project | At `approve-release` |
 
 **When `git.branching_strategy: "none"` (default):**
 - All work commits to current branch
 - Standard AI-SDLC behavior
 
-**When `git.branching_strategy: "phase"`:**
-- `execute-phase` creates/switches to a branch before execution
-- Branch name from `phase_branch_template` (e.g., `sdlc/phase-03-authentication`)
-- All plan commits go to that branch
-- User merges branches manually after phase completion
-- `complete-milestone` offers to merge all phase branches
+**When `git.branching_strategy: "unit"`:**
+- `build-unit` creates/switches to a branch before execution
+- Branch name from `unit_branch_template` (e.g., `sdlc/unit-003-authentication`)
+- All bolt commits go to that branch
+- User merges branches manually after unit completion
+- `approve-release` offers to merge all unit branches
 
-**When `git.branching_strategy: "milestone"`:**
-- First `execute-phase` of milestone creates the milestone branch
-- Branch name from `milestone_branch_template` (e.g., `sdlc/v1.0-mvp`)
-- All phases in milestone commit to same branch
-- `complete-milestone` offers to merge milestone branch to main
+**When `git.branching_strategy: "project"`:**
+- First `build-unit` of project creates the project branch
+- Branch name from `project_branch_template` (e.g., `sdlc/myapp-v1`)
+- All units in project commit to same branch
+- `approve-release` offers to merge project branch to main
 
 **Template variables:**
 
 | Variable | Available in | Description |
 |----------|--------------|-------------|
-| `{phase}` | phase_branch_template | Zero-padded phase number (e.g., "03") |
+| `{unit}` | unit_branch_template | Zero-padded unit number (e.g., "003") |
 | `{slug}` | Both | Lowercase, hyphenated name |
-| `{milestone}` | milestone_branch_template | Milestone version (e.g., "v1.0") |
+| `{project}` | project_branch_template | Project name |
 
 **Checking the config:**
 
@@ -140,32 +140,29 @@ To use uncommitted mode:
 # Get branching strategy (default: none)
 BRANCHING_STRATEGY=$(cat .aidlc/config.json 2>/dev/null | grep -o '"branching_strategy"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*:.*"\([^"]*\)"/\1/' || echo "none")
 
-# Get phase branch template
-PHASE_BRANCH_TEMPLATE=$(cat .aidlc/config.json 2>/dev/null | grep -o '"phase_branch_template"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*:.*"\([^"]*\)"/\1/' || echo "sdlc/phase-{phase}-{slug}")
-
-# Get milestone branch template
-MILESTONE_BRANCH_TEMPLATE=$(cat .aidlc/config.json 2>/dev/null | grep -o '"milestone_branch_template"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*:.*"\([^"]*\)"/\1/' || echo "sdlc/{milestone}-{slug}")
+# Get unit branch template
+UNIT_BRANCH_TEMPLATE=$(cat .aidlc/config.json 2>/dev/null | grep -o '"unit_branch_template"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*:.*"\([^"]*\)"/\1/' || echo "sdlc/unit-{unit}-{slug}")
 ```
 
 **Branch creation:**
 
 ```bash
-# For phase strategy
-if [ "$BRANCHING_STRATEGY" = "phase" ]; then
-  PHASE_SLUG=$(echo "$PHASE_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
-  BRANCH_NAME=$(echo "$PHASE_BRANCH_TEMPLATE" | sed "s/{phase}/$PADDED_PHASE/g" | sed "s/{slug}/$PHASE_SLUG/g")
+# For unit strategy
+if [ "$BRANCHING_STRATEGY" = "unit" ]; then
+  UNIT_SLUG=$(echo "$UNIT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+  BRANCH_NAME=$(echo "$UNIT_BRANCH_TEMPLATE" | sed "s/{unit}/$PADDED_UNIT/g" | sed "s/{slug}/$UNIT_SLUG/g")
   git checkout -b "$BRANCH_NAME" 2>/dev/null || git checkout "$BRANCH_NAME"
 fi
 
-# For milestone strategy
-if [ "$BRANCHING_STRATEGY" = "milestone" ]; then
-  MILESTONE_SLUG=$(echo "$MILESTONE_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
-  BRANCH_NAME=$(echo "$MILESTONE_BRANCH_TEMPLATE" | sed "s/{milestone}/$MILESTONE_VERSION/g" | sed "s/{slug}/$MILESTONE_SLUG/g")
+# For project strategy
+if [ "$BRANCHING_STRATEGY" = "project" ]; then
+  PROJECT_SLUG=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+  BRANCH_NAME=$(echo "$PROJECT_BRANCH_TEMPLATE" | sed "s/{project}/$PROJECT_SLUG/g" | sed "s/{slug}/$PROJECT_SLUG/g")
   git checkout -b "$BRANCH_NAME" 2>/dev/null || git checkout "$BRANCH_NAME"
 fi
 ```
 
-**Merge options at complete-milestone:**
+**Merge options at approve-release:**
 
 | Option | Git command | Result |
 |--------|-------------|--------|
@@ -181,8 +178,8 @@ Squash merge is recommended — keeps main branch history clean while preserving
 | Strategy | Best for |
 |----------|----------|
 | `none` | Solo development, simple projects |
-| `phase` | Code review per phase, granular rollback, team collaboration |
-| `milestone` | Release branches, staging environments, PR per version |
+| `unit` | Code review per unit, granular rollback, team collaboration |
+| `project` | Release branches, staging environments, PR per version |
 
 </branching_strategy_behavior>
 

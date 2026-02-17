@@ -4,7 +4,7 @@
 
 1. `.aidlc/STATE.md`
 2. `.aidlc/PROJECT.md`
-3. `.aidlc/ROADMAP.md`
+3. `.aidlc/execution-plan.md`
 4. Current phase's plan files (`*-PLAN.md`)
 5. Current phase's summary files (`*-SUMMARY.md`)
 
@@ -39,8 +39,8 @@ Note accumulated context that may need updating after transition.
 Check current phase has all plan summaries:
 
 ```bash
-ls .aidlc/phases/XX-current/*-PLAN.md 2>/dev/null | sort
-ls .aidlc/phases/XX-current/*-SUMMARY.md 2>/dev/null | sort
+ls .aidlc/construction/XX-current/*-PLAN.md 2>/dev/null | sort
+ls .aidlc/construction/XX-current/*-SUMMARY.md 2>/dev/null | sort
 ```
 
 **Verification logic:**
@@ -111,7 +111,7 @@ Wait for user decision.
 Check for lingering handoffs:
 
 ```bash
-ls .aidlc/phases/XX-current/.continue-here*.md 2>/dev/null
+ls .aidlc/construction/XX-current/.continue-here*.md 2>/dev/null
 ```
 
 If found, delete them — phase is complete, handoffs are stale.
@@ -123,7 +123,7 @@ If found, delete them — phase is complete, handoffs are stale.
 Update the roadmap file:
 
 ```bash
-ROADMAP_FILE=".aidlc/ROADMAP.md"
+ROADMAP_FILE=".aidlc/execution-plan.md"
 ```
 
 Update the file:
@@ -168,7 +168,7 @@ Evolve PROJECT.md to reflect learnings from completed phase.
 **Read phase summaries:**
 
 ```bash
-cat .aidlc/phases/XX-current/*-SUMMARY.md
+cat .aidlc/construction/XX-current/*-SUMMARY.md
 ```
 
 **Assess requirement changes:**
@@ -394,9 +394,9 @@ Resume file: None
 
 **MANDATORY: Verify milestone status before presenting next steps.**
 
-**Step 1: Read ROADMAP.md and identify phases in current milestone**
+**Step 1: Read execution-plan.md and identify phases in current milestone**
 
-Read the ROADMAP.md file and extract:
+Read the execution-plan.md file and extract:
 1. Current phase number (the phase just transitioned from)
 2. All phase numbers in the current milestone section
 
@@ -419,7 +419,7 @@ State: "Current phase is {X}. Milestone has {N} phases (highest: {Y})."
 
 **Route A: More phases remain in milestone**
 
-Read ROADMAP.md to get the next phase's name and goal.
+Read execution-plan.md to get the next phase's name and goal.
 
 **If next phase exists:**
 
@@ -433,7 +433,7 @@ Next: Phase [X+1] — [Name]
 ⚡ Auto-continuing: Plan Phase [X+1] in detail
 ```
 
-Exit skill and invoke SlashCommand("__CMD_PREFIX__plan-phase [X+1]")
+Exit skill and invoke SlashCommand("__CMD_PREFIX__plan-unit [X+1]")
 
 </if>
 
@@ -446,17 +446,16 @@ Exit skill and invoke SlashCommand("__CMD_PREFIX__plan-phase [X+1]")
 
 ## ▶ Next Up
 
-**Phase [X+1]: [Name]** — [Goal from ROADMAP.md]
+**Phase [X+1]: [Name]** — [Goal from execution-plan.md]
 
-`__CMD_PREFIX__plan-phase [X+1]`
+`__CMD_PREFIX__plan-unit [X+1]`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__discuss-phase [X+1]` — gather context first
-- `__CMD_PREFIX__research-phase [X+1]` — investigate unknowns
+- `__CMD_PREFIX__elaborate [X+1]` — gather context and investigate unknowns
 - Review roadmap
 
 ---
@@ -478,7 +477,7 @@ Phase {X} marked complete.
 ⚡ Auto-continuing: Complete milestone and archive
 ```
 
-Exit skill and invoke SlashCommand("__CMD_PREFIX__complete-milestone {version}")
+Exit skill and invoke SlashCommand("__CMD_PREFIX__approve-release {version}")
 
 </if>
 
@@ -495,7 +494,7 @@ Exit skill and invoke SlashCommand("__CMD_PREFIX__complete-milestone {version}")
 
 **Complete Milestone {version}** — archive and prepare for next
 
-`__CMD_PREFIX__complete-milestone {version}`
+`__CMD_PREFIX__approve-release {version}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -547,7 +546,7 @@ Transition is complete when:
 
 - [ ] Current phase plan summaries verified (all exist or user chose to skip)
 - [ ] Any stale handoffs deleted
-- [ ] ROADMAP.md updated with completion status and plan count
+- [ ] execution-plan.md updated with completion status and plan count
 - [ ] PROJECT.md evolved (requirements, decisions, description if needed)
 - [ ] STATE.md updated (position, project reference, context, session)
 - [ ] Progress table updated

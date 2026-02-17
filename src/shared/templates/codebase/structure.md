@@ -148,7 +148,7 @@ ai-sdlc/
 **commands/sdlc/**
 - Purpose: Slash command definitions for Claude Code
 - Contains: *.md files (one per command)
-- Key files: new-project.md, plan-phase.md, execute-plan.md
+- Key files: new-project.md, plan-unit.md, build-unit.md
 - Subdirectories: None (flat structure)
 
 **ai-sdlc/references/**
@@ -160,13 +160,13 @@ ai-sdlc/
 **ai-sdlc/templates/**
 - Purpose: Document templates for .aidlc/ files
 - Contains: Template definitions with frontmatter
-- Key files: project.md, roadmap.md, plan.md, summary.md
+- Key files: intent.md, requirements.md, state.md, summary.md
 - Subdirectories: codebase/ (new - for stack/architecture/structure templates)
 
 **ai-sdlc/workflows/**
 - Purpose: Reusable multi-step procedures
 - Contains: Workflow definitions called by commands
-- Key files: execute-plan.md, research-phase.md
+- Key files: execute-plan.md
 - Subdirectories: None
 
 ## Key File Locations
@@ -277,7 +277,7 @@ root/
 └── file.ts        # Purpose
 ```
 
-**Useful for phase planning when:**
+**Useful for unit planning when:**
 - Adding new features (where should files go?)
 - Understanding project organization
 - Finding where specific logic lives

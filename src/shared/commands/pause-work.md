@@ -1,6 +1,6 @@
 ---
 name: sdlc:pause-work
-description: Create context handoff when pausing work mid-phase
+description: Create context handoff when pausing work mid-unit
 allowed-tools:
   - Read
   - Write
@@ -14,21 +14,21 @@ Enables seamless resumption in fresh session with full context restoration.
 </objective>
 
 <context>
-@.aidlc/STATE.md
+@.aidlc/state.md
 </context>
 
 <process>
 
 <step name="detect">
-Find current phase directory from most recently modified files.
+Find current unit directory from most recently modified files.
 </step>
 
 <step name="gather">
 **Collect complete state for handoff:**
 
-1. **Current position**: Which phase, which plan, which task
+1. **Current position**: Which unit, which plan, which task
 2. **Work completed**: What got done this session
-3. **Work remaining**: What's left in current plan/phase
+3. **Work remaining**: What's left in current plan/unit
 4. **Decisions made**: Key decisions and rationale
 5. **Blockers/issues**: Anything stuck
 6. **Mental context**: The approach, next steps, "vibe"
@@ -38,11 +38,11 @@ Ask user for clarifications if needed.
 </step>
 
 <step name="write">
-**Write handoff to `.aidlc/phases/XX-name/.continue-here.md`:**
+**Write handoff to `.aidlc/construction/unit-NNN/.continue-here.md`:**
 
 ```markdown
 ---
-phase: XX-name
+unit: unit-NNN
 task: 3
 total_tasks: 7
 status: in_progress
@@ -102,18 +102,18 @@ git check-ignore -q .aidlc 2>/dev/null && COMMIT_PLANNING_DOCS=false
 **If `COMMIT_PLANNING_DOCS=true` (default):**
 
 ```bash
-git add .aidlc/phases/*/.continue-here.md
-git commit -m "wip: [phase-name] paused at task [X]/[Y]"
+git add .aidlc/construction/*/.continue-here.md
+git commit -m "wip: [unit-name] paused at task [X]/[Y]"
 ```
 </step>
 
 <step name="confirm">
 ```
-✓ Handoff created: .aidlc/phases/[XX-name]/.continue-here.md
+✓ Handoff created: .aidlc/construction/[unit-NNN]/.continue-here.md
 
 Current state:
 
-- Phase: [XX-name]
+- Unit: [unit-NNN]
 - Task: [X] of [Y]
 - Status: [in_progress/blocked]
 - Committed as WIP
@@ -126,7 +126,7 @@ To resume: __CMD_PREFIX__resume-work
 </process>
 
 <success_criteria>
-- [ ] .continue-here.md created in correct phase directory
+- [ ] .continue-here.md created in correct unit directory
 - [ ] All sections filled with specific content
 - [ ] Committed as WIP
 - [ ] User knows location and how to resume

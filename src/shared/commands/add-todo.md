@@ -16,7 +16,7 @@ Enables "thought → capture → continue" flow without losing context or derail
 </objective>
 
 <context>
-@.aidlc/STATE.md
+@.aidlc/state.md
 </context>
 
 <process>
@@ -117,7 +117,7 @@ files:
 </step>
 
 <step name="update_state">
-If `.aidlc/STATE.md` exists:
+If `.aidlc/state.md` exists:
 
 1. Count todos: `ls .aidlc/todos/pending/*.md 2>/dev/null | wc -l`
 2. Update "### Pending Todos" under "## Accumulated Context"
@@ -139,7 +139,7 @@ git check-ignore -q .aidlc 2>/dev/null && COMMIT_PLANNING_DOCS=false
 
 ```bash
 git add .aidlc/todos/pending/[filename]
-[ -f .aidlc/STATE.md ] && git add .aidlc/STATE.md
+[ -f .aidlc/state.md ] && git add .aidlc/state.md
 git commit -m "$(cat <<'EOF'
 docs: capture todo - [title]
 
@@ -173,7 +173,7 @@ Would you like to:
 
 <output>
 - `.aidlc/todos/pending/[date]-[slug].md`
-- Updated `.aidlc/STATE.md` (if exists)
+- Updated `.aidlc/state.md` (if exists)
 </output>
 
 <anti_patterns>
@@ -188,6 +188,6 @@ Would you like to:
 - [ ] Problem section has enough context for future Claude
 - [ ] No duplicates (checked and resolved)
 - [ ] Area consistent with existing todos
-- [ ] STATE.md updated if exists
+- [ ] state.md updated if exists
 - [ ] Todo and state committed to git
 </success_criteria>

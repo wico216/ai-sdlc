@@ -1,6 +1,6 @@
 # Planner Subagent Prompt Template
 
-Template for spawning sdlc-planner agent. The agent contains all planning expertise - this template provides planning context only.
+Template for spawning sdlc-bolt-planner agent. The agent contains all planning expertise - this template provides planning context only.
 
 ---
 
@@ -9,47 +9,45 @@ Template for spawning sdlc-planner agent. The agent contains all planning expert
 ```markdown
 <planning_context>
 
-**Phase:** {phase_number}
-**Mode:** {standard | gap_closure}
+**Unit:** {unit_id}
 
 **Project State:**
 @.aidlc/STATE.md
 
-**Roadmap:**
-@.aidlc/ROADMAP.md
+**Unit Spec:**
+@.aidlc/inception/units/UNIT-{unit_id}.md
 
 **Requirements (if exists):**
 @.aidlc/REQUIREMENTS.md
 
-**Phase Context (if exists):**
-@.aidlc/phases/{phase_dir}/{phase}-CONTEXT.md
+**Unit Context (if exists):**
+@.aidlc/construction/unit-{unit_id}/context.md
 
-**Research (if exists):**
-@.aidlc/phases/{phase_dir}/{phase}-RESEARCH.md
+**Design (if exists):**
+@.aidlc/construction/unit-{unit_id}/design.md
 
-**Gap Closure (if --gaps mode):**
-@.aidlc/phases/{phase_dir}/{phase}-VERIFICATION.md
-@.aidlc/phases/{phase_dir}/{phase}-UAT.md
+**Prior Validation (if exists):**
+@.aidlc/construction/unit-{unit_id}/validation-report.md
 
 </planning_context>
 
 <downstream_consumer>
-Output consumed by __CMD_PREFIX__execute-phase
+Output consumed by __CMD_PREFIX__build-unit
 Plans must be executable prompts with:
 - Frontmatter (wave, depends_on, files_modified, autonomous)
 - Tasks in XML format
 - Verification criteria
-- must_haves for goal-backward verification
+- must_haves for acceptance criteria verification
 </downstream_consumer>
 
 <quality_gate>
 Before returning PLANNING COMPLETE:
-- [ ] PLAN.md files created in phase directory
+- [ ] bolt-NNN-plan.md files created in unit directory
 - [ ] Each plan has valid frontmatter
 - [ ] Tasks are specific and actionable
 - [ ] Dependencies correctly identified
 - [ ] Waves assigned for parallel execution
-- [ ] must_haves derived from phase goal
+- [ ] must_haves derived from unit acceptance criteria
 </quality_gate>
 ```
 
@@ -59,30 +57,19 @@ Before returning PLANNING COMPLETE:
 
 | Placeholder | Source | Example |
 |-------------|--------|---------|
-| `{phase_number}` | From roadmap/arguments | `5` or `2.1` |
-| `{phase_dir}` | Phase directory name | `05-user-profiles` |
-| `{phase}` | Phase prefix | `05` |
-| `{standard \| gap_closure}` | Mode flag | `standard` |
+| `{unit_id}` | From unit spec/arguments | `003` |
+| `{unit_dir}` | Unit directory name | `construction/unit-003` |
 
 ---
 
 ## Usage
 
-**From __CMD_PREFIX__plan-phase (standard mode):**
+**From __CMD_PREFIX__plan-unit:**
 ```python
 Task(
   prompt=filled_template,
-  subagent_type="sdlc-planner",
-  description="Plan Phase {phase}"
-)
-```
-
-**From __CMD_PREFIX__plan-phase --gaps (gap closure mode):**
-```python
-Task(
-  prompt=filled_template,  # with mode: gap_closure
-  subagent_type="sdlc-planner",
-  description="Plan gaps for Phase {phase}"
+  subagent_type="sdlc-bolt-planner",
+  description="Plan Unit {unit_id}"
 )
 ```
 
@@ -94,24 +81,20 @@ For checkpoints, spawn fresh agent with:
 
 ```markdown
 <objective>
-Continue planning for Phase {phase_number}: {phase_name}
+Continue planning for Unit {unit_id}: {unit_name}
 </objective>
 
 <prior_state>
-Phase directory: @.aidlc/phases/{phase_dir}/
-Existing plans: @.aidlc/phases/{phase_dir}/*-PLAN.md
+Unit directory: @.aidlc/construction/unit-{unit_id}/
+Existing plans: @.aidlc/construction/unit-{unit_id}/bolt-*-plan.md
 </prior_state>
 
 <checkpoint_response>
 **Type:** {checkpoint_type}
 **Response:** {user_response}
 </checkpoint_response>
-
-<mode>
-Continue: {standard | gap_closure}
-</mode>
 ```
 
 ---
 
-**Note:** Planning methodology, task breakdown, dependency analysis, wave assignment, TDD detection, and goal-backward derivation are baked into the sdlc-planner agent. This template only passes context.
+**Note:** Planning methodology, task breakdown, dependency analysis, wave assignment, TDD detection, and acceptance criteria derivation are baked into the sdlc-bolt-planner agent. This template only passes context.

@@ -1,6 +1,6 @@
 ---
-name: sdlc:deploy
-description: Run the Operations phase — deployment plan, runbooks, and Production Ready gate
+name: sdlc:operations
+description: Run the Operations phase — deployment planning, runbook generation, and observability setup
 allowed-tools:
   - Read
   - Write
@@ -21,9 +21,10 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 - When preparing a release for production deployment
 
 **Creates:**
-- `.aidlc/deployment-plan.md` — How this reaches production
-- `.aidlc/runbooks/` — Operational playbooks
-- `.aidlc/observability-config.md` — Monitoring and alerting setup
+- `.aidlc/operations/deployment-plan.md` — How this reaches production
+- `.aidlc/operations/runbooks/` — Operational playbooks
+- `.aidlc/operations/observability.md` — Monitoring and alerting setup
+- `.aidlc/operations/cost.md` — Cost estimates (if applicable)
 - Updates `.aidlc/audit.md` — Gate entries
 
 **After this command:** The Production Ready gate must pass, then deploy.
@@ -46,8 +47,8 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 </execution_context>
 
 <context>
-@.aidlc/STATE.md
-@.aidlc/PROJECT.md
+@.aidlc/state.md
+@.aidlc/intent.md
 @.aidlc/execution-plan.md
 </context>
 
@@ -57,7 +58,7 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 
 **Check all units are complete:**
 ```bash
-ls .aidlc/units/UNIT-*.md 2>/dev/null
+ls .aidlc/inception/units/UNIT-*.md 2>/dev/null
 ```
 
 Read each unit file and check status. If any unit is not `complete`:
@@ -68,7 +69,7 @@ Not all units are complete:
 - UNIT-002: in-progress ✗
 - UNIT-003: defined ✗
 
-Complete all units before Operations. Run __CMD_PREFIX__bolt {UNIT-ID} to continue.
+Complete all units before Operations. Run __CMD_PREFIX__build-unit {UNIT-ID} to continue.
 ```
 
 Use AskUserQuestion:
@@ -90,7 +91,7 @@ Display banner:
 ```
 
 Read execution-plan.md for deployment approach (set during Inception).
-Read PROJECT.md for infrastructure constraints.
+Read intent.md for infrastructure constraints.
 
 **Generate deployment plan:**
 
@@ -123,7 +124,7 @@ Read PROJECT.md for infrastructure constraints.
 ```
 
 Present to user and iterate until approved.
-Save to `.aidlc/deployment-plan.md`.
+Save to `.aidlc/operations/deployment-plan.md`.
 
 ## 2. Runbook Generation
 
@@ -137,7 +138,7 @@ Display banner:
 Based on the project, generate operational runbooks:
 
 ```bash
-mkdir -p .aidlc/runbooks
+mkdir -p .aidlc/operations/runbooks
 ```
 
 **Common runbooks (generate what's applicable):**
@@ -176,7 +177,7 @@ Use AskUserQuestion:
   - "Maintenance" — Routine procedures
   - "Backup/Restore" — Data recovery
 
-Generate selected runbooks and save to `.aidlc/runbooks/`.
+Generate selected runbooks and save to `.aidlc/operations/runbooks/`.
 
 ## 3. Observability Config
 
@@ -218,7 +219,7 @@ Generate observability config document:
 - Sample rate: {percentage}
 ```
 
-Save to `.aidlc/observability-config.md`.
+Save to `.aidlc/operations/observability.md`.
 
 ## 4. GATE: Production Ready
 
@@ -236,9 +237,9 @@ Display banner:
 ```
 Evidence:
 - [{status}] All units complete and integrated
-- [{status}] Deployment plan exists and reviewed → .aidlc/deployment-plan.md
-- [{status}] Runbooks generated → .aidlc/runbooks/
-- [{status}] Observability configured → .aidlc/observability-config.md
+- [{status}] Deployment plan exists and reviewed → .aidlc/operations/deployment-plan.md
+- [{status}] Runbooks generated → .aidlc/operations/runbooks/
+- [{status}] Observability configured → .aidlc/operations/observability.md
 - [{status}] Rollback procedure documented
 - [{status}] Performance requirements validated (from intent.md success criteria)
 - [{status}] Security review passed (if applicable)
@@ -254,7 +255,7 @@ Use AskUserQuestion:
 
 **If approved:**
 Audit entry: `gate-approval` for PRODUCTION READY.
-Update STATE.md: phase = Operations Complete.
+Update state.md: phase = Operations Complete.
 
 **If rejected:**
 Audit entry: `gate-rejection`.
@@ -266,7 +267,7 @@ Create follow-up items.
 
 **Commit:**
 ```bash
-git add .aidlc/deployment-plan.md .aidlc/runbooks/ .aidlc/observability-config.md .aidlc/audit.md .aidlc/STATE.md
+git add .aidlc/operations/ .aidlc/audit.md .aidlc/state.md
 git commit -m "$(cat <<'EOF'
 docs(operations): Production Ready gate {approved/rejected}
 
@@ -286,9 +287,9 @@ EOF
 
 | Artifact | Location |
 |---|---|
-| Deployment Plan | `.aidlc/deployment-plan.md` |
-| Runbooks | `.aidlc/runbooks/` |
-| Observability | `.aidlc/observability-config.md` |
+| Deployment Plan | `.aidlc/operations/deployment-plan.md` |
+| Runbooks | `.aidlc/operations/runbooks/` |
+| Observability | `.aidlc/operations/observability.md` |
 | Full Audit Trail | `.aidlc/audit.md` |
 
 **Gates passed:** Requirements Approved ✓ → Inception Exit ✓ → Design Approved ✓ → Unit Complete ✓ → Production Ready ✓
@@ -300,7 +301,7 @@ Intent → Requirements → Units → Design → Code → Tests → Deployment
 
 ## Deploy
 
-Follow the deployment plan at `.aidlc/deployment-plan.md`.
+Follow the deployment plan at `.aidlc/operations/deployment-plan.md`.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -309,11 +310,12 @@ Follow the deployment plan at `.aidlc/deployment-plan.md`.
 
 <output>
 
-- `.aidlc/deployment-plan.md`
-- `.aidlc/runbooks/` (selected runbooks)
-- `.aidlc/observability-config.md`
+- `.aidlc/operations/deployment-plan.md`
+- `.aidlc/operations/runbooks/` (selected runbooks)
+- `.aidlc/operations/observability.md`
+- `.aidlc/operations/cost.md` (if applicable)
 - Updated `.aidlc/audit.md`
-- Updated `.aidlc/STATE.md`
+- Updated `.aidlc/state.md`
 
 </output>
 
@@ -325,7 +327,7 @@ Follow the deployment plan at `.aidlc/deployment-plan.md`.
 - [ ] Observability configuration created
 - [ ] Gate: Production Ready — passed with evidence
 - [ ] Audit trail has Production Ready gate entry
-- [ ] STATE.md reflects Operations Complete
+- [ ] state.md reflects Operations Complete
 - [ ] Golden Thread intact: Intent → Requirements → Units → Code → Deployment
 
 </success_criteria>

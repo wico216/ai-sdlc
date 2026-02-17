@@ -267,7 +267,7 @@ Template for `.aidlc/codebase/INTEGRATIONS.md` - captures external service depen
 - Document environment-specific differences (dev/staging/prod)
 - Include auth patterns for each service
 
-**Useful for phase planning when:**
+**Useful for unit planning when:**
 - Adding new external service integrations
 - Debugging authentication issues
 - Understanding data flow outside the application

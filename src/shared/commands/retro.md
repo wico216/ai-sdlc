@@ -1,7 +1,7 @@
 ---
 name: sdlc:retro
 description: Run a Guardrail Retro — review what AI did well/poorly and improve for next time
-argument-hint: "[unit-id or 'milestone']"
+argument-hint: "[unit-id or 'release']"
 allowed-tools:
   - Read
   - Write
@@ -13,13 +13,13 @@ allowed-tools:
 
 <objective>
 
-Run a Guardrail Retro after completing a unit or milestone. This is how the team gets better over time.
+Run a Guardrail Retro after completing a unit or release. This is how the team gets better over time.
 
 **Purpose:** Review what the AI did well/poorly, which guardrails helped/were missing, and produce concrete improvement actions for the next unit.
 
 **When to run:**
 - After `__CMD_PREFIX__bolt` completes a unit (Unit Complete gate passed)
-- After `__CMD_PREFIX__audit-milestone` or `__CMD_PREFIX__complete-milestone`
+- After `__CMD_PREFIX__approve-release`
 - Anytime the team wants to reflect on completed work
 
 **Principles in play:**
@@ -39,10 +39,10 @@ Run a Guardrail Retro after completing a unit or milestone. This is how the team
 Scope: __ARGUMENTS__
 
 - If "UNIT-001" or "1": retro for that specific unit
-- If "milestone" or "v1.0": retro for the entire milestone
-- If empty: check STATE.md for most recently completed unit or milestone
+- If "release" or "v1.0": retro for the entire release
+- If empty: check state.md for most recently completed unit or release
 
-@.aidlc/STATE.md
+@.aidlc/state.md
 </context>
 
 <process>
@@ -60,11 +60,11 @@ ls .aidlc/ 2>/dev/null
 Parse __ARGUMENTS__ to determine retro scope:
 
 - **Unit retro:** Find the unit file, its design doc, related phase summaries and verifications
-- **Milestone retro:** Aggregate across all units and phases
+- **Release retro:** Aggregate across all units and phases
 
 ```bash
-ls .aidlc/units/UNIT-*.md 2>/dev/null
-ls .aidlc/phases/*/  2>/dev/null
+ls .aidlc/inception/units/UNIT-*.md 2>/dev/null
+ls .aidlc/construction/unit-*/  2>/dev/null
 ```
 
 **Create retro directory if needed:**
@@ -78,24 +78,25 @@ Display banner:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  AI-SDLC ► GUARDRAIL RETRO
- Scope: {UNIT-ID or milestone version}
+ Scope: {UNIT-ID or release version}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 Read all relevant artifacts:
 
 **For unit retro:**
-- `.aidlc/units/{UNIT-ID}.md` — acceptance criteria
-- `.aidlc/units/{UNIT-ID}-design.md` — design decisions
+- `.aidlc/inception/units/{UNIT-ID}.md` — acceptance criteria
+- `.aidlc/inception/units/{UNIT-ID}-design.md` — design decisions
 - `.aidlc/audit.md` — filter entries related to this unit
-- `.aidlc/phases/{phase-dir}/*-SUMMARY.md` — what was built
-- `.aidlc/phases/{phase-dir}/*-VERIFICATION.md` — what passed/failed
+- `.aidlc/construction/{unit-dir}/*-SUMMARY.md` — what was built
+- `.aidlc/construction/{unit-dir}/*-VERIFICATION.md` — what passed/failed
 - `.aidlc/risk-register.md` — risks related to this unit
+- `.aidlc/GUARDRAILS.md` — current guardrails (if exists)
 
-**For milestone retro:**
+**For release retro:**
 - All of the above across all units
-- `.aidlc/v*-MILESTONE-AUDIT.md` — if exists
-- `.aidlc/REQUIREMENTS.md` — original scope vs. delivered
+- `.aidlc/v*-RELEASE-AUDIT.md` — if exists
+- `.aidlc/inception/requirements.md` — original scope vs. delivered
 
 ## 2. Analyze Patterns
 
@@ -179,7 +180,7 @@ Create `.aidlc/retros/RETRO-{scope}.md`:
 # Guardrail Retro: {scope}
 
 > Retro date: {timestamp}
-> Scope: {UNIT-ID or milestone version}
+> Scope: {UNIT-ID or release version}
 > Participants: AI + {human}
 
 ## Summary
@@ -234,8 +235,18 @@ Create `.aidlc/retros/RETRO-{scope}.md`:
 - **Context:** Guardrail Retro for {scope}
 - **Decision:** Retro completed. {N} improvement actions identified.
 - **Evidence:** .aidlc/retros/RETRO-{scope}.md
-- **Traces to:** {UNIT-IDs or milestone version}
+- **Traces to:** {UNIT-IDs or release version}
 ```
+
+**Update GUARDRAILS.md:**
+
+If `.aidlc/GUARDRAILS.md` exists, update it with retro findings:
+- Add new entries to the **Evolution Log** table with date, unit, change, and rationale
+- Update **Known Pitfalls** if new pitfalls were discovered
+- Update **Team Conventions** or **Auto-Approve Thresholds** if improvements identified
+- Remove stale guardrails that proved unnecessary
+
+If `.aidlc/GUARDRAILS.md` does not exist, ask: "Should I create a GUARDRAILS.md to capture these lessons for future units?"
 
 **If new risks were identified during retro:**
 
@@ -258,10 +269,10 @@ If yes, append new RISK-IDs to `.aidlc/risk-register.md`.
 ## ▶ Next
 
 {If unit retro + more units:}
-__CMD_PREFIX__bolt {next-UNIT-ID} — start next unit (with retro learnings applied)
+__CMD_PREFIX__build-unit {next-UNIT-ID} — start next unit (with retro learnings applied)
 
-{If milestone retro:}
-__CMD_PREFIX__new-milestone — start next milestone cycle
+{If release retro:}
+__CMD_PREFIX__elaborate — start next release cycle
 
 {Always:}
 Review improvement actions before starting next work.
@@ -281,7 +292,7 @@ The best retros change how the next unit is built.
 </anti_patterns>
 
 <success_criteria>
-- [ ] Scope resolved (unit or milestone)
+- [ ] Scope resolved (unit or release)
 - [ ] All relevant artifacts read (audit, summaries, verifications, risks)
 - [ ] Metrics extracted (gates, rework, criteria coverage)
 - [ ] What went well/wrong identified with evidence
@@ -290,5 +301,6 @@ The best retros change how the next unit is built.
 - [ ] RETRO-{scope}.md written to .aidlc/retros/
 - [ ] Audit trail updated
 - [ ] Risk register updated if new risks found
+- [ ] GUARDRAILS.md updated with new lessons (if exists)
 - [ ] Concrete improvement actions listed (not vague advice)
 </success_criteria>

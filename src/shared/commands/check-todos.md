@@ -17,8 +17,8 @@ Enables reviewing captured ideas and deciding what to work on next.
 </objective>
 
 <context>
-@.aidlc/STATE.md
-@.aidlc/ROADMAP.md
+@.aidlc/state.md
+@.aidlc/execution-plan.md
 </context>
 
 <process>
@@ -39,7 +39,7 @@ Todos are captured during work sessions with __CMD_PREFIX__add-todo.
 
 Would you like to:
 
-1. Continue with current phase (__CMD_PREFIX__progress)
+1. Continue with current unit (__CMD_PREFIX__status)
 2. Add a todo now (__CMD_PREFIX__add-todo)
 ```
 
@@ -110,35 +110,35 @@ If `files` field has entries, read and briefly summarize each.
 
 <step name="check_roadmap">
 ```bash
-ls .aidlc/ROADMAP.md 2>/dev/null && echo "Roadmap exists"
+ls .aidlc/execution-plan.md 2>/dev/null && echo "Execution plan exists"
 ```
 
-If roadmap exists:
-1. Check if todo's area matches an upcoming phase
-2. Check if todo's files overlap with a phase's scope
+If execution plan exists:
+1. Check if todo's area matches an upcoming unit
+2. Check if todo's files overlap with a unit's scope
 3. Note any match for action options
 </step>
 
 <step name="offer_actions">
-**If todo maps to a roadmap phase:**
+**If todo maps to an execution plan unit:**
 
 Use AskUserQuestion:
 - header: "Action"
-- question: "This todo relates to Phase [N]: [name]. What would you like to do?"
+- question: "This todo relates to Unit [N]: [name]. What would you like to do?"
 - options:
   - "Work on it now" — move to done, start working
-  - "Add to phase plan" — include when planning Phase [N]
+  - "Add to unit plan" — include when planning Unit [N]
   - "Brainstorm approach" — think through before deciding
   - "Put it back" — return to list
 
-**If no roadmap match:**
+**If no execution plan match:**
 
 Use AskUserQuestion:
 - header: "Action"
 - question: "What would you like to do with this todo?"
 - options:
   - "Work on it now" — move to done, start working
-  - "Create a phase" — __CMD_PREFIX__add-phase with this scope
+  - "Create a unit" — __CMD_PREFIX__add-unit with this scope
   - "Brainstorm approach" — think through before deciding
   - "Put it back" — return to list
 </step>
@@ -148,13 +148,13 @@ Use AskUserQuestion:
 ```bash
 mv ".aidlc/todos/pending/[filename]" ".aidlc/todos/done/"
 ```
-Update STATE.md todo count. Present problem/solution context. Begin work or ask how to proceed.
+Update state.md todo count. Present problem/solution context. Begin work or ask how to proceed.
 
-**Add to phase plan:**
-Note todo reference in phase planning notes. Keep in pending. Return to list or exit.
+**Add to unit plan:**
+Note todo reference in unit planning notes. Keep in pending. Return to list or exit.
 
-**Create a phase:**
-Display: `__CMD_PREFIX__add-phase [description from todo]`
+**Create a unit:**
+Display: `__CMD_PREFIX__add-unit [description from todo]`
 Keep in pending. User runs command in fresh context.
 
 **Brainstorm approach:**
@@ -171,7 +171,7 @@ After any action that changes todo count:
 ls .aidlc/todos/pending/*.md 2>/dev/null | wc -l
 ```
 
-Update STATE.md "### Pending Todos" section if exists.
+Update state.md "### Pending Todos" section if exists.
 </step>
 
 <step name="git_commit">
@@ -191,7 +191,7 @@ git check-ignore -q .aidlc 2>/dev/null && COMMIT_PLANNING_DOCS=false
 ```bash
 git add .aidlc/todos/done/[filename]
 git rm --cached .aidlc/todos/pending/[filename] 2>/dev/null || true
-[ -f .aidlc/STATE.md ] && git add .aidlc/STATE.md
+[ -f .aidlc/state.md ] && git add .aidlc/state.md
 git commit -m "$(cat <<'EOF'
 docs: start work on todo - [title]
 
@@ -207,22 +207,22 @@ Confirm: "Committed: docs: start work on todo - [title]"
 
 <output>
 - Moved todo to `.aidlc/todos/done/` (if "Work on it now")
-- Updated `.aidlc/STATE.md` (if todo count changed)
+- Updated `.aidlc/state.md` (if todo count changed)
 </output>
 
 <anti_patterns>
 - Don't delete todos — move to done/ when work begins
 - Don't start work without moving to done/ first
-- Don't create plans from this command — route to __CMD_PREFIX__plan-phase or __CMD_PREFIX__add-phase
+- Don't create plans from this command — route to __CMD_PREFIX__plan-unit or __CMD_PREFIX__add-unit
 </anti_patterns>
 
 <success_criteria>
 - [ ] All pending todos listed with title, area, age
 - [ ] Area filter applied if specified
 - [ ] Selected todo's full context loaded
-- [ ] Roadmap context checked for phase match
+- [ ] Execution plan context checked for unit match
 - [ ] Appropriate actions offered
 - [ ] Selected action executed
-- [ ] STATE.md updated if todo count changed
+- [ ] state.md updated if todo count changed
 - [ ] Changes committed to git (if todo moved to done/)
 </success_criteria>

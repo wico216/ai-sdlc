@@ -5,7 +5,7 @@
 
 ## Instructions for agents
 
-- Fill this during `__CMD_PREFIX__inception` or `__CMD_PREFIX__new-project`
+- Fill this during `__CMD_PREFIX__new-project`
 - Use the Reverse Conversation pattern: AI proposes, human refines
 - Mark unknowns as `**TBD** — [owner] to clarify`
 - Keep language domain-specific (DDD Principle #3)

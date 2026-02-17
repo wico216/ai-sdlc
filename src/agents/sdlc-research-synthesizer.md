@@ -24,7 +24,7 @@ Your job: Create a unified research summary that informs roadmap creation. Extra
 </role>
 
 <downstream_consumer>
-Your SUMMARY.md is consumed by the sdlc-roadmapper agent which uses it to:
+Your SUMMARY.md is consumed by the sdlc-inception agent which uses it to:
 
 | Section | How Roadmapper Uses It |
 |---------|------------------------|

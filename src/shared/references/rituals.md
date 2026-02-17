@@ -11,7 +11,7 @@
 
 ### How it works
 
-1. One person shares screen running `__CMD_PREFIX__inception`
+1. One person shares screen running `__CMD_PREFIX__new-project` + `__CMD_PREFIX__elaborate`
 2. Team discusses each unit's bounded context and acceptance criteria together
 3. AI proposes decomposition, team debates and refines
 4. Risk register reviewed collaboratively — risks the AI missed surface in group discussion
@@ -37,7 +37,7 @@ Even working alone, the principle applies: don't rush through Inception. Take ti
 
 ### How it works
 
-1. One person drives (runs `__CMD_PREFIX__bolt`), others observe and contribute
+1. One person drives (runs `__CMD_PREFIX__build-unit`), others observe and contribute
 2. AI generates code, team reviews together in real-time
 3. Design decisions made collaboratively, logged in audit trail
 4. Rotate driver every 30-60 minutes
@@ -53,7 +53,7 @@ Work in focused sessions (2-3 hours). Review AI-generated code carefully — you
 
 ## Guardrail Retro
 
-**When:** After completing a unit (Unit Complete gate) or milestone
+**When:** After completing a unit (Unit Complete gate) or release (Production Ready gate)
 **Who:** Full team
 **Duration:** 30-60 minutes
 **Command:** `__CMD_PREFIX__retro`
@@ -90,9 +90,9 @@ Still valuable. Run `__CMD_PREFIX__retro` after each unit. The data analysis alo
 
 | Ritual | Frequency | Skip when... |
 |--------|-----------|-------------|
-| Mob Elaboration | Once per project/milestone (during Inception) | Solo developer doing a well-understood domain |
+| Mob Elaboration | Once per project inception | Solo developer doing a well-understood domain |
 | Mob Construction | Per complex unit or first unit of a project | Simple units with clear acceptance criteria |
-| Guardrail Retro | After each unit or milestone completion | Never skip — this is how you get better |
+| Guardrail Retro | After each unit completion | Never skip — this is how you get better |
 
 ## Principle Alignment
 

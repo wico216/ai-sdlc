@@ -1,15 +1,15 @@
 # Research Template
 
-Template for `.aidlc/phases/XX-name/{phase}-RESEARCH.md` - comprehensive ecosystem research before planning.
+Template for `.aidlc/construction/unit-NNN/research.md` - comprehensive ecosystem research before planning a unit.
 
-**Purpose:** Document what Claude needs to know to implement a phase well - not just "which library" but "how do experts build this."
+**Purpose:** Document what Claude needs to know to implement a unit well - not just "which library" but "how do experts build this."
 
 ---
 
 ## File Template
 
 ```markdown
-# Phase [X]: [Name] - Research
+# Unit [NNN]: [Name] - Research
 
 **Researched:** [date]
 **Domain:** [primary technology/problem domain]
@@ -216,7 +216,7 @@ Things that couldn't be fully resolved:
 
 ---
 
-*Phase: XX-name*
+*Unit: NNN*
 *Research completed: [date]*
 *Ready for planning: [yes/no]*
 ```
@@ -226,7 +226,7 @@ Things that couldn't be fully resolved:
 ## Good Example
 
 ```markdown
-# Phase 3: 3D City Driving - Research
+# Unit 003: 3D City Driving - Research
 
 **Researched:** 2025-01-20
 **Domain:** Three.js 3D web game with driving mechanics
@@ -490,7 +490,7 @@ function useVehicleControls(rigidBodyRef) {
 
 ---
 
-*Phase: 03-city-driving*
+*Unit: 003*
 *Research completed: 2025-01-20*
 *Ready for planning: yes*
 ```
@@ -500,7 +500,7 @@ function useVehicleControls(rigidBodyRef) {
 ## Guidelines
 
 **When to create:**
-- Before planning phases in niche/complex domains
+- Before planning units in niche/complex domains
 - When Claude's training data is likely stale or sparse
 - When "how do experts do this" matters more than "which library"
 
@@ -524,6 +524,6 @@ function useVehicleControls(rigidBodyRef) {
 - Code examples can be referenced in task actions
 
 **After creation:**
-- File lives in phase directory: `.aidlc/phases/XX-name/{phase}-RESEARCH.md`
+- File lives in unit directory: `.aidlc/construction/unit-NNN/research.md`
 - Referenced during planning workflow
-- plan-phase loads it automatically when present
+- plan-unit loads it automatically when present

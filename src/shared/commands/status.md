@@ -1,6 +1,6 @@
 ---
-name: sdlc:progress
-description: Check project progress, show context, and route to next action (execute or plan)
+name: sdlc:status
+description: Check project status — current phase, stage, active unit, gate statuses, progress, next action
 allowed-tools:
   - Read
   - Bash
@@ -37,21 +37,21 @@ Run __CMD_PREFIX__new-project to start a new project.
 
 Exit.
 
-If missing STATE.md: suggest `__CMD_PREFIX__new-project`.
+If missing state.md: suggest `__CMD_PREFIX__new-project`.
 
-**If ROADMAP.md missing but PROJECT.md exists:**
+**If execution-plan.md missing but intent.md exists:**
 
-This means a milestone was completed and archived. Go to **Route F** (between milestones).
+This means a release was completed and archived. Go to **Route F** (between releases).
 
-If missing both ROADMAP.md and PROJECT.md: suggest `__CMD_PREFIX__new-project`.
+If missing both execution-plan.md and intent.md: suggest `__CMD_PREFIX__new-project`.
 </step>
 
 <step name="load">
 **Load full project context:**
 
-- Read `.aidlc/STATE.md` for living memory (position, decisions, issues)
-- Read `.aidlc/ROADMAP.md` for phase structure and objectives
-- Read `.aidlc/PROJECT.md` for current state (What This Is, Core Value, Requirements)
+- Read `.aidlc/state.md` for living memory (position, decisions, issues)
+- Read `.aidlc/execution-plan.md` for unit structure and objectives
+- Read `.aidlc/intent.md` for current state (What This Is, Core Value, Requirements)
 - Read `.aidlc/config.json` for settings (model_profile, workflow toggles)
   </step>
 
@@ -66,10 +66,10 @@ If missing both ROADMAP.md and PROJECT.md: suggest `__CMD_PREFIX__new-project`.
 <step name="position">
 **Parse current position:**
 
-- From STATE.md: current phase, plan number, status
+- From state.md: current unit, plan number, status
 - Calculate: total plans, completed plans, remaining plans
 - Note any blockers or concerns
-- Check for CONTEXT.md: For phases without PLAN.md files, check if `{phase}-CONTEXT.md` exists in phase directory
+- Check for CONTEXT.md: For units without PLAN.md files, check if `{unit}-CONTEXT.md` exists in unit directory
 - Count pending todos: `ls .aidlc/todos/pending/*.md 2>/dev/null | wc -l`
 - Check for active debug sessions: `ls .aidlc/debug/*.md 2>/dev/null | grep -v resolved | wc -l`
   </step>
@@ -84,12 +84,12 @@ If missing both ROADMAP.md and PROJECT.md: suggest `__CMD_PREFIX__new-project`.
 **Profile:** [quality/balanced/budget]
 
 ## Recent Work
-- [Phase X, Plan Y]: [what was accomplished - 1 line]
-- [Phase X, Plan Z]: [what was accomplished - 1 line]
+- [Unit X, Plan Y]: [what was accomplished - 1 line]
+- [Unit X, Plan Z]: [what was accomplished - 1 line]
 
 ## Current Position
-Phase [N] of [total]: [phase-name]
-Plan [M] of [phase-total]: [status]
+Unit [N] of [total]: [unit-name]
+Plan [M] of [unit-total]: [status]
 CONTEXT: [✓ if CONTEXT.md exists | - if not]
 
 ## Key Decisions Made
@@ -107,7 +107,7 @@ CONTEXT: [✓ if CONTEXT.md exists | - if not]
 (Only show this section if count > 0)
 
 ## What's Next
-[Next phase/plan objective from ROADMAP]
+[Next unit/plan objective from execution-plan]
 ```
 
 </step>
@@ -115,17 +115,17 @@ CONTEXT: [✓ if CONTEXT.md exists | - if not]
 <step name="route">
 **Determine next action based on verified counts.**
 
-**Step 1: Count plans, summaries, and issues in current phase**
+**Step 1: Count plans, summaries, and issues in current unit**
 
-List files in the current phase directory:
+List files in the current unit directory:
 
 ```bash
-ls -1 .aidlc/phases/[current-phase-dir]/*-PLAN.md 2>/dev/null | wc -l
-ls -1 .aidlc/phases/[current-phase-dir]/*-SUMMARY.md 2>/dev/null | wc -l
-ls -1 .aidlc/phases/[current-phase-dir]/*-UAT.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/unit-NNN/*-PLAN.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/unit-NNN/*-SUMMARY.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/unit-NNN/*-UAT.md 2>/dev/null | wc -l
 ```
 
-State: "This phase has {X} plans, {Y} summaries."
+State: "This unit has {X} plans, {Y} summaries."
 
 **Step 1.5: Check for unaddressed UAT gaps**
 
@@ -133,7 +133,7 @@ Check for UAT.md files with status "diagnosed" (has gaps needing fixes).
 
 ```bash
 # Check for diagnosed UAT with gaps
-grep -l "status: diagnosed" .aidlc/phases/[current-phase-dir]/*-UAT.md 2>/dev/null
+grep -l "status: diagnosed" .aidlc/construction/unit-NNN/*-UAT.md 2>/dev/null
 ```
 
 Track:
@@ -145,8 +145,8 @@ Track:
 |-----------|---------|--------|
 | uat_with_gaps > 0 | UAT gaps need fix plans | Go to **Route E** |
 | summaries < plans | Unexecuted plans exist | Go to **Route A** |
-| summaries = plans AND plans > 0 | Phase complete | Go to Step 3 |
-| plans = 0 | Phase not yet planned | Go to **Route B** |
+| summaries = plans AND plans > 0 | Unit complete | Go to Step 3 |
+| plans = 0 | Unit not yet planned | Go to **Route B** |
 
 ---
 
@@ -160,9 +160,9 @@ Read its `<objective>` section.
 
 ## ▶ Next Up
 
-**{phase}-{plan}: [Plan Name]** — [objective summary from PLAN.md]
+**{unit}-{plan}: [Plan Name]** — [objective summary from PLAN.md]
 
-`__CMD_PREFIX__execute-phase {phase}`
+`__CMD_PREFIX__build-unit {unit}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -171,9 +171,9 @@ Read its `<objective>` section.
 
 ---
 
-**Route B: Phase needs planning**
+**Route B: Unit needs planning**
 
-Check if `{phase}-CONTEXT.md` exists in phase directory.
+Check if `{unit}-CONTEXT.md` exists in unit directory.
 
 **If CONTEXT.md exists:**
 
@@ -182,10 +182,10 @@ Check if `{phase}-CONTEXT.md` exists in phase directory.
 
 ## ▶ Next Up
 
-**Phase {N}: {Name}** — {Goal from ROADMAP.md}
+**Unit {N}: {Name}** — {Goal from execution-plan.md}
 <sub>✓ Context gathered, ready to plan</sub>
 
-`__CMD_PREFIX__plan-phase {phase-number}`
+`__CMD_PREFIX__plan-unit {unit-number}`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -199,17 +199,17 @@ Check if `{phase}-CONTEXT.md` exists in phase directory.
 
 ## ▶ Next Up
 
-**Phase {N}: {Name}** — {Goal from ROADMAP.md}
+**Unit {N}: {Name}** — {Goal from execution-plan.md}
 
-`__CMD_PREFIX__discuss-phase {phase}` — gather context and clarify approach
+`__CMD_PREFIX__elaborate {unit}` — gather context and clarify approach
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__plan-phase {phase}` — skip discussion, plan directly
-- `__CMD_PREFIX__list-phase-assumptions {phase}` — see Claude's assumptions
+- `__CMD_PREFIX__plan-unit {unit}` — skip discussion, plan directly
+- `__CMD_PREFIX__list-unit-assumptions {unit}` — see Claude's assumptions
 
 ---
 ```
@@ -225,115 +225,115 @@ UAT.md exists with gaps (diagnosed issues). User needs to plan fixes.
 
 ## ⚠ UAT Gaps Found
 
-**{phase}-UAT.md** has {N} gaps requiring fixes.
+**{unit}-UAT.md** has {N} gaps requiring fixes.
 
-`__CMD_PREFIX__plan-phase {phase} --gaps`
+`__CMD_PREFIX__plan-unit {unit} --gaps`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__execute-phase {phase}` — execute phase plans
-- `__CMD_PREFIX__verify-work {phase}` — run more UAT testing
+- `__CMD_PREFIX__build-unit {unit}` — execute unit plans
+- `__CMD_PREFIX__verify-unit {unit}` — run more UAT testing
 
 ---
 ```
 
 ---
 
-**Step 3: Check milestone status (only when phase complete)**
+**Step 3: Check release status (only when unit complete)**
 
-Read ROADMAP.md and identify:
-1. Current phase number
-2. All phase numbers in the current milestone section
+Read execution-plan.md and identify:
+1. Current unit number
+2. All unit numbers in the current release section
 
-Count total phases and identify the highest phase number.
+Count total units and identify the highest unit number.
 
-State: "Current phase is {X}. Milestone has {N} phases (highest: {Y})."
+State: "Current unit is {X}. Release has {N} units (highest: {Y})."
 
-**Route based on milestone status:**
+**Route based on release status:**
 
 | Condition | Meaning | Action |
 |-----------|---------|--------|
-| current phase < highest phase | More phases remain | Go to **Route C** |
-| current phase = highest phase | Milestone complete | Go to **Route D** |
+| current unit < highest unit | More units remain | Go to **Route C** |
+| current unit = highest unit | Release complete | Go to **Route D** |
 
 ---
 
-**Route C: Phase complete, more phases remain**
+**Route C: Unit complete, more units remain**
 
-Read ROADMAP.md to get the next phase's name and goal.
+Read execution-plan.md to get the next unit's name and goal.
 
 ```
 ---
 
-## ✓ Phase {Z} Complete
+## ✓ Unit {Z} Complete
 
 ## ▶ Next Up
 
-**Phase {Z+1}: {Name}** — {Goal from ROADMAP.md}
+**Unit {Z+1}: {Name}** — {Goal from execution-plan.md}
 
-`__CMD_PREFIX__discuss-phase {Z+1}` — gather context and clarify approach
+`__CMD_PREFIX__elaborate {Z+1}` — gather context and clarify approach
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__plan-phase {Z+1}` — skip discussion, plan directly
-- `__CMD_PREFIX__verify-work {Z}` — user acceptance test before continuing
+- `__CMD_PREFIX__plan-unit {Z+1}` — skip discussion, plan directly
+- `__CMD_PREFIX__verify-unit {Z}` — user acceptance test before continuing
 
 ---
 ```
 
 ---
 
-**Route D: Milestone complete**
+**Route D: Release complete**
 
 ```
 ---
 
-## 🎉 Milestone Complete
+## 🎉 Release Complete
 
-All {N} phases finished!
+All {N} units finished!
 
 ## ▶ Next Up
 
-**Complete Milestone** — archive and prepare for next
+**Approve Release** — review and approve for release
 
-`__CMD_PREFIX__complete-milestone`
+`__CMD_PREFIX__approve-release`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__verify-work` — user acceptance test before completing milestone
+- `__CMD_PREFIX__verify-unit` — user acceptance test before approving release
 
 ---
 ```
 
 ---
 
-**Route F: Between milestones (ROADMAP.md missing, PROJECT.md exists)**
+**Route F: Between releases (execution-plan.md missing, intent.md exists)**
 
-A milestone was completed and archived. Ready to start the next milestone cycle.
+A release was completed and archived. Ready to start the next release cycle.
 
-Read MILESTONES.md to find the last completed milestone version.
+Read state.md to find the last completed release version.
 
 ```
 ---
 
-## ✓ Milestone v{X.Y} Complete
+## ✓ Release v{X.Y} Complete
 
-Ready to plan the next milestone.
+Ready to plan the next release.
 
 ## ▶ Next Up
 
-**Start Next Milestone** — questioning → research → requirements → roadmap
+**Start Next Release** — elaborate → requirements → execution-plan
 
-`__CMD_PREFIX__new-milestone`
+`__CMD_PREFIX__elaborate`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -345,8 +345,8 @@ Ready to plan the next milestone.
 <step name="edge_cases">
 **Handle edge cases:**
 
-- Phase complete but next phase not planned → offer `__CMD_PREFIX__plan-phase [next]`
-- All work complete → offer milestone completion
+- Unit complete but next unit not planned → offer `__CMD_PREFIX__plan-unit [next]`
+- All work complete → offer release approval
 - Blockers present → highlight before offering to continue
 - Handoff file exists → mention it, offer `__CMD_PREFIX__resume-work`
   </step>
@@ -358,7 +358,7 @@ Ready to plan the next milestone.
 - [ ] Rich context provided (recent work, decisions, issues)
 - [ ] Current position clear with visual progress
 - [ ] What's next clearly explained
-- [ ] Smart routing: __CMD_PREFIX__execute-phase if plans exist, __CMD_PREFIX__plan-phase if not
+- [ ] Smart routing: __CMD_PREFIX__build-unit if plans exist, __CMD_PREFIX__plan-unit if not
 - [ ] User confirms before any action
 - [ ] Seamless handoff to appropriate sdlc command
       </success_criteria>

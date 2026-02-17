@@ -1,6 +1,6 @@
 # Verification Report Template
 
-Template for `.aidlc/phases/XX-name/{phase}-VERIFICATION.md` — phase goal verification results.
+Template for `.aidlc/construction/unit-NNN/validation-report.md` — unit acceptance criteria verification results.
 
 ---
 
@@ -8,15 +8,15 @@ Template for `.aidlc/phases/XX-name/{phase}-VERIFICATION.md` — phase goal veri
 
 ```markdown
 ---
-phase: XX-name
+unit: NNN
 verified: YYYY-MM-DDTHH:MM:SSZ
 status: passed | gaps_found | human_needed
 score: N/M must-haves verified
 ---
 
-# Phase {X}: {Name} Verification Report
+# Unit {NNN}: {Name} Verification Report
 
-**Phase Goal:** {goal from ROADMAP.md}
+**Unit Acceptance Criteria:** {acceptance criteria from unit spec}
 **Verified:** {timestamp}
 **Status:** {passed | gaps_found | human_needed}
 
@@ -92,7 +92,7 @@ None — all verifiable items checked programmatically.
 ## Gaps Summary
 
 {If no gaps:}
-**No gaps found.** Phase goal achieved. Ready to proceed.
+**No gaps found.** Unit acceptance criteria achieved. Ready to proceed.
 
 {If gaps found:}
 
@@ -119,7 +119,7 @@ None — all verifiable items checked programmatically.
 
 {If gaps found, generate fix plan recommendations:}
 
-### {phase}-{next}-PLAN.md: {Fix Name}
+### bolt-{next}-plan.md: {Fix Name}
 
 **Objective:** {What this fixes}
 
@@ -132,7 +132,7 @@ None — all verifiable items checked programmatically.
 
 ---
 
-### {phase}-{next+1}-PLAN.md: {Fix Name}
+### bolt-{next+1}-plan.md: {Fix Name}
 
 **Objective:** {What this fixes}
 
@@ -146,8 +146,8 @@ None — all verifiable items checked programmatically.
 
 ## Verification Metadata
 
-**Verification approach:** Goal-backward (derived from phase goal)
-**Must-haves source:** {PLAN.md frontmatter | derived from ROADMAP.md goal}
+**Verification approach:** Goal-backward (derived from unit acceptance criteria)
+**Must-haves source:** {bolt-plan.md frontmatter | derived from unit acceptance criteria}
 **Automated checks:** {N} passed, {M} failed
 **Human checks required:** {N}
 **Total verification time:** {duration}
@@ -189,15 +189,15 @@ None — all verifiable items checked programmatically.
 
 ```markdown
 ---
-phase: 03-chat
+unit: 003
 verified: 2025-01-15T14:30:00Z
 status: gaps_found
 score: 2/5 must-haves verified
 ---
 
-# Phase 3: Chat Interface Verification Report
+# Unit 003: Chat Interface Verification Report
 
-**Phase Goal:** Working chat interface where users can send and receive messages
+**Unit Acceptance Criteria:** Working chat interface where users can send and receive messages
 **Verified:** 2025-01-15T14:30:00Z
 **Status:** gaps_found
 
@@ -282,7 +282,7 @@ None needed until automated gaps are fixed.
 
 ## Recommended Fix Plans
 
-### 03-04-PLAN.md: Implement Chat API
+### bolt-004-plan.md: Implement Chat API
 
 **Objective:** Wire API routes to database
 
@@ -295,7 +295,7 @@ None needed until automated gaps are fixed.
 
 ---
 
-### 03-05-PLAN.md: Implement Chat UI
+### bolt-005-plan.md: Implement Chat UI
 
 **Objective:** Wire Chat component to API
 
@@ -310,8 +310,8 @@ None needed until automated gaps are fixed.
 
 ## Verification Metadata
 
-**Verification approach:** Goal-backward (derived from phase goal)
-**Must-haves source:** 03-01-PLAN.md frontmatter
+**Verification approach:** Goal-backward (derived from unit acceptance criteria)
+**Must-haves source:** bolt-001-plan.md frontmatter
 **Automated checks:** 2 passed, 8 failed
 **Human checks required:** 0 (blocked by automated failures)
 **Total verification time:** 2 min

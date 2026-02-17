@@ -1176,7 +1176,7 @@ Check for mode flags in prompt context:
 - Diagnose but don't fix
 - Stop after confirming root cause
 - Skip fix_and_verify step
-- Return root cause to caller (for plan-phase --gaps to handle)
+- Return root cause to caller (for plan-unit --gaps to handle)
 
 **goal: find_and_fix** (default)
 - Find root cause, then fix and verify

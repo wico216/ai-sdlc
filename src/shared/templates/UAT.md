@@ -1,6 +1,6 @@
 # UAT Template
 
-Template for `.aidlc/phases/XX-name/{phase}-UAT.md` — persistent UAT session tracking.
+Template for `.aidlc/construction/unit-NNN/UAT.md` — persistent UAT session tracking.
 
 ---
 
@@ -9,8 +9,8 @@ Template for `.aidlc/phases/XX-name/{phase}-UAT.md` — persistent UAT session t
 ```markdown
 ---
 status: testing | complete | diagnosed
-phase: XX-name
-source: [list of SUMMARY.md files tested]
+unit: NNN
+source: [list of bolt-summary.md files tested]
 started: [ISO timestamp]
 updated: [ISO timestamp]
 ---
@@ -57,7 +57,7 @@ skipped: [N]
 
 ## Gaps
 
-<!-- YAML format for plan-phase --gaps consumption -->
+<!-- YAML format for plan-unit --gaps consumption -->
 - truth: "[expected behavior from test]"
   status: failed
   reason: "User reported: [verbatim response]"
@@ -75,8 +75,8 @@ skipped: [N]
 
 **Frontmatter:**
 - `status`: OVERWRITE - "testing" or "complete"
-- `phase`: IMMUTABLE - set on creation
-- `source`: IMMUTABLE - SUMMARY files being tested
+- `unit`: IMMUTABLE - set on creation
+- `source`: IMMUTABLE - bolt-summary files being tested
 - `started`: IMMUTABLE - set on creation
 - `updated`: OVERWRITE - update on every change
 
@@ -98,7 +98,7 @@ skipped: [N]
 **Gaps:**
 - APPEND only when issue found (YAML format)
 - After diagnosis: fill `root_cause`, `artifacts`, `missing`, `debug_session`
-- This section feeds directly into __CMD_PREFIX__plan-phase --gaps
+- This section feeds directly into __CMD_PREFIX__plan-unit --gaps
 
 </section_rules>
 
@@ -106,13 +106,13 @@ skipped: [N]
 
 **After testing complete (status: complete), if gaps exist:**
 
-1. User runs diagnosis (from verify-work offer or manually)
+1. User runs diagnosis (from verify-unit offer or manually)
 2. diagnose-issues workflow spawns parallel debug agents
 3. Each agent investigates one gap, returns root cause
 4. UAT.md Gaps section updated with diagnosis:
    - Each gap gets `root_cause`, `artifacts`, `missing`, `debug_session` filled
 5. status → "diagnosed"
-6. Ready for __CMD_PREFIX__plan-phase --gaps with root causes
+6. Ready for __CMD_PREFIX__plan-unit --gaps with root causes
 
 **After diagnosis:**
 ```yaml
@@ -136,7 +136,7 @@ skipped: [N]
 
 <lifecycle>
 
-**Creation:** When __CMD_PREFIX__verify-work starts new session
+**Creation:** When __CMD_PREFIX__verify-unit starts new session
 - Extract tests from SUMMARY.md files
 - Set status to "testing"
 - Current Test points to test 1
@@ -157,7 +157,7 @@ skipped: [N]
 - Present summary with next steps
 
 **Resume after /clear:**
-1. Read frontmatter → know phase and status
+1. Read frontmatter → know unit and status
 2. Read Current Test → know where we are
 3. Find first [pending] result → continue from there
 4. Summary shows progress so far
@@ -183,8 +183,8 @@ Default: **major** (safe default, user can clarify if wrong)
 ```markdown
 ---
 status: diagnosed
-phase: 04-comments
-source: 04-01-SUMMARY.md, 04-02-SUMMARY.md
+unit: 004
+source: bolt-001-summary.md, bolt-002-summary.md
 started: 2025-01-15T10:30:00Z
 updated: 2025-01-15T10:45:00Z
 ---

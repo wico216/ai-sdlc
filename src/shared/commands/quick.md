@@ -17,10 +17,10 @@ allowed-tools:
 Execute small, ad-hoc tasks with AI-SDLC guarantees (atomic commits, STATE.md tracking) while skipping optional agents (research, plan-checker, verifier).
 
 Quick mode is the same system with a shorter path:
-- Spawns sdlc-planner (quick mode) + sdlc-executor(s)
-- Skips sdlc-phase-researcher, sdlc-plan-checker, sdlc-verifier
-- Quick tasks live in `.aidlc/quick/` separate from planned phases
-- Updates STATE.md "Quick Tasks Completed" table (NOT ROADMAP.md)
+- Spawns sdlc-bolt-planner (quick mode) + sdlc-bolt-executor(s)
+- Skips sdlc-plan-checker, sdlc-unit-verifier
+- Quick tasks live in `.aidlc/quick/` separate from planned units
+- Updates state.md "Quick Tasks Completed" table (NOT execution-plan.md)
 
 Use when: You know exactly what to do and the task is small enough to not need research or verification.
 </objective>
@@ -30,7 +30,7 @@ Orchestration is inline - no separate workflow file. Quick mode is deliberately 
 </execution_context>
 
 <context>
-@.aidlc/STATE.md
+@.aidlc/state.md
 </context>
 
 <process>
@@ -48,8 +48,8 @@ Default to "balanced" if not set.
 
 | Agent | quality | balanced | budget |
 |-------|---------|----------|--------|
-| sdlc-planner | opus | opus | sonnet |
-| sdlc-executor | opus | sonnet | sonnet |
+| sdlc-bolt-planner | opus | opus | sonnet |
+| sdlc-bolt-executor | opus | sonnet | sonnet |
 
 Store resolved models for use in Task calls below.
 
@@ -60,8 +60,8 @@ Store resolved models for use in Task calls below.
 Check that an active AI-SDLC project exists:
 
 ```bash
-if [ ! -f .aidlc/ROADMAP.md ]; then
-  echo "Quick mode requires an active project with ROADMAP.md."
+if [ ! -f .aidlc/execution-plan.md ]; then
+  echo "Quick mode requires an active project with execution-plan.md."
   echo "Run __CMD_PREFIX__new-project first."
   exit 1
 fi
@@ -69,7 +69,7 @@ fi
 
 If validation fails, stop immediately with the error message.
 
-Quick tasks can run mid-phase - validation only checks ROADMAP.md exists, not phase status.
+Quick tasks can run mid-unit - validation only checks execution-plan.md exists, not unit status.
 
 ---
 
@@ -137,7 +137,7 @@ Store `$QUICK_DIR` for use in orchestration.
 
 **Step 5: Spawn planner (quick mode)**
 
-Spawn sdlc-planner with quick mode context:
+Spawn sdlc-bolt-planner with quick mode context:
 
 ```
 Task(
@@ -149,7 +149,7 @@ Task(
 **Description:** ${DESCRIPTION}
 
 **Project State:**
-@.aidlc/STATE.md
+@.aidlc/state.md
 
 </planning_context>
 
@@ -165,7 +165,7 @@ Write plan to: ${QUICK_DIR}/${next_num}-PLAN.md
 Return: ## PLANNING COMPLETE with plan path
 </output>
 ",
-  subagent_type="sdlc-planner",
+  subagent_type="sdlc-bolt-planner",
   model="{planner_model}",
   description="Quick plan: ${DESCRIPTION}"
 )
@@ -182,7 +182,7 @@ If plan not found, error: "Planner failed to create ${next_num}-PLAN.md"
 
 **Step 6: Spawn executor**
 
-Spawn sdlc-executor with plan reference:
+Spawn sdlc-bolt-executor with plan reference:
 
 ```
 Task(
@@ -190,16 +190,16 @@ Task(
 Execute quick task ${next_num}.
 
 Plan: @${QUICK_DIR}/${next_num}-PLAN.md
-Project state: @.aidlc/STATE.md
+Project state: @.aidlc/state.md
 
 <constraints>
 - Execute all tasks in the plan
 - Commit each task atomically
 - Create summary at: ${QUICK_DIR}/${next_num}-SUMMARY.md
-- Do NOT update ROADMAP.md (quick tasks are separate from planned phases)
+- Do NOT update execution-plan.md (quick tasks are separate from planned units)
 </constraints>
 ",
-  subagent_type="sdlc-executor",
+  subagent_type="sdlc-bolt-executor",
   model="{executor_model}",
   description="Execute: ${DESCRIPTION}"
 )
@@ -212,17 +212,17 @@ After executor returns:
 
 If summary not found, error: "Executor failed to create ${next_num}-SUMMARY.md"
 
-Note: For quick tasks producing multiple plans (rare), spawn executors in parallel waves per execute-phase patterns.
+Note: For quick tasks producing multiple plans (rare), spawn executors in parallel waves per build-unit patterns.
 
 ---
 
 **Step 7: Update STATE.md**
 
-Update STATE.md with quick task completion record.
+Update state.md with quick task completion record.
 
 **7a. Check if "Quick Tasks Completed" section exists:**
 
-Read STATE.md and check for `### Quick Tasks Completed` section.
+Read state.md and check for `### Quick Tasks Completed` section.
 
 **7b. If section doesn't exist, create it:**
 
@@ -260,7 +260,7 @@ Stage and commit quick task artifacts:
 # Stage quick task artifacts
 git add ${QUICK_DIR}/${next_num}-PLAN.md
 git add ${QUICK_DIR}/${next_num}-SUMMARY.md
-git add .aidlc/STATE.md
+git add .aidlc/state.md
 
 # Commit with quick task format
 git commit -m "$(cat <<'EOF'
@@ -297,13 +297,13 @@ Ready for next task: __CMD_PREFIX__quick
 </process>
 
 <success_criteria>
-- [ ] ROADMAP.md validation passes
+- [ ] execution-plan.md validation passes
 - [ ] User provides task description
 - [ ] Slug generated (lowercase, hyphens, max 40 chars)
 - [ ] Next number calculated (001, 002, 003...)
 - [ ] Directory created at `.aidlc/quick/NNN-slug/`
 - [ ] `${next_num}-PLAN.md` created by planner
 - [ ] `${next_num}-SUMMARY.md` created by executor
-- [ ] STATE.md updated with quick task row
+- [ ] state.md updated with quick task row
 - [ ] Artifacts committed
 </success_criteria>

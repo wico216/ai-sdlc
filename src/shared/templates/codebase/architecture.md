@@ -168,7 +168,7 @@ Template for `.aidlc/codebase/ARCHITECTURE.md` - captures conceptual code organi
 
 **Command:**
 - Purpose: CLI command definition
-- Examples: `src/commands/new-project.ts`, `src/commands/plan-phase.ts`
+- Examples: `src/commands/new-project.ts`, `src/commands/plan-unit.ts`
 - Pattern: Commander.js command registration
 
 **Template:**
@@ -247,7 +247,7 @@ Include file paths as concrete examples of abstractions. Use backtick formatting
 - Note recurring patterns (services, controllers, repositories)
 - Keep descriptions conceptual, not mechanical
 
-**Useful for phase planning when:**
+**Useful for unit planning when:**
 - Adding new features (where does it fit in the layers?)
 - Refactoring (understanding current patterns)
 - Identifying where to add code (which layer handles X?)

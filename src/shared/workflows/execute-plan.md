@@ -24,7 +24,7 @@ Default to "balanced" if not set.
 
 | Agent | quality | balanced | budget |
 |-------|---------|----------|--------|
-| sdlc-executor | opus | sonnet | sonnet |
+| sdlc-bolt-executor | opus | sonnet | sonnet |
 
 Store resolved model for use in Task calls below.
 </step>
@@ -75,11 +75,11 @@ Find the next plan to execute:
 - Identify first plan without corresponding SUMMARY
 
 ```bash
-cat .aidlc/ROADMAP.md
+cat .aidlc/execution-plan.md
 # Look for phase with "In progress" status
 # Then find plans in that phase
-ls .aidlc/phases/XX-name/*-PLAN.md 2>/dev/null | sort
-ls .aidlc/phases/XX-name/*-SUMMARY.md 2>/dev/null | sort
+ls .aidlc/construction/XX-name/*-PLAN.md 2>/dev/null | sort
+ls .aidlc/construction/XX-name/*-SUMMARY.md 2>/dev/null | sort
 ```
 
 **Logic:**
@@ -92,8 +92,8 @@ ls .aidlc/phases/XX-name/*-SUMMARY.md 2>/dev/null | sort
 
 Phase directories can be integer or decimal format:
 
-- Integer: `.aidlc/phases/01-foundation/01-01-PLAN.md`
-- Decimal: `.aidlc/phases/01.1-hotfix/01.1-01-PLAN.md`
+- Integer: `.aidlc/construction/01-foundation/01-01-PLAN.md`
+- Decimal: `.aidlc/construction/01.1-hotfix/01.1-01-PLAN.md`
 
 Parse phase number from path (handles both formats):
 
@@ -160,7 +160,7 @@ Plans are divided into segments by checkpoints. Each segment is routed to optima
 
 ```bash
 # Find all checkpoints and their types
-grep -n "type=\"checkpoint" .aidlc/phases/XX-name/{phase}-{plan}-PLAN.md
+grep -n "type=\"checkpoint" .aidlc/construction/XX-name/{phase}-{plan}-PLAN.md
 ```
 
 **2. Analyze execution strategy:**
@@ -225,9 +225,9 @@ No segmentation benefit - execute entirely in main
 ```
 1. Run init_agent_tracking step first (see step below)
 
-2. Use Task tool with subagent_type="sdlc-executor" and model="{executor_model}":
+2. Use Task tool with subagent_type="sdlc-bolt-executor" and model="{executor_model}":
 
-   Prompt: "Execute plan at .aidlc/phases/{phase}-{plan}-PLAN.md
+   Prompt: "Execute plan at .aidlc/construction/{phase}-{plan}-PLAN.md
 
    This is an autonomous plan (no checkpoints). Execute all tasks, create SUMMARY.md in phase directory, commit with message following plan's commit guidance.
 
@@ -273,7 +273,7 @@ No segmentation benefit - execute entirely in main
 Execute segment-by-segment:
 
 For each autonomous segment:
-  Spawn subagent with prompt: "Execute tasks [X-Y] from plan at .aidlc/phases/{phase}-{plan}-PLAN.md. Read the plan for full context and deviation rules. Do NOT create SUMMARY or commit - just execute these tasks and report results."
+  Spawn subagent with prompt: "Execute tasks [X-Y] from plan at .aidlc/construction/{phase}-{plan}-PLAN.md. Read the plan for full context and deviation rules. Do NOT create SUMMARY or commit - just execute these tasks and report results."
 
   Wait for subagent completion
 
@@ -377,7 +377,7 @@ For Pattern A (fully autonomous) and Pattern C (decision-dependent), skip this s
 
    B. If routing = Subagent:
       ```
-      Spawn Task tool with subagent_type="sdlc-executor" and model="{executor_model}":
+      Spawn Task tool with subagent_type="sdlc-bolt-executor" and model="{executor_model}":
 
       Prompt: "Execute tasks [task numbers/names] from plan at [plan path].
 
@@ -527,7 +527,7 @@ Committing...
 <step name="load_prompt">
 Read the plan prompt:
 ```bash
-cat .aidlc/phases/XX-name/{phase}-{plan}-PLAN.md
+cat .aidlc/construction/XX-name/{phase}-{plan}-PLAN.md
 ````
 
 This IS the execution instructions. Follow it exactly.
@@ -541,7 +541,7 @@ Before executing, check if previous phase had issues:
 
 ```bash
 # Find previous phase summary
-ls .aidlc/phases/*/SUMMARY.md 2>/dev/null | sort -r | head -2 | tail -1
+ls .aidlc/construction/*/SUMMARY.md 2>/dev/null | sort -r | head -2 | tail -1
 ```
 
 If previous phase SUMMARY.md has "Issues Encountered" != "None" or "Next Phase Readiness" mentions blockers:
@@ -1130,7 +1130,7 @@ See __SDLC_REFS__/checkpoints.md for complete checkpoint guidance.
 </step>
 
 <step name="checkpoint_return_for_orchestrator">
-**When spawned by an orchestrator (execute-phase or execute-plan command):**
+**When spawned by an orchestrator (build-unit or execute-plan command):**
 
 If you were spawned via Task tool and hit a checkpoint, you cannot directly interact with the user. Instead, RETURN to the orchestrator with structured checkpoint state so it can present to the user and spawn a fresh continuation agent.
 
@@ -1255,12 +1255,12 @@ Pass timing data to SUMMARY.md creation.
 Check PLAN.md frontmatter for `user_setup` field:
 
 ```bash
-grep -A 50 "^user_setup:" .aidlc/phases/XX-name/{phase}-{plan}-PLAN.md | head -50
+grep -A 50 "^user_setup:" .aidlc/construction/XX-name/{phase}-{plan}-PLAN.md | head -50
 ```
 
 **If user_setup exists and is not empty:**
 
-Create `.aidlc/phases/XX-name/{phase}-USER-SETUP.md` using template from `__SDLC_TEMPLATES__/user-setup.md`.
+Create `.aidlc/construction/XX-name/{phase}-USER-SETUP.md` using template from `__SDLC_TEMPLATES__/user-setup.md`.
 
 **Content generation:**
 
@@ -1323,7 +1323,7 @@ Set `USER_SETUP_CREATED=true` if file was generated, for use in completion messa
 Create `{phase}-{plan}-SUMMARY.md` as specified in the prompt's `<output>` section.
 Use __SDLC_TEMPLATES__/summary.md for structure.
 
-**File location:** `.aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md`
+**File location:** `.aidlc/construction/XX-name/{phase}-{plan}-SUMMARY.md`
 
 **Frontmatter population:**
 
@@ -1394,7 +1394,7 @@ Progress: [progress bar]
 
 **Calculate progress bar:**
 
-- Count total plans across all phases (from ROADMAP.md or ROADMAP.md)
+- Count total plans across all phases (from execution-plan.md or execution-plan.md)
 - Count completed plans (count SUMMARY.md files that exist)
 - Progress = (completed / total) × 100%
 - Render: ░ for incomplete, █ for complete
@@ -1493,7 +1493,7 @@ Present issues and wait for acknowledgment before proceeding.
 Update the roadmap file:
 
 ```bash
-ROADMAP_FILE=".aidlc/ROADMAP.md"
+ROADMAP_FILE=".aidlc/execution-plan.md"
 ```
 
 **If more plans remain in this phase:**
@@ -1511,7 +1511,7 @@ ROADMAP_FILE=".aidlc/ROADMAP.md"
 Commit execution metadata (SUMMARY + STATE + ROADMAP):
 
 **Note:** All task code has already been committed during execution (one commit per task).
-PLAN.md was already committed during plan-phase. This final commit captures execution results only.
+PLAN.md was already committed during plan-unit. This final commit captures execution results only.
 
 **Check planning config:**
 
@@ -1527,14 +1527,14 @@ If `COMMIT_PLANNING_DOCS=true` (default):
 **1. Stage execution artifacts:**
 
 ```bash
-git add .aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md
+git add .aidlc/construction/XX-name/{phase}-{plan}-SUMMARY.md
 git add .aidlc/STATE.md
 ```
 
 **2. Stage roadmap:**
 
 ```bash
-git add .aidlc/ROADMAP.md
+git add .aidlc/execution-plan.md
 ```
 
 **3. Verify staging:**
@@ -1555,7 +1555,7 @@ Tasks completed: [N]/[N]
 - [Task 2 name]
 - [Task 3 name]
 
-SUMMARY: .aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md
+SUMMARY: .aidlc/construction/XX-name/{phase}-{plan}-SUMMARY.md
 EOF
 )"
 ```
@@ -1571,7 +1571,7 @@ Tasks completed: 3/3
 - Password hashing with bcrypt
 - Email confirmation flow
 
-SUMMARY: .aidlc/phases/08-user-auth/08-02-registration-SUMMARY.md
+SUMMARY: .aidlc/construction/08-user-auth/08-02-registration-SUMMARY.md
 EOF
 )"
 ```
@@ -1645,7 +1645,7 @@ If `USER_SETUP_CREATED=true` (from generate_user_setup step), always include thi
 
 This phase introduced external services requiring manual configuration:
 
-📋 .aidlc/phases/{phase-dir}/{phase}-USER-SETUP.md
+📋 .aidlc/construction/{phase-dir}/{phase}-USER-SETUP.md
 
 Quick view:
 - [ ] {ENV_VAR_1}
@@ -1653,7 +1653,7 @@ Quick view:
 - [ ] {Dashboard config task}
 
 Complete this setup for the integration to function.
-Run `cat .aidlc/phases/{phase-dir}/{phase}-USER-SETUP.md` for full details.
+Run `cat .aidlc/construction/{phase-dir}/{phase}-USER-SETUP.md` for full details.
 
 ---
 ```
@@ -1665,8 +1665,8 @@ This warning appears BEFORE "Plan complete" messaging. User sees setup requireme
 List files in the phase directory:
 
 ```bash
-ls -1 .aidlc/phases/[current-phase-dir]/*-PLAN.md 2>/dev/null | wc -l
-ls -1 .aidlc/phases/[current-phase-dir]/*-SUMMARY.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/[current-phase-dir]/*-PLAN.md 2>/dev/null | wc -l
+ls -1 .aidlc/construction/[current-phase-dir]/*-SUMMARY.md 2>/dev/null | wc -l
 ```
 
 State the counts: "This phase has [X] plans and [Y] summaries."
@@ -1691,7 +1691,7 @@ Identify the next unexecuted plan:
 <if mode="yolo">
 ```
 Plan {phase}-{plan} complete.
-Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
+Summary: .aidlc/construction/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 {Y} of {X} plans complete for Phase {Z}.
 
@@ -1704,7 +1704,7 @@ Loop back to identify_plan step automatically.
 <if mode="interactive" OR="custom with gates.execute_next_plan true">
 ```
 Plan {phase}-{plan} complete.
-Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
+Summary: .aidlc/construction/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 {Y} of {X} plans complete for Phase {Z}.
 
@@ -1714,14 +1714,14 @@ Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 **{phase}-{next-plan}: [Plan Name]** — [objective from next PLAN.md]
 
-`__CMD_PREFIX__execute-phase {phase}`
+`__CMD_PREFIX__build-unit {phase}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__verify-work {phase}-{plan}` — manual acceptance testing before continuing
+- `__CMD_PREFIX__verify-unit {phase}-{plan}` — manual acceptance testing before continuing
 - Review what was built before continuing
 
 ---
@@ -1736,7 +1736,7 @@ Wait for user to clear and run next command.
 
 **Step 3: Check milestone status (only when all plans in phase are complete)**
 
-Read ROADMAP.md and extract:
+Read execution-plan.md and extract:
 1. Current phase number (from the plan just completed)
 2. All phase numbers listed in the current milestone section
 
@@ -1759,11 +1759,11 @@ State: "Current phase is {X}. Milestone has {N} phases (highest: {Y})."
 
 **Route B: Phase complete, more phases remain in milestone**
 
-Read ROADMAP.md to get the next phase's name and goal.
+Read execution-plan.md to get the next phase's name and goal.
 
 ```
 Plan {phase}-{plan} complete.
-Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
+Summary: .aidlc/construction/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 ## ✓ Phase {Z}: {Phase Name} Complete
 
@@ -1773,17 +1773,17 @@ All {Y} plans finished.
 
 ## ▶ Next Up
 
-**Phase {Z+1}: {Next Phase Name}** — {Goal from ROADMAP.md}
+**Phase {Z+1}: {Next Phase Name}** — {Goal from execution-plan.md}
 
-`__CMD_PREFIX__plan-phase {Z+1}`
+`__CMD_PREFIX__plan-unit {Z+1}`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__verify-work {Z}` — manual acceptance testing before continuing
-- `__CMD_PREFIX__discuss-phase {Z+1}` — gather context first
+- `__CMD_PREFIX__verify-unit {Z}` — manual acceptance testing before continuing
+- `__CMD_PREFIX__elaborate {Z+1}` — gather context first
 - Review phase accomplishments before continuing
 
 ---
@@ -1797,7 +1797,7 @@ All {Y} plans finished.
 🎉 MILESTONE COMPLETE!
 
 Plan {phase}-{plan} complete.
-Summary: .aidlc/phases/{phase-dir}/{phase}-{plan}-SUMMARY.md
+Summary: .aidlc/construction/{phase-dir}/{phase}-{plan}-SUMMARY.md
 
 ## ✓ Phase {Z}: {Phase Name} Complete
 
@@ -1813,15 +1813,15 @@ All {Y} plans finished.
 
 **Complete Milestone** — archive and prepare for next
 
-`__CMD_PREFIX__complete-milestone`
+`__CMD_PREFIX__approve-release`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ---
 
 **Also available:**
-- `__CMD_PREFIX__verify-work` — manual acceptance testing before completing milestone
-- `__CMD_PREFIX__add-phase <description>` — add another phase before completing
+- `__CMD_PREFIX__verify-unit` — manual acceptance testing before completing milestone
+- `__CMD_PREFIX__elaborate <description>` — add another phase before completing
 - Review accomplishments before archiving
 
 ---
@@ -1838,7 +1838,7 @@ All {Y} plans finished.
 - USER-SETUP.md generated if user_setup in frontmatter
 - SUMMARY.md created with substantive content
 - STATE.md updated (position, decisions, issues, session)
-- ROADMAP.md updated
+- execution-plan.md updated
 - If codebase map exists: map updated with execution changes (or skipped if no significant changes)
 - If USER-SETUP.md created: prominently surfaced in completion output
   </success_criteria>

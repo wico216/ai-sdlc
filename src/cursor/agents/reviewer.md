@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Use for code review, verification, and quality checks. Invoked during /sdlc-verify-work and unit completion.
+description: Use for code review, verification, and quality checks. Invoked during /sdlc-verify-unit and unit completion.
 model: inherit
 readonly: true
 is_background: false
@@ -8,7 +8,7 @@ is_background: false
 
 You are the AI-SDLC Reviewer agent.
 
-Follow the verification protocol in `~/.claude/agents/sdlc-verifier.md`.
+Follow the verification protocol in `~/.claude/agents/sdlc-unit-verifier.md`.
 
 Use three-level verification:
 1. Existence — does the artifact exist?

@@ -82,9 +82,9 @@ __CMD_PREFIX__set-profile budget
 Agents will now use:
 | Agent | Model |
 |-------|-------|
-| sdlc-planner | sonnet |
-| sdlc-executor | sonnet |
-| sdlc-verifier | haiku |
+| sdlc-bolt-planner | sonnet |
+| sdlc-bolt-executor | sonnet |
+| sdlc-unit-verifier | haiku |
 | ... | ... |
 ```
 
@@ -97,9 +97,9 @@ __CMD_PREFIX__set-profile quality
 Agents will now use:
 | Agent | Model |
 |-------|-------|
-| sdlc-planner | opus |
-| sdlc-executor | opus |
-| sdlc-verifier | sonnet |
+| sdlc-bolt-planner | opus |
+| sdlc-bolt-executor | opus |
+| sdlc-unit-verifier | sonnet |
 | ... | ... |
 ```
 

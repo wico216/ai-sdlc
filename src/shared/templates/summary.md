@@ -1,6 +1,6 @@
 # Summary Template
 
-Template for `.aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md` - phase completion documentation.
+Template for `.aidlc/construction/unit-NNN/bolt-NNN-summary.md` - bolt completion documentation.
 
 ---
 
@@ -8,22 +8,22 @@ Template for `.aidlc/phases/XX-name/{phase}-{plan}-SUMMARY.md` - phase completio
 
 ```markdown
 ---
-phase: XX-name
-plan: YY
+unit: NNN
+bolt: YY
 subsystem: [primary category: auth, payments, ui, api, database, infra, testing, etc.]
 tags: [searchable tech: jwt, stripe, react, postgres, prisma]
 
 # Dependency graph
 requires:
-  - phase: [prior phase this depends on]
-    provides: [what that phase built that this uses]
+  - unit: [prior unit this depends on]
+    provides: [what that unit built that this uses]
 provides:
-  - [bullet list of what this phase built/delivered]
-affects: [list of phase names or keywords that will need this context]
+  - [bullet list of what this bolt built/delivered]
+affects: [list of unit names or keywords that will need this context]
 
 # Tech tracking
 tech-stack:
-  added: [libraries/tools added in this phase]
+  added: [libraries/tools added in this bolt]
   patterns: [architectural/code patterns established]
 
 key-files:
@@ -43,9 +43,9 @@ duration: Xmin
 completed: YYYY-MM-DD
 ---
 
-# Phase [X]: [Name] Summary
+# Bolt [Y]: [Name] Summary
 
-**[Substantive one-liner describing outcome - NOT "phase complete" or "implementation finished"]**
+**[Substantive one-liner describing outcome - NOT "bolt complete" or "implementation finished"]**
 
 ## Performance
 
@@ -110,7 +110,7 @@ _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 ## User Setup Required
 
 [If USER-SETUP.md was generated:]
-**External services require manual configuration.** See [{phase}-USER-SETUP.md](./{phase}-USER-SETUP.md) for:
+**External services require manual configuration.** See [USER-SETUP.md](./USER-SETUP.md) for:
 - Environment variables to add
 - Dashboard configuration steps
 - Verification commands
@@ -118,31 +118,31 @@ _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 [If no USER-SETUP.md:]
 None - no external service configuration required.
 
-## Next Phase Readiness
-[What's ready for next phase]
+## Next Unit Readiness
+[What's ready for next unit]
 [Any blockers or concerns]
 
 ---
-*Phase: XX-name*
+*Unit: NNN*
 *Completed: [date]*
 ```
 
 <frontmatter_guidance>
-**Purpose:** Enable automatic context assembly via dependency graph. Frontmatter makes summary metadata machine-readable so plan-phase can scan all summaries quickly and select relevant ones based on dependencies.
+**Purpose:** Enable automatic context assembly via dependency graph. Frontmatter makes summary metadata machine-readable so plan-unit can scan all summaries quickly and select relevant ones based on dependencies.
 
 **Fast scanning:** Frontmatter is first ~25 lines, cheap to scan across all summaries without reading full content.
 
-**Dependency graph:** `requires`/`provides`/`affects` create explicit links between phases, enabling transitive closure for context selection.
+**Dependency graph:** `requires`/`provides`/`affects` create explicit links between units, enabling transitive closure for context selection.
 
-**Subsystem:** Primary categorization (auth, payments, ui, api, database, infra, testing) for detecting related phases.
+**Subsystem:** Primary categorization (auth, payments, ui, api, database, infra, testing) for detecting related units.
 
 **Tags:** Searchable technical keywords (libraries, frameworks, tools) for tech stack awareness.
 
-**Key-files:** Important files for @context references in PLAN.md.
+**Key-files:** Important files for @context references in bolt plans.
 
-**Patterns:** Established conventions future phases should maintain.
+**Patterns:** Established conventions future units should maintain.
 
-**Population:** Frontmatter is populated during summary creation in execute-plan.md. See `<step name="create_summary">` for field-by-field guidance.
+**Population:** Frontmatter is populated during summary creation in build-unit. See `<step name="create_summary">` for field-by-field guidance.
 </frontmatter_guidance>
 
 <one_liner_rules>
@@ -154,7 +154,7 @@ The one-liner MUST be substantive:
 - "Dashboard with real-time metrics via Server-Sent Events"
 
 **Bad:**
-- "Phase complete"
+- "Bolt complete"
 - "Authentication implemented"
 - "Foundation finished"
 - "All tasks done"
@@ -164,7 +164,7 @@ The one-liner should tell someone what actually shipped.
 
 <example>
 ```markdown
-# Phase 1: Foundation Summary
+# Bolt 1: Foundation Summary
 
 **JWT auth with refresh rotation using jose library, Prisma User model, and protected API middleware**
 
@@ -222,12 +222,12 @@ The one-liner should tell someone what actually shipped.
 ## Issues Encountered
 - jsonwebtoken CommonJS import failed in Edge runtime - switched to jose (planned library change, worked as expected)
 
-## Next Phase Readiness
+## Next Unit Readiness
 - Auth foundation complete, ready for feature development
 - User registration endpoint needed before public launch
 
 ---
-*Phase: 01-foundation*
+*Unit: 001*
 *Completed: 2025-01-15*
 ```
 </example>
@@ -235,7 +235,7 @@ The one-liner should tell someone what actually shipped.
 <guidelines>
 **Frontmatter:** MANDATORY - complete all fields. Enables automatic context assembly for future planning.
 
-**One-liner:** Must be substantive. "JWT auth with refresh rotation using jose library" not "Authentication implemented".
+**One-liner:** Must be substantive. "JWT auth with refresh rotation using jose library" not "Implementation finished".
 
 **Decisions section:**
 - Key decisions made during execution with rationale
