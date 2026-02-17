@@ -6,15 +6,14 @@ Model profiles control which Claude model each AI-SDLC agent uses. This allows b
 
 | Agent | `quality` | `balanced` | `budget` |
 |-------|-----------|------------|----------|
-| sdlc-planner | opus | opus | sonnet |
-| sdlc-roadmapper | opus | sonnet | sonnet |
-| sdlc-executor | opus | sonnet | sonnet |
-| sdlc-phase-researcher | opus | sonnet | haiku |
-| sdlc-project-researcher | opus | sonnet | haiku |
+| sdlc-inception | opus | sonnet | sonnet |
+| sdlc-bolt-planner | opus | opus | sonnet |
+| sdlc-bolt-executor | opus | sonnet | sonnet |
+| sdlc-unit-verifier | sonnet | sonnet | haiku |
+| sdlc-gate-checker | sonnet | sonnet | haiku |
 | sdlc-research-synthesizer | sonnet | sonnet | haiku |
 | sdlc-debugger | opus | sonnet | sonnet |
 | sdlc-codebase-mapper | sonnet | haiku | haiku |
-| sdlc-verifier | sonnet | sonnet | haiku |
 | sdlc-plan-checker | sonnet | sonnet | haiku |
 | sdlc-integration-checker | sonnet | sonnet | haiku |
 
@@ -60,14 +59,14 @@ Per-project default: Set in `.aidlc/config.json`:
 
 ## Design Rationale
 
-**Why Opus for sdlc-planner?**
+**Why Opus for sdlc-bolt-planner?**
 Planning involves architecture decisions, goal decomposition, and task design. This is where model quality has the highest impact.
 
-**Why Sonnet for sdlc-executor?**
-Executors follow explicit PLAN.md instructions. The plan already contains the reasoning; execution is implementation.
+**Why Sonnet for sdlc-bolt-executor?**
+Executors follow explicit bolt-plan.md instructions. The plan already contains the reasoning; execution is implementation.
 
-**Why Sonnet (not Haiku) for verifiers in balanced?**
-Verification requires goal-backward reasoning - checking if code *delivers* what the phase promised, not just pattern matching. Sonnet handles this well; Haiku may miss subtle gaps.
+**Why Sonnet (not Haiku) for sdlc-unit-verifier in balanced?**
+Verification requires goal-backward reasoning - checking if code *delivers* what the unit promised, not just pattern matching. Sonnet handles this well; Haiku may miss subtle gaps.
 
 **Why Haiku for sdlc-codebase-mapper?**
 Read-only exploration and pattern extraction. No reasoning required, just structured output from file contents.

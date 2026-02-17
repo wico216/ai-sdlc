@@ -23,7 +23,7 @@ Self-check that the project follows AI-SDLC methodology. Verifies all 5 gates ha
 </objective>
 
 <context>
-@.aidlc/STATE.md
+@.aidlc/state.md
 @.aidlc/audit.md
 </context>
 
@@ -50,10 +50,10 @@ Verify each link in the traceability chain:
 
 **Intent → Requirements:**
 - Check `.aidlc/intent.md` exists
-- Check `.aidlc/REQUIREMENTS.md` exists with REQ-IDs
+- Check `.aidlc/inception/requirements.md` exists with REQ-IDs
 
 **Requirements → Units:**
-- For each REQ-ID in REQUIREMENTS.md, check it appears in at least one unit file
+- For each REQ-ID in inception/requirements.md, check it appears in at least one unit file
 - Report orphan requirements (REQ-IDs not traced to any unit)
 
 **Units → Design:**
@@ -61,7 +61,7 @@ Verify each link in the traceability chain:
 - Report units without design documents
 
 **Design → Code (via bolts):**
-- For each unit, check SUMMARY.md files exist in the corresponding phase
+- For each unit, check SUMMARY.md files exist in the corresponding construction directory
 - Report units with no execution evidence
 
 **Code → Deployment:**

@@ -21,12 +21,12 @@ Check if this is an existing project:
 
 ```bash
 ls .aidlc/STATE.md 2>/dev/null && echo "Project exists"
-ls .aidlc/ROADMAP.md 2>/dev/null && echo "Roadmap exists"
+ls .aidlc/execution-plan.md 2>/dev/null && echo "Roadmap exists"
 ls .aidlc/PROJECT.md 2>/dev/null && echo "Project file exists"
 ```
 
 **If STATE.md exists:** Proceed to load_state
-**If only ROADMAP.md/PROJECT.md exist:** Offer to reconstruct STATE.md
+**If only execution-plan.md/PROJECT.md exist:** Offer to reconstruct STATE.md
 **If .aidlc/ doesn't exist:** This is a new project - route to __CMD_PREFIX__new-project
 </step>
 
@@ -63,10 +63,10 @@ Look for incomplete work that needs attention:
 
 ```bash
 # Check for continue-here files (mid-plan resumption)
-ls .aidlc/phases/*/.continue-here*.md 2>/dev/null
+ls .aidlc/construction/*/.continue-here*.md 2>/dev/null
 
 # Check for plans without summaries (incomplete execution)
-for plan in .aidlc/phases/*/*-PLAN.md; do
+for plan in .aidlc/construction/*/*-PLAN.md; do
   summary="${plan/PLAN/SUMMARY}"
   [ ! -f "$summary" ] && echo "Incomplete: $plan"
 done 2>/dev/null
@@ -181,11 +181,11 @@ What would you like to do?
 [Primary action based on state - e.g.:]
 1. Resume interrupted agent [if interrupted agent found]
    OR
-1. Execute phase (__CMD_PREFIX__execute-phase {phase})
+1. Execute phase (__CMD_PREFIX__build-unit {phase})
    OR
-1. Discuss Phase 3 context (__CMD_PREFIX__discuss-phase 3) [if CONTEXT.md missing]
+1. Discuss Phase 3 context (__CMD_PREFIX__elaborate 3) [if CONTEXT.md missing]
    OR
-1. Plan Phase 3 (__CMD_PREFIX__plan-phase 3) [if CONTEXT.md exists or discuss option declined]
+1. Plan Phase 3 (__CMD_PREFIX__plan-unit 3) [if CONTEXT.md exists or discuss option declined]
 
 [Secondary options:]
 2. Review current phase status
@@ -197,10 +197,10 @@ What would you like to do?
 **Note:** When offering phase planning, check for CONTEXT.md existence first:
 
 ```bash
-ls .aidlc/phases/XX-name/*-CONTEXT.md 2>/dev/null
+ls .aidlc/construction/XX-name/*-CONTEXT.md 2>/dev/null
 ```
 
-If missing, suggest discuss-phase before plan. If exists, offer plan directly.
+If missing, suggest elaborate before plan. If exists, offer plan directly.
 
 Wait for user selection.
 </step>
@@ -216,7 +216,7 @@ Based on user selection, route to appropriate workflow:
 
   **{phase}-{plan}: [Plan Name]** — [objective from PLAN.md]
 
-  `__CMD_PREFIX__execute-phase {phase}`
+  `__CMD_PREFIX__build-unit {phase}`
 
   <sub>`/clear` first → fresh context window</sub>
 
@@ -228,17 +228,16 @@ Based on user selection, route to appropriate workflow:
 
   ## ▶ Next Up
 
-  **Phase [N]: [Name]** — [Goal from ROADMAP.md]
+  **Phase [N]: [Name]** — [Goal from execution-plan.md]
 
-  `__CMD_PREFIX__plan-phase [phase-number]`
+  `__CMD_PREFIX__plan-unit [phase-number]`
 
   <sub>`/clear` first → fresh context window</sub>
 
   ---
 
   **Also available:**
-  - `__CMD_PREFIX__discuss-phase [N]` — gather context first
-  - `__CMD_PREFIX__research-phase [N]` — investigate unknowns
+  - `__CMD_PREFIX__elaborate [N]` — gather context and investigate unknowns
 
   ---
   ```
@@ -272,7 +271,7 @@ If STATE.md is missing but other artifacts exist:
 "STATE.md missing. Reconstructing from artifacts..."
 
 1. Read PROJECT.md → Extract "What This Is" and Core Value
-2. Read ROADMAP.md → Determine phases, find current position
+2. Read execution-plan.md → Determine phases, find current position
 3. Scan \*-SUMMARY.md files → Extract decisions, concerns
 4. Count pending todos in .aidlc/todos/pending/
 5. Check for .continue-here files → Session continuity

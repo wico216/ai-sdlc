@@ -111,7 +111,7 @@ Task(
 - Display root cause and evidence summary
 - Offer options:
   - "Fix now" - spawn fix subagent
-  - "Plan fix" - suggest __CMD_PREFIX__plan-phase --gaps
+  - "Plan fix" - suggest __CMD_PREFIX__plan-unit --gaps
   - "Manual fix" - done
 
 **If `## CHECKPOINT REACHED`:**

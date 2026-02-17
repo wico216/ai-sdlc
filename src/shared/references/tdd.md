@@ -50,8 +50,8 @@ Output: [Working, tested feature]
 </objective>
 
 <context>
-@.aidlc/PROJECT.md
-@.aidlc/ROADMAP.md
+@.aidlc/intent.md
+@.aidlc/execution-plan.md
 @relevant/source/files.ts
 </context>
 

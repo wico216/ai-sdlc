@@ -46,8 +46,8 @@ Run the AI-SDLC Operations phase: productionize with safety and observability.
 </execution_context>
 
 <context>
-@.aidlc/STATE.md
-@.aidlc/PROJECT.md
+@.aidlc/state.md
+@.aidlc/intent.md
 @.aidlc/execution-plan.md
 </context>
 
@@ -68,7 +68,7 @@ Not all units are complete:
 - UNIT-002: in-progress ✗
 - UNIT-003: defined ✗
 
-Complete all units before Operations. Run __CMD_PREFIX__bolt {UNIT-ID} to continue.
+Complete all units before Operations. Run __CMD_PREFIX__build-unit {UNIT-ID} to continue.
 ```
 
 Use AskUserQuestion:
@@ -90,7 +90,7 @@ Display banner:
 ```
 
 Read execution-plan.md for deployment approach (set during Inception).
-Read PROJECT.md for infrastructure constraints.
+Read intent.md for infrastructure constraints.
 
 **Generate deployment plan:**
 
@@ -254,7 +254,7 @@ Use AskUserQuestion:
 
 **If approved:**
 Audit entry: `gate-approval` for PRODUCTION READY.
-Update STATE.md: phase = Operations Complete.
+Update state.md: phase = Operations Complete.
 
 **If rejected:**
 Audit entry: `gate-rejection`.
@@ -266,7 +266,7 @@ Create follow-up items.
 
 **Commit:**
 ```bash
-git add .aidlc/deployment-plan.md .aidlc/runbooks/ .aidlc/observability-config.md .aidlc/audit.md .aidlc/STATE.md
+git add .aidlc/deployment-plan.md .aidlc/runbooks/ .aidlc/observability-config.md .aidlc/audit.md .aidlc/state.md
 git commit -m "$(cat <<'EOF'
 docs(operations): Production Ready gate {approved/rejected}
 
@@ -313,7 +313,7 @@ Follow the deployment plan at `.aidlc/deployment-plan.md`.
 - `.aidlc/runbooks/` (selected runbooks)
 - `.aidlc/observability-config.md`
 - Updated `.aidlc/audit.md`
-- Updated `.aidlc/STATE.md`
+- Updated `.aidlc/state.md`
 
 </output>
 
@@ -325,7 +325,7 @@ Follow the deployment plan at `.aidlc/deployment-plan.md`.
 - [ ] Observability configuration created
 - [ ] Gate: Production Ready — passed with evidence
 - [ ] Audit trail has Production Ready gate entry
-- [ ] STATE.md reflects Operations Complete
+- [ ] state.md reflects Operations Complete
 - [ ] Golden Thread intact: Intent → Requirements → Units → Code → Deployment
 
 </success_criteria>

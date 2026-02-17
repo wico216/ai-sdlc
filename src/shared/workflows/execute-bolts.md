@@ -1,5 +1,5 @@
 <purpose>
-Execute all plans in a phase using wave-based parallel execution. Orchestrator stays lean by delegating plan execution to subagents.
+Execute all bolts in a unit using wave-based parallel execution. Orchestrator stays lean by delegating bolt execution to subagents.
 </purpose>
 
 <core_principle>
@@ -26,8 +26,8 @@ Default to "balanced" if not set.
 
 | Agent | quality | balanced | budget |
 |-------|---------|----------|--------|
-| sdlc-executor | opus | sonnet | sonnet |
-| sdlc-verifier | sonnet | sonnet | haiku |
+| sdlc-bolt-executor | opus | sonnet | sonnet |
+| sdlc-unit-verifier | sonnet | sonnet | haiku |
 | general-purpose | — | — | — |
 
 Store resolved models for use in Task calls below.
@@ -116,9 +116,9 @@ fi
 
 ```bash
 if [ "$BRANCHING_STRATEGY" = "milestone" ]; then
-  # Get current milestone info from ROADMAP.md
-  MILESTONE_VERSION=$(grep -oE 'v[0-9]+\.[0-9]+' .aidlc/ROADMAP.md | head -1 || echo "v1.0")
-  MILESTONE_NAME=$(grep -A1 "## .*$MILESTONE_VERSION" .aidlc/ROADMAP.md | tail -1 | sed 's/.*- //' | cut -d'(' -f1 | tr -d ' ' || echo "milestone")
+  # Get current milestone info from execution-plan.md
+  MILESTONE_VERSION=$(grep -oE 'v[0-9]+\.[0-9]+' .aidlc/execution-plan.md | head -1 || echo "v1.0")
+  MILESTONE_NAME=$(grep -A1 "## .*$MILESTONE_VERSION" .aidlc/execution-plan.md | tail -1 | sed 's/.*- //' | cut -d'(' -f1 | tr -d ' ' || echo "milestone")
 
   # Create slug
   MILESTONE_SLUG=$(echo "$MILESTONE_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
@@ -148,7 +148,7 @@ Confirm phase exists and has plans:
 ```bash
 # Match both zero-padded (05-*) and unpadded (5-*) folders
 PADDED_PHASE=$(printf "%02d" ${PHASE_ARG} 2>/dev/null || echo "${PHASE_ARG}")
-PHASE_DIR=$(ls -d .aidlc/phases/${PADDED_PHASE}-* .aidlc/phases/${PHASE_ARG}-* 2>/dev/null | head -1)
+PHASE_DIR=$(ls -d .aidlc/construction/${PADDED_PHASE}-* .aidlc/construction/${PHASE_ARG}-* 2>/dev/null | head -1)
 if [ -z "$PHASE_DIR" ]; then
   echo "ERROR: No phase directory matching '${PHASE_ARG}'"
   exit 1
@@ -216,7 +216,7 @@ waves = {
 }
 ```
 
-**No dependency analysis needed.** Wave numbers are pre-computed during `__CMD_PREFIX__plan-phase`.
+**No dependency analysis needed.** Wave numbers are pre-computed during `__CMD_PREFIX__plan-unit`.
 
 Report wave structure with context:
 ```
@@ -369,7 +369,7 @@ Plans with `autonomous: false` require user interaction.
 
 1. **Spawn agent for checkpoint plan:**
    ```
-   Task(prompt="{subagent-task-prompt}", subagent_type="sdlc-executor", model="{executor_model}")
+   Task(prompt="{subagent-task-prompt}", subagent_type="sdlc-bolt-executor", model="{executor_model}")
    ```
 
 2. **Agent runs until checkpoint:**
@@ -408,7 +408,7 @@ Plans with `autonomous: false` require user interaction.
    ```
    Task(
      prompt=filled_continuation_template,
-     subagent_type="sdlc-executor",
+     subagent_type="sdlc-bolt-executor",
      model="{executor_model}"
    )
    ```
@@ -481,11 +481,11 @@ Task(
   prompt="Verify phase {phase_number} goal achievement.
 
 Phase directory: {phase_dir}
-Phase goal: {goal from ROADMAP.md}
+Phase goal: {goal from execution-plan.md}
 
 Check must_haves against actual codebase. Create VERIFICATION.md.
 Verify what actually exists in the code.",
-  subagent_type="sdlc-verifier",
+  subagent_type="sdlc-unit-verifier",
   model="{verifier_model}"
 )
 ```
@@ -502,7 +502,7 @@ grep "^status:" "$PHASE_DIR"/*-VERIFICATION.md | cut -d: -f2 | tr -d ' '
 |--------|--------|
 | `passed` | Continue to update_roadmap |
 | `human_needed` | Present items to user, get approval or feedback |
-| `gaps_found` | Present gap summary, offer `__CMD_PREFIX__plan-phase {phase} --gaps` |
+| `gaps_found` | Present gap summary, offer `__CMD_PREFIX__plan-unit {phase} --gaps` |
 
 **If passed:**
 
@@ -549,7 +549,7 @@ Present gaps and offer next command:
 
 **Plan gap closure** — create additional plans to complete the phase
 
-`__CMD_PREFIX__plan-phase {X} --gaps`
+`__CMD_PREFIX__plan-unit {X} --gaps`
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -557,13 +557,13 @@ Present gaps and offer next command:
 
 **Also available:**
 - `cat {phase_dir}/{phase}-VERIFICATION.md` — see full report
-- `__CMD_PREFIX__verify-work {X}` — manual testing before planning
+- `__CMD_PREFIX__verify-unit {X}` — manual testing before planning
 ```
 
-User runs `__CMD_PREFIX__plan-phase {X} --gaps` which:
+User runs `__CMD_PREFIX__plan-unit {X} --gaps` which:
 1. Reads VERIFICATION.md gaps
 2. Creates additional plans (04, 05, etc.) with `gap_closure: true` to close gaps
-3. User then runs `__CMD_PREFIX__execute-phase {X} --gaps-only`
+3. User then runs `__CMD_PREFIX__build-unit {X} --gaps-only`
 4. Execute-phase runs only gap closure plans (04-05)
 5. Verifier runs again after new plans complete
 
@@ -571,7 +571,7 @@ User stays in control at each decision point.
 </step>
 
 <step name="update_roadmap">
-Update ROADMAP.md to reflect phase completion:
+Update execution-plan.md to reflect phase completion:
 
 ```bash
 # Mark phase complete
@@ -592,7 +592,7 @@ If `COMMIT_PLANNING_DOCS=true` (default):
 
 Commit phase completion (roadmap, state, verification):
 ```bash
-git add .aidlc/ROADMAP.md .aidlc/STATE.md .aidlc/phases/{phase_dir}/*-VERIFICATION.md
+git add .aidlc/execution-plan.md .aidlc/STATE.md .aidlc/construction/{phase_dir}/*-VERIFICATION.md
 git add .aidlc/REQUIREMENTS.md  # if updated
 git commit -m "docs(phase-{X}): complete phase execution"
 ```
@@ -607,7 +607,7 @@ Present next steps based on milestone status:
 
 **Phase {X+1}: {Name}** — {Goal}
 
-`__CMD_PREFIX__plan-phase {X+1}`
+`__CMD_PREFIX__plan-unit {X+1}`
 
 <sub>`/clear` first for fresh context</sub>
 ```
@@ -618,7 +618,7 @@ MILESTONE COMPLETE!
 
 All {N} phases executed.
 
-`__CMD_PREFIX__complete-milestone`
+`__CMD_PREFIX__approve-release`
 ```
 </step>
 
@@ -658,7 +658,7 @@ No polling (Task blocks). No context bleed.
 
 If phase execution was interrupted (context limit, user exit, error):
 
-1. Run `__CMD_PREFIX__execute-phase {phase}` again
+1. Run `__CMD_PREFIX__build-unit {phase}` again
 2. discover_plans finds completed SUMMARYs
 3. Skips completed plans
 4. Resumes from first incomplete plan

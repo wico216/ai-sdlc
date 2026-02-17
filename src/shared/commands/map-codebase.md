@@ -59,7 +59,7 @@ Check for .aidlc/STATE.md - loads context if project already initialized
 4. Wait for agents to complete, collect confirmations (NOT document contents)
 5. Verify all 7 documents exist with line counts
 6. Commit codebase map
-7. Offer next steps (typically: __CMD_PREFIX__new-project or __CMD_PREFIX__plan-phase)
+7. Offer next steps (typically: __CMD_PREFIX__new-project or __CMD_PREFIX__plan-unit)
 </process>
 
 <success_criteria>

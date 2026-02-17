@@ -17,51 +17,54 @@ Output ONLY the reference content below. Do NOT add:
 <reference>
 # AI-SDLC Command Reference
 
-**AI-SDLC** is an AI-native software development lifecycle framework for Claude Code. Three phases — Inception, Construction, Operations — with evidence-based gates and a complete audit trail.
+**AI-SDLC** is an AI-native software development lifecycle framework for Claude Code. Three phases — Inception, Construction, Operations — with evidence-based gates, a unit/bolt execution model, and a complete audit trail.
 
 ## Quick Start
 
-1. `__CMD_PREFIX__new-project` - Initialize project (questioning, research, requirements, roadmap)
-2. `__CMD_PREFIX__inception` - Run full Inception phase (intent, units, risk register, gates)
-3. `__CMD_PREFIX__bolt 1` - Execute a Construction bolt for the first unit
-4. `__CMD_PREFIX__deploy` - Run Operations phase when ready
+1. `__CMD_PREFIX__new-project` - Initialize project (questioning + config + brownfield detection)
+2. `__CMD_PREFIX__elaborate` - Adaptive inception (requirements, user stories, application design, execution plan)
+3. `__CMD_PREFIX__approve-inception` - Gate 1+2 approval
+4. `__CMD_PREFIX__plan-unit 1` - Plan bolts for Unit 1
+5. `__CMD_PREFIX__approve-unit 1 --design` - Gate 3 approval
+6. `__CMD_PREFIX__build-unit 1` - Execute bolts for Unit 1
+7. `__CMD_PREFIX__verify-unit 1` - UAT for Unit 1
+8. `__CMD_PREFIX__approve-unit 1 --complete` - Gate 4 approval
+9. `__CMD_PREFIX__deploy` - Run Operations phase
+10. `__CMD_PREFIX__approve-release` - Gate 5 approval
 
 ## Core Workflow (3 Phases)
 
 ```
-INCEPTION:     __CMD_PREFIX__new-project → __CMD_PREFIX__inception
-CONSTRUCTION:  __CMD_PREFIX__bolt <unit> (repeat per unit)
-OPERATIONS:    __CMD_PREFIX__deploy
+INCEPTION:     __CMD_PREFIX__new-project → __CMD_PREFIX__elaborate → __CMD_PREFIX__approve-inception
+CONSTRUCTION:  __CMD_PREFIX__plan-unit → __CMD_PREFIX__approve-unit --design → __CMD_PREFIX__build-unit → __CMD_PREFIX__verify-unit → __CMD_PREFIX__approve-unit --complete (repeat per unit)
+OPERATIONS:    __CMD_PREFIX__deploy → __CMD_PREFIX__approve-release
 ```
 
 ### 5 Gates (Proof over Prose)
 
-| Gate | Phase | What it checks |
+| Gate | Command | What it checks |
 |---|---|---|
-| Requirements Approved | Inception | Intent + requirements clear |
-| INCEPTION EXIT | Inception → Construction | Units decomposed, risks identified |
-| Design Approved | Construction | Architecture reviewed per unit |
-| UNIT COMPLETE | Construction | Tests pass, criteria met per unit |
-| PRODUCTION READY | Operations | Deployable, observable, rollbackable |
+| Requirements Approved | `__CMD_PREFIX__approve-inception` | Intent + requirements clear |
+| INCEPTION EXIT | `__CMD_PREFIX__approve-inception` | Application design complete, execution plan ready |
+| Design Approved | `__CMD_PREFIX__approve-unit <unit> --design` | Architecture reviewed per unit |
+| UNIT COMPLETE | `__CMD_PREFIX__approve-unit <unit> --complete` | Tests pass, criteria met per unit |
+| PRODUCTION READY | `__CMD_PREFIX__approve-release` | Deployable, observable, rollbackable |
 
 ### Project Initialization
 
 **`__CMD_PREFIX__new-project`**
 Initialize new project through unified flow.
 
-One command takes you from idea to ready-for-planning:
+One command takes you from idea to ready-for-elaboration:
 - Deep questioning to understand what you're building
-- Optional domain research (spawns 4 parallel researcher agents)
-- Requirements definition with v1/v2/out-of-scope scoping
-- Roadmap creation with phase breakdown and success criteria
+- Brownfield detection and optional codebase mapping
+- Writes intent.md capturing vision, scope, and constraints
+- Configures workflow preferences (mode, depth, agents)
 
-Creates all `.aidlc/` artifacts:
-- `PROJECT.md` — vision and requirements
+Creates `.aidlc/` artifacts:
+- `intent.md` — project intent (Golden Thread foundation)
 - `config.json` — workflow mode (interactive/yolo)
-- `research/` — domain research (if selected)
-- `REQUIREMENTS.md` — scoped requirements with REQ-IDs
-- `ROADMAP.md` — phases mapped to requirements
-- `STATE.md` — project memory
+- `state.md` — project memory
 
 Usage: `__CMD_PREFIX__new-project`
 
@@ -77,119 +80,144 @@ Usage: `__CMD_PREFIX__map-codebase`
 
 ### Inception Phase
 
-**`__CMD_PREFIX__inception`**
-Run the full AI-SDLC Inception phase after `__CMD_PREFIX__new-project`.
+**`__CMD_PREFIX__elaborate`**
+Adaptive inception — build out all inception artifacts from intent.
 
-Converts intent into testable, decomposed work:
-- Creates intent document (Golden Thread starting point)
-- Generates execution plan (adaptive depth)
-- Decomposes into Units (parallel-deliverable work chunks using DDD)
-- Creates risk register
-- Runs 2 gates: Requirements Approved, INCEPTION EXIT
+Replaces the old inception, discuss-phase, and research-phase commands. Drives the project from intent through to a complete, gate-ready inception:
+- Requirements definition (with research if configured)
+- User stories
+- Application design
+- Execution plan with unit decomposition
+- Risk register
 
-Creates additional `.aidlc/` artifacts:
-- `intent.md` — project intent and success criteria
-- `execution-plan.md` — which stages to run
-- `units/UNIT-NNN.md` — parallel work chunks with acceptance criteria
-- `risk-register.md` — identified risks with mitigations
-- `audit.md` — append-only decision log
+Creates `.aidlc/inception/` artifacts:
+- `requirements.md` — scoped requirements with REQ-IDs
+- `user-stories.md` — user stories derived from requirements
+- `application-design.md` — architecture and design decisions
+- `execution-plan.md` — units, dependencies, and build order
+- `research/` — domain research (if selected)
 
-Usage: `__CMD_PREFIX__inception`
+Usage: `__CMD_PREFIX__elaborate`
+
+**`__CMD_PREFIX__approve-inception`**
+Gate 1+2 approval — Requirements Approved and INCEPTION EXIT.
+
+- Reviews intent.md and inception artifacts for completeness
+- Validates requirements are specific, testable, and traced
+- Confirms application design is sound
+- Checks execution plan covers all requirements
+- Records gate evidence in audit.md
+
+Usage: `__CMD_PREFIX__approve-inception`
 
 ### Construction Phase
 
-**`__CMD_PREFIX__bolt <unit>`**
-Execute a Construction bolt for a specific unit.
+**`__CMD_PREFIX__plan-unit <unit>`**
+Plan bolts for a specific unit.
 
-A Bolt is the smallest iteration in AI-SDLC (hours to days):
-- Loads unit definition and checks dependencies
-- Runs Design Approved gate (architecture review)
-- Creates bolt plans (2-3 tasks max per plan)
+Creates bolt plans (the smallest iteration in AI-SDLC):
+- Loads unit definition from execution plan
+- Checks dependencies on other units
+- Decomposes unit into bolt plans (2-3 tasks max per bolt)
+- Creates design document for the unit
+
+Creates `.aidlc/construction/unit-NNN/` artifacts:
+- `design.md` — unit architecture and design
+- `bolt-NN-plan.md` — individual bolt plans
+
+Usage: `__CMD_PREFIX__plan-unit UNIT-001`
+Usage: `__CMD_PREFIX__plan-unit 1`
+
+**`__CMD_PREFIX__approve-unit <unit> --design`**
+Gate 3 approval — Design Approved for a specific unit.
+
+- Reviews unit design document
+- Validates architecture decisions
+- Checks alignment with application design
+- Records gate evidence in audit.md
+
+Usage: `__CMD_PREFIX__approve-unit UNIT-001 --design`
+Usage: `__CMD_PREFIX__approve-unit 1 --design`
+
+**`__CMD_PREFIX__build-unit <unit>`**
+Execute bolts for a specific unit.
+
+Runs bolt execution — the build phase:
+- Loads bolt plans for the unit
 - Executes plans with wave-based parallelization
-- Checks Unit Complete gate when all criteria met
+- Creates bolt summaries after each bolt completes
 - Appends to audit trail
 
-Flags:
-- `--skip-design-gate` — Skip design review (for subsequent bolts)
-- `--plan-only` — Only create plans, don't execute
-- `--execute-only` — Execute existing plans
+Creates `.aidlc/construction/unit-NNN/` artifacts:
+- `bolt-NN-summary.md` — execution results per bolt
 
-Usage: `__CMD_PREFIX__bolt UNIT-001`
-Usage: `__CMD_PREFIX__bolt 1`
-Usage: `__CMD_PREFIX__bolt UNIT-002 --skip-design-gate`
+Usage: `__CMD_PREFIX__build-unit UNIT-001`
+Usage: `__CMD_PREFIX__build-unit 1`
+
+**`__CMD_PREFIX__verify-unit <unit>`**
+Validate built features through conversational UAT for a specific unit.
+
+- Extracts testable deliverables from bolt summaries
+- Presents tests one at a time (yes/no responses)
+- Automatically diagnoses failures and creates fix plans
+- Ready for re-execution if issues found
+
+Creates `.aidlc/construction/unit-NNN/` artifacts:
+- `VERIFICATION.md` — verification results
+- `UAT.md` — user acceptance test results
+
+Usage: `__CMD_PREFIX__verify-unit UNIT-001`
+Usage: `__CMD_PREFIX__verify-unit 1`
+
+**`__CMD_PREFIX__approve-unit <unit> --complete`**
+Gate 4 approval — UNIT COMPLETE for a specific unit.
+
+- Reviews verification and UAT results
+- Validates all acceptance criteria are met
+- Checks tests pass and criteria satisfied
+- Records gate evidence in audit.md
+
+Usage: `__CMD_PREFIX__approve-unit UNIT-001 --complete`
+Usage: `__CMD_PREFIX__approve-unit 1 --complete`
 
 ### Operations Phase
 
 **`__CMD_PREFIX__deploy`**
-Run the Operations phase — deployment plan, runbooks, and Production Ready gate.
+Run the Operations phase — deployment plan, runbooks, and readiness checks.
 
 - Verifies all units are complete
 - Generates deployment plan with rollback procedures
 - Creates operational runbooks
 - Sets up observability configuration
-- Runs Production Ready gate (final gate)
 - Completes the Golden Thread: Intent → Code → Deployment
 
 Usage: `__CMD_PREFIX__deploy`
 
-### Unit Research & Planning
+**`__CMD_PREFIX__approve-release [version]`**
+Gate 5 approval — PRODUCTION READY.
 
-These commands help prepare for bolt execution. They are called internally by `__CMD_PREFIX__bolt` but can also be used standalone for deeper control.
+- Reviews deployment plan and runbooks
+- Validates all units passed Gate 4
+- Checks rollback procedures exist
+- Confirms observability is configured
+- Records final gate evidence in audit.md
 
-**`__CMD_PREFIX__discuss-phase <number>`**
-Help articulate your vision for a phase before planning.
+Usage: `__CMD_PREFIX__approve-release`
+Usage: `__CMD_PREFIX__approve-release 1.0.0`
 
-- Captures how you imagine this phase working
-- Creates CONTEXT.md with your vision, essentials, and boundaries
-- Use when you have ideas about how something should look/feel
+### Progress Tracking
 
-Usage: `__CMD_PREFIX__discuss-phase 2`
+**`__CMD_PREFIX__progress`**
+Check project status and intelligently route to next action.
 
-**`__CMD_PREFIX__research-phase <number>`**
-Comprehensive ecosystem research for niche/complex domains.
+- Shows visual progress bar and completion percentage
+- Summarizes recent work from summary files
+- Displays current position and what's next
+- Lists key decisions and open issues
+- Offers to execute next action or create it if missing
+- Detects unit/project completion
 
-- Discovers standard stack, architecture patterns, pitfalls
-- Creates RESEARCH.md with "how experts build this" knowledge
-- Use for 3D, games, audio, shaders, ML, and other specialized domains
-- Goes beyond "which library" to ecosystem knowledge
-
-Usage: `__CMD_PREFIX__research-phase 3`
-
-**`__CMD_PREFIX__list-phase-assumptions <number>`**
-See what Claude is planning to do before it starts.
-
-- Shows Claude's intended approach for a phase
-- Lets you course-correct if Claude misunderstood your vision
-- No files created - conversational output only
-
-Usage: `__CMD_PREFIX__list-phase-assumptions 3`
-
-### Advanced: Direct Phase Execution
-
-> **Note:** These commands bypass AI-SDLC gates (Design Approved, Unit Complete). They are the internal execution engine used by `__CMD_PREFIX__bolt`. Use them directly only when you need fine-grained control over planning and execution, and understand that gate enforcement and Golden Thread traceability are your responsibility.
-
-**`__CMD_PREFIX__plan-phase <number>`**
-Create detailed execution plan for a specific phase.
-
-- Generates `.aidlc/phases/XX-phase-name/XX-YY-PLAN.md`
-- Breaks phase into concrete, actionable tasks
-- Includes verification criteria and success measures
-- Multiple plans per phase supported (XX-01, XX-02, etc.)
-- **Does not enforce Design Approved gate** — use `__CMD_PREFIX__bolt` for gate-enforced flow
-
-Usage: `__CMD_PREFIX__plan-phase 1`
-Result: Creates `.aidlc/phases/01-foundation/01-01-PLAN.md`
-
-**`__CMD_PREFIX__execute-phase <phase-number>`**
-Execute all plans in a phase.
-
-- Groups plans by wave (from frontmatter), executes waves sequentially
-- Plans within each wave run in parallel via Task tool
-- Verifies phase goal after all plans complete
-- Updates REQUIREMENTS.md, ROADMAP.md, STATE.md
-- **Does not enforce Unit Complete gate** — use `__CMD_PREFIX__bolt` for gate-enforced flow
-
-Usage: `__CMD_PREFIX__execute-phase 5`
+Usage: `__CMD_PREFIX__progress`
 
 ### Quick Mode
 
@@ -198,120 +226,30 @@ Execute small, ad-hoc tasks with AI-SDLC guarantees but skip optional agents.
 
 Quick mode uses the same system with a shorter path:
 - Spawns planner + executor (skips researcher, checker, verifier)
-- Quick tasks live in `.aidlc/quick/` separate from planned phases
-- Updates STATE.md tracking (not ROADMAP.md)
+- Quick tasks live in `.aidlc/quick/` separate from planned units
+- Updates state.md tracking
 
 Use when you know exactly what to do and the task is small enough to not need research or verification.
 
 Usage: `__CMD_PREFIX__quick`
 Result: Creates `.aidlc/quick/NNN-slug/PLAN.md`, `.aidlc/quick/NNN-slug/SUMMARY.md`
 
-### Extended Workflow: Roadmap & Milestone Management
-
-> These commands extend AI-SDLC for multi-release projects. They manage the ROADMAP.md phases and milestone lifecycle. They are not part of the core 3-phase model (Inception → Construction → Operations) but are useful for iterative development across multiple releases.
-
-**`__CMD_PREFIX__add-phase <description>`**
-Add new phase to end of current milestone.
-
-- Appends to ROADMAP.md
-- Uses next sequential number
-- Updates phase directory structure
-
-Usage: `__CMD_PREFIX__add-phase "Add admin dashboard"`
-
-**`__CMD_PREFIX__insert-phase <after> <description>`**
-Insert urgent work as decimal phase between existing phases.
-
-- Creates intermediate phase (e.g., 7.1 between 7 and 8)
-- Useful for discovered work that must happen mid-milestone
-- Maintains phase ordering
-
-Usage: `__CMD_PREFIX__insert-phase 7 "Fix critical auth bug"`
-Result: Creates Phase 7.1
-
-**`__CMD_PREFIX__remove-phase <number>`**
-Remove a future phase and renumber subsequent phases.
-
-- Deletes phase directory and all references
-- Renumbers all subsequent phases to close the gap
-- Only works on future (unstarted) phases
-- Git commit preserves historical record
-
-Usage: `__CMD_PREFIX__remove-phase 17`
-Result: Phase 17 deleted, phases 18-20 become 17-19
-
-**`__CMD_PREFIX__new-milestone <name>`**
-Start a new milestone through unified flow.
-
-- Deep questioning to understand what you're building next
-- Optional domain research (spawns 4 parallel researcher agents)
-- Requirements definition with scoping
-- Roadmap creation with phase breakdown
-
-Mirrors `__CMD_PREFIX__new-project` flow for brownfield projects (existing PROJECT.md).
-
-Usage: `__CMD_PREFIX__new-milestone "v2.0 Features"`
-
-**`__CMD_PREFIX__complete-milestone <version>`**
-Archive completed milestone and prepare for next version.
-
-- Creates MILESTONES.md entry with stats
-- Archives full details to milestones/ directory
-- Creates git tag for the release
-- Prepares workspace for next version
-
-Usage: `__CMD_PREFIX__complete-milestone 1.0.0`
-
-**`__CMD_PREFIX__audit-milestone [version]`**
-Audit milestone completion against original intent.
-
-- Reads all phase VERIFICATION.md files
-- Checks requirements coverage
-- Spawns integration checker for cross-phase wiring
-- Creates MILESTONE-AUDIT.md with gaps and tech debt
-
-Usage: `__CMD_PREFIX__audit-milestone`
-
-**`__CMD_PREFIX__plan-milestone-gaps`**
-Create phases to close gaps identified by audit.
-
-- Reads MILESTONE-AUDIT.md and groups gaps into phases
-- Prioritizes by requirement priority (must/should/nice)
-- Adds gap closure phases to ROADMAP.md
-- Ready for `__CMD_PREFIX__plan-phase` on new phases
-
-Usage: `__CMD_PREFIX__plan-milestone-gaps`
-
-### Progress Tracking
-
-**`__CMD_PREFIX__progress`**
-Check project status and intelligently route to next action.
-
-- Shows visual progress bar and completion percentage
-- Summarizes recent work from SUMMARY files
-- Displays current position and what's next
-- Lists key decisions and open issues
-- Offers to execute next plan or create it if missing
-- Detects 100% milestone completion
-
-Usage: `__CMD_PREFIX__progress`
-
 ### Session Management
 
 **`__CMD_PREFIX__resume-work`**
 Resume work from previous session with full context restoration.
 
-- Reads STATE.md for project context
+- Reads state.md for project context
 - Shows current position and recent progress
 - Offers next actions based on project state
 
 Usage: `__CMD_PREFIX__resume-work`
 
 **`__CMD_PREFIX__pause-work`**
-Create context handoff when pausing work mid-phase.
+Create context handoff when pausing work mid-unit.
 
 - Creates .continue-here file with current state
-- Updates STATE.md session continuity section
+- Updates state.md session continuity section
 - Captures in-progress work context
 
 Usage: `__CMD_PREFIX__pause-work`
@@ -339,7 +277,7 @@ Capture idea or task as todo from current conversation.
 - Creates structured todo file in `.aidlc/todos/pending/`
 - Infers area from file paths for grouping
 - Checks for duplicates before creating
-- Updates STATE.md todo count
+- Updates state.md todo count
 
 Usage: `__CMD_PREFIX__add-todo` (infers from conversation)
 Usage: `__CMD_PREFIX__add-todo Add auth token refresh`
@@ -350,27 +288,15 @@ List pending todos and select one to work on.
 - Lists all pending todos with title, area, age
 - Optional area filter (e.g., `__CMD_PREFIX__check-todos api`)
 - Loads full context for selected todo
-- Routes to appropriate action (work now, add to phase, brainstorm)
+- Routes to appropriate action (work now, add to unit, brainstorm)
 - Moves todo to done/ when work begins
 
 Usage: `__CMD_PREFIX__check-todos`
 Usage: `__CMD_PREFIX__check-todos api`
 
-### User Acceptance Testing
-
-**`__CMD_PREFIX__verify-work [phase]`**
-Validate built features through conversational UAT.
-
-- Extracts testable deliverables from SUMMARY.md files
-- Presents tests one at a time (yes/no responses)
-- Automatically diagnoses failures and creates fix plans
-- Ready for re-execution if issues found
-
-Usage: `__CMD_PREFIX__verify-work 3`
-
 ### Guardrail Retro
 
-**`__CMD_PREFIX__retro [unit-id or 'milestone']`**
+**`__CMD_PREFIX__retro [unit-id]`**
 Review what AI did well/poorly and improve for next time.
 
 - Analyzes audit trail, gate results, rework cycles, risk register
@@ -380,7 +306,6 @@ Review what AI did well/poorly and improve for next time.
 - Optionally updates risk register with new risks
 
 Usage: `__CMD_PREFIX__retro UNIT-001`
-Usage: `__CMD_PREFIX__retro milestone`
 Usage: `__CMD_PREFIX__retro` (retro on most recently completed unit)
 
 ### Compliance
@@ -418,6 +343,11 @@ Usage: `__CMD_PREFIX__set-profile budget`
 
 ### Utility Commands
 
+**`__CMD_PREFIX__ask`**
+Ask questions about the project, codebase, or AI-SDLC methodology.
+
+Usage: `__CMD_PREFIX__ask`
+
 **`__CMD_PREFIX__help`**
 Show this command reference.
 
@@ -444,30 +374,41 @@ Usage: `__CMD_PREFIX__community`
 
 ```
 .aidlc/
-├── PROJECT.md            # Project vision
-├── ROADMAP.md            # Current phase breakdown
-├── STATE.md              # Project memory & context
-├── config.json           # Workflow mode & gates
-├── todos/                # Captured ideas and tasks
-│   ├── pending/          # Todos waiting to be worked on
-│   └── done/             # Completed todos
-├── debug/                # Active debug sessions
-│   └── resolved/         # Archived resolved issues
-├── codebase/             # Codebase map (brownfield projects)
-│   ├── STACK.md          # Languages, frameworks, dependencies
-│   ├── ARCHITECTURE.md   # Patterns, layers, data flow
-│   ├── STRUCTURE.md      # Directory layout, key files
-│   ├── CONVENTIONS.md    # Coding standards, naming
-│   ├── TESTING.md        # Test setup, patterns
-│   ├── INTEGRATIONS.md   # External services, APIs
-│   └── CONCERNS.md       # Tech debt, known issues
-└── phases/
-    ├── 01-foundation/
-    │   ├── 01-01-PLAN.md
-    │   └── 01-01-SUMMARY.md
-    └── 02-core-features/
-        ├── 02-01-PLAN.md
-        └── 02-01-SUMMARY.md
+├── intent.md              # Project intent (Golden Thread foundation)
+├── state.md               # Project memory & context
+├── config.json            # Workflow mode & gates
+├── audit.md               # Append-only decision log
+├── risk-register.md       # Identified risks with mitigations
+├── inception/             # Inception artifacts
+│   ├── requirements.md    # Scoped requirements with REQ-IDs
+│   ├── user-stories.md    # User stories from requirements
+│   ├── application-design.md  # Architecture and design
+│   ├── execution-plan.md  # Units, dependencies, build order
+│   └── research/          # Domain research (optional)
+├── construction/          # Construction artifacts
+│   └── unit-NNN/          # Per-unit directory
+│       ├── design.md      # Unit architecture
+│       ├── bolt-NN-plan.md    # Bolt execution plans
+│       ├── bolt-NN-summary.md # Bolt execution results
+│       ├── VERIFICATION.md    # Verification results
+│       └── UAT.md             # User acceptance tests
+├── todos/                 # Captured ideas and tasks
+│   ├── pending/           # Todos waiting to be worked on
+│   └── done/              # Completed todos
+├── debug/                 # Active debug sessions
+│   └── resolved/          # Archived resolved issues
+├── codebase/              # Codebase map (brownfield projects)
+│   ├── STACK.md           # Languages, frameworks, dependencies
+│   ├── ARCHITECTURE.md    # Patterns, layers, data flow
+│   ├── STRUCTURE.md       # Directory layout, key files
+│   ├── CONVENTIONS.md     # Coding standards, naming
+│   ├── TESTING.md         # Test setup, patterns
+│   ├── INTEGRATIONS.md    # External services, APIs
+│   └── CONCERNS.md        # Tech debt, known issues
+└── quick/                 # Quick tasks (ad-hoc)
+    └── NNN-slug/
+        ├── PLAN.md
+        └── SUMMARY.md
 ```
 
 ## Workflow Modes
@@ -520,37 +461,31 @@ Example config:
 **Starting a new project (full AI-SDLC flow):**
 
 ```
-__CMD_PREFIX__new-project        # INCEPTION: questioning → research → requirements → roadmap
+__CMD_PREFIX__new-project             # INCEPTION: questioning → intent → config
 /clear
-__CMD_PREFIX__inception          # INCEPTION: intent → units → risk register → gates
+__CMD_PREFIX__elaborate               # INCEPTION: requirements → user stories → design → execution plan
 /clear
-__CMD_PREFIX__bolt UNIT-001      # CONSTRUCTION: design gate → plan → execute → unit gate
+__CMD_PREFIX__approve-inception       # GATE 1+2: Requirements Approved + INCEPTION EXIT
 /clear
-__CMD_PREFIX__bolt UNIT-002      # CONSTRUCTION: next unit
+__CMD_PREFIX__plan-unit 1             # CONSTRUCTION: plan bolts for Unit 1
+__CMD_PREFIX__approve-unit 1 --design # GATE 3: Design Approved
 /clear
-__CMD_PREFIX__deploy             # OPERATIONS: deployment plan → runbooks → production ready gate
+__CMD_PREFIX__build-unit 1            # CONSTRUCTION: execute bolts for Unit 1
+/clear
+__CMD_PREFIX__verify-unit 1           # CONSTRUCTION: UAT for Unit 1
+__CMD_PREFIX__approve-unit 1 --complete # GATE 4: UNIT COMPLETE
+/clear
+__CMD_PREFIX__plan-unit 2             # CONSTRUCTION: next unit...
+# ... repeat for all units ...
+/clear
+__CMD_PREFIX__deploy                  # OPERATIONS: deployment plan → runbooks
+__CMD_PREFIX__approve-release 1.0.0   # GATE 5: PRODUCTION READY
 ```
 
 **Resuming work after a break:**
 
 ```
 __CMD_PREFIX__progress  # See where you left off and continue
-```
-
-**Adding urgent mid-milestone work:**
-
-```
-__CMD_PREFIX__insert-phase 5 "Critical security fix"
-__CMD_PREFIX__plan-phase 5.1
-__CMD_PREFIX__execute-phase 5.1
-```
-
-**Completing a milestone:**
-
-```
-__CMD_PREFIX__complete-milestone 1.0.0
-/clear
-__CMD_PREFIX__new-milestone  # Start next milestone (questioning → research → requirements → roadmap)
 ```
 
 **Capturing ideas during work:**
@@ -571,10 +506,16 @@ __CMD_PREFIX__debug "form submission fails silently"  # Start debug session
 __CMD_PREFIX__debug                                    # Resume from where you left off
 ```
 
+**Running a retro after completing a unit:**
+
+```
+__CMD_PREFIX__retro UNIT-001  # Review guardrails, identify improvements
+```
+
 ## Getting Help
 
-- Read `.aidlc/PROJECT.md` for project vision
-- Read `.aidlc/STATE.md` for current context
-- Check `.aidlc/ROADMAP.md` for phase status
+- Read `.aidlc/intent.md` for project vision
+- Read `.aidlc/state.md` for current context
+- Check `.aidlc/inception/execution-plan.md` for unit status
 - Run `__CMD_PREFIX__progress` to check where you're up to
   </reference>

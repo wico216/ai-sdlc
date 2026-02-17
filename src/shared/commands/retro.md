@@ -19,7 +19,7 @@ Run a Guardrail Retro after completing a unit or milestone. This is how the team
 
 **When to run:**
 - After `__CMD_PREFIX__bolt` completes a unit (Unit Complete gate passed)
-- After `__CMD_PREFIX__audit-milestone` or `__CMD_PREFIX__complete-milestone`
+- After `__CMD_PREFIX__approve-release`
 - Anytime the team wants to reflect on completed work
 
 **Principles in play:**
@@ -40,9 +40,9 @@ Scope: __ARGUMENTS__
 
 - If "UNIT-001" or "1": retro for that specific unit
 - If "milestone" or "v1.0": retro for the entire milestone
-- If empty: check STATE.md for most recently completed unit or milestone
+- If empty: check state.md for most recently completed unit or milestone
 
-@.aidlc/STATE.md
+@.aidlc/state.md
 </context>
 
 <process>
@@ -64,7 +64,7 @@ Parse __ARGUMENTS__ to determine retro scope:
 
 ```bash
 ls .aidlc/units/UNIT-*.md 2>/dev/null
-ls .aidlc/phases/*/  2>/dev/null
+ls .aidlc/construction/unit-*/  2>/dev/null
 ```
 
 **Create retro directory if needed:**
@@ -88,14 +88,14 @@ Read all relevant artifacts:
 - `.aidlc/units/{UNIT-ID}.md` — acceptance criteria
 - `.aidlc/units/{UNIT-ID}-design.md` — design decisions
 - `.aidlc/audit.md` — filter entries related to this unit
-- `.aidlc/phases/{phase-dir}/*-SUMMARY.md` — what was built
-- `.aidlc/phases/{phase-dir}/*-VERIFICATION.md` — what passed/failed
+- `.aidlc/construction/{unit-dir}/*-SUMMARY.md` — what was built
+- `.aidlc/construction/{unit-dir}/*-VERIFICATION.md` — what passed/failed
 - `.aidlc/risk-register.md` — risks related to this unit
 
 **For milestone retro:**
 - All of the above across all units
 - `.aidlc/v*-MILESTONE-AUDIT.md` — if exists
-- `.aidlc/REQUIREMENTS.md` — original scope vs. delivered
+- `.aidlc/inception/requirements.md` — original scope vs. delivered
 
 ## 2. Analyze Patterns
 
@@ -258,10 +258,10 @@ If yes, append new RISK-IDs to `.aidlc/risk-register.md`.
 ## ▶ Next
 
 {If unit retro + more units:}
-__CMD_PREFIX__bolt {next-UNIT-ID} — start next unit (with retro learnings applied)
+__CMD_PREFIX__build-unit {next-UNIT-ID} — start next unit (with retro learnings applied)
 
 {If milestone retro:}
-__CMD_PREFIX__new-milestone — start next milestone cycle
+__CMD_PREFIX__elaborate — start next milestone cycle
 
 {Always:}
 Review improvement actions before starting next work.

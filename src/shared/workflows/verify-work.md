@@ -1,5 +1,5 @@
 <purpose>
-Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /clear, and feeds gaps into __CMD_PREFIX__plan-phase --gaps.
+Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /clear, and feeds gaps into __CMD_PREFIX__plan-unit --gaps.
 
 User tests, Claude records. One test at a time. Plain text responses.
 </purpose>
@@ -33,7 +33,7 @@ Default to "balanced" if not set.
 
 | Agent | quality | balanced | budget |
 |-------|---------|----------|--------|
-| sdlc-planner | opus | opus | sonnet |
+| sdlc-bolt-planner | opus | opus | sonnet |
 | sdlc-plan-checker | sonnet | sonnet | haiku |
 
 Store resolved models for use in Task calls below.
@@ -43,7 +43,7 @@ Store resolved models for use in Task calls below.
 **First: Check for active UAT sessions**
 
 ```bash
-find .aidlc/phases -name "*-UAT.md" -type f 2>/dev/null | head -5
+find .aidlc/construction -name "*-UAT.md" -type f 2>/dev/null | head -5
 ```
 
 **If active sessions exist AND no $ARGUMENTS provided:**
@@ -78,7 +78,7 @@ If no, continue to `create_uat_file`.
 ```
 No active UAT sessions.
 
-Provide a phase number to start testing (e.g., __CMD_PREFIX__verify-work 4)
+Provide a phase number to start testing (e.g., __CMD_PREFIX__verify-unit 4)
 ```
 
 **If no active sessions AND $ARGUMENTS provided:**
@@ -94,7 +94,7 @@ Parse $ARGUMENTS as phase number (e.g., "4") or plan number (e.g., "04-02").
 ```bash
 # Find phase directory (match both zero-padded and unpadded)
 PADDED_PHASE=$(printf "%02d" ${PHASE_ARG} 2>/dev/null || echo "${PHASE_ARG}")
-PHASE_DIR=$(ls -d .aidlc/phases/${PADDED_PHASE}-* .aidlc/phases/${PHASE_ARG}-* 2>/dev/null | head -1)
+PHASE_DIR=$(ls -d .aidlc/construction/${PADDED_PHASE}-* .aidlc/construction/${PHASE_ARG}-* 2>/dev/null | head -1)
 
 # Find SUMMARY files
 ls "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null
@@ -178,7 +178,7 @@ skipped: 0
 [none yet]
 ```
 
-Write to `.aidlc/phases/XX-name/{phase}-UAT.md`
+Write to `.aidlc/construction/XX-name/{phase}-UAT.md`
 
 Proceed to `present_test`.
 </step>
@@ -250,7 +250,7 @@ reported: "{verbatim user response}"
 severity: {inferred}
 ```
 
-Append to Gaps section (structured YAML for plan-phase --gaps):
+Append to Gaps section (structured YAML for plan-unit --gaps):
 ```yaml
 - truth: "{expected behavior from test}"
   status: failed
@@ -317,7 +317,7 @@ git check-ignore -q .aidlc 2>/dev/null && COMMIT_PLANNING_DOCS=false
 
 Commit the UAT file:
 ```bash
-git add ".aidlc/phases/XX-name/{phase}-UAT.md"
+git add ".aidlc/construction/XX-name/{phase}-UAT.md"
 git commit -m "test({phase}): complete UAT - {passed} passed, {issues} issues"
 ```
 
@@ -343,8 +343,8 @@ Present summary:
 ```
 All tests passed. Ready to continue.
 
-- `__CMD_PREFIX__plan-phase {next}` — Plan next phase
-- `__CMD_PREFIX__execute-phase {next}` — Execute next phase
+- `__CMD_PREFIX__plan-unit {next}` — Plan next phase
+- `__CMD_PREFIX__build-unit {next}` — Execute next phase
 ```
 </step>
 
@@ -381,7 +381,7 @@ Display:
 ◆ Spawning planner for gap closure...
 ```
 
-Spawn sdlc-planner in --gaps mode:
+Spawn sdlc-bolt-planner in --gaps mode:
 
 ```
 Task(
@@ -392,22 +392,22 @@ Task(
 **Mode:** gap_closure
 
 **UAT with diagnoses:**
-@.aidlc/phases/{phase_dir}/{phase}-UAT.md
+@.aidlc/construction/{phase_dir}/{phase}-UAT.md
 
 **Project State:**
 @.aidlc/STATE.md
 
 **Roadmap:**
-@.aidlc/ROADMAP.md
+@.aidlc/execution-plan.md
 
 </planning_context>
 
 <downstream_consumer>
-Output consumed by __CMD_PREFIX__execute-phase
+Output consumed by __CMD_PREFIX__build-unit
 Plans must be executable prompts.
 </downstream_consumer>
 """,
-  subagent_type="sdlc-planner",
+  subagent_type="sdlc-bolt-planner",
   model="{planner_model}",
   description="Plan gap fixes for Phase {phase}"
 )
@@ -443,7 +443,7 @@ Task(
 **Phase Goal:** Close diagnosed gaps from UAT
 
 **Plans to verify:**
-@.aidlc/phases/{phase_dir}/*-PLAN.md
+@.aidlc/construction/{phase_dir}/*-PLAN.md
 
 </verification_context>
 
@@ -471,7 +471,7 @@ On return:
 
 Display: `Sending back to planner for revision... (iteration {N}/3)`
 
-Spawn sdlc-planner with revision context:
+Spawn sdlc-bolt-planner with revision context:
 
 ```
 Task(
@@ -482,7 +482,7 @@ Task(
 **Mode:** revision
 
 **Existing plans:**
-@.aidlc/phases/{phase_dir}/*-PLAN.md
+@.aidlc/construction/{phase_dir}/*-PLAN.md
 
 **Checker issues:**
 {structured_issues_from_checker}
@@ -494,7 +494,7 @@ Read existing PLAN.md files. Make targeted updates to address checker issues.
 Do NOT replan from scratch unless issues are fundamental.
 </instructions>
 """,
-  subagent_type="sdlc-planner",
+  subagent_type="sdlc-bolt-planner",
   model="{planner_model}",
   description="Revise Phase {phase} plans"
 )
@@ -510,7 +510,7 @@ Display: `Max iterations reached. {N} issues remain.`
 Offer options:
 1. Force proceed (execute despite issues)
 2. Provide guidance (user gives direction, retry)
-3. Abandon (exit, user runs __CMD_PREFIX__plan-phase manually)
+3. Abandon (exit, user runs __CMD_PREFIX__plan-unit manually)
 
 Wait for user response.
 </step>
@@ -538,7 +538,7 @@ Plans verified and ready for execution.
 
 **Execute fixes** — run fix plans
 
-`/clear` then `__CMD_PREFIX__execute-phase {phase} --gaps-only`
+`/clear` then `__CMD_PREFIX__build-unit {phase} --gaps-only`
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -589,8 +589,8 @@ Default to **major** if unclear. User can correct if needed.
 - [ ] Batched writes: on issue, every 5 passes, or completion
 - [ ] Committed on completion
 - [ ] If issues: parallel debug agents diagnose root causes
-- [ ] If issues: sdlc-planner creates fix plans (gap_closure mode)
+- [ ] If issues: sdlc-bolt-planner creates fix plans (gap_closure mode)
 - [ ] If issues: sdlc-plan-checker verifies fix plans
 - [ ] If issues: revision loop until plans pass (max 3 iterations)
-- [ ] Ready for `__CMD_PREFIX__execute-phase --gaps-only` when complete
+- [ ] Ready for `__CMD_PREFIX__build-unit --gaps-only` when complete
 </success_criteria>
