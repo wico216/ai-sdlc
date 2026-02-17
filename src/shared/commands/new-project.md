@@ -28,6 +28,9 @@ This is the most leveraged moment in any project. Deep questioning here means be
 
 @__SDLC_REFS__/questioning.md
 @__SDLC_REFS__/ui-brand.md
+@__SDLC_REFS__/overconfidence-prevention.md
+@__SDLC_REFS__/error-handling.md
+@__SDLC_REFS__/content-validation.md
 @__SDLC_TEMPLATES__/intent.md
 
 </execution_context>

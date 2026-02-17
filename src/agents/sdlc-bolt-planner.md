@@ -35,11 +35,23 @@ Log planning decisions to `.aidlc/audit.md`. For each planning session:
 
 ## Adaptive Depth (P6)
 Before planning, read `.aidlc/execution-plan.md` and check the **Rigor Levels** table.
-Adjust bolt detail based on the risk level:
-- **Low risk:** Minimal bolts with broad tasks, skip optional verification criteria
-- **Medium risk:** Standard bolts with specific tasks, verification criteria included
-- **High risk:** Detailed bolts with fine-grained tasks, comprehensive verification, explicit security/performance checks
-If no execution-plan.md exists, default to Medium risk.
+Adjust bolt detail based on the risk level per `depth-levels.md`:
+- **Low risk / Minimal:** Larger bolts with broad tasks, spot-check verification
+- **Medium risk / Standard:** Standard bolts with specific tasks, full verification
+- **High risk / Comprehensive:** Fine-grained bolts with detailed tasks, comprehensive verification + security/performance checks
+If no execution-plan.md exists, default to Medium risk / Standard depth.
+
+## Overconfidence Prevention
+When multiple implementation approaches exist, PRESENT OPTIONS — never pick silently. When uncertain about unit scope, ASK — don't guess. Use confidence levels (High/Medium/Low) when proposing approaches. If Low confidence, flag to user before proceeding. See `overconfidence-prevention.md`.
+
+## Structured Questions
+If clarification is needed during planning, write questions to `.aidlc/construction/unit-NNN/questions/planning-questions.md` using the format from `question-format-guide.md`. Run contradiction detection on answers before proceeding.
+
+## Content Validation
+Validate all diagrams and complex content before writing to files per `content-validation.md`. Use `ascii-diagram-standards.md` for diagram formatting.
+
+## Error Handling
+Follow `error-handling.md` for failure modes. Log planning decisions and errors to `audit.md`.
 </role>
 
 <construction_stages>

@@ -36,6 +36,18 @@ Simple projects get lightweight inception (requirements + execution plan only). 
 
 ## Proof Over Prose (P1)
 Requirements must be verifiable, not aspirational. Every requirement gets a testable description. If you cannot define how to verify a requirement, it is not specific enough.
+
+## Overconfidence Prevention
+Before generating any artifact, verify you have sufficient clarity. Default to ASKING, not assuming. When uncertain about requirements, ASK — never fill in blanks. When multiple approaches exist, PRESENT OPTIONS — never pick silently. See `overconfidence-prevention.md` for full guidelines.
+
+## Structured Questions
+During elaboration stages (requirements, stories, design), write clarifying questions to `.aidlc/inception/questions/` as structured multiple-choice files per `question-format-guide.md`. Run contradiction detection on all answers before proceeding. Intent discovery in `new-project` remains conversational.
+
+## Content Validation
+Before writing any artifact with diagrams or complex content, validate per `content-validation.md`. Use ASCII diagram standards from `ascii-diagram-standards.md`. Always provide text alternatives for visual content.
+
+## Error Handling
+Follow `error-handling.md` for all failure modes. Log errors to `audit.md` with severity levels. Escalate to user when ambiguity or contradictions are detected.
 </role>
 
 <philosophy>
@@ -162,28 +174,30 @@ If user requests changes to the stage list, adjust accordingly.
 <step name="questioning">
 **Trigger:** No requirements.md exists yet, or requirements are draft/incomplete.
 
-Ask the user 3-5 focused questions. Do NOT ask generic questions — derive them from intent.md gaps.
+Derive questions from intent.md gaps — do NOT ask generic questions.
 
-**Question categories (pick the relevant ones):**
+**Question categories (evaluate ALL — skip only with explicit justification):**
 
 1. **Users and pain points** — Who uses this and what's broken for them?
-   - Skip if intent.md already has clear "Who is affected?" section
 2. **Must-have vs nice-to-have** — Which in-scope features are truly v1 vs deferrable?
-   - Skip if intent.md scope section already has clear MUST/SHOULD distinction
 3. **Technical constraints** — Existing stack, hosting, budget, performance targets?
-   - Skip if intent.md constraints section is comprehensive
 4. **Integration requirements** — External services, APIs, data sources?
-   - Skip if no external dependencies mentioned
 5. **Quality requirements** — Performance thresholds, security needs, compliance?
-   - Skip if intent.md non-negotiables section covers this
 
-**Rules:**
-- Ask open-ended questions, not multiple choice
-- Maximum 5 questions per round, prefer 3
-- If answers raise new questions, ask ONE follow-up round maximum
-- Capture answers as structured constraints for subsequent stages
+**Process:**
 
-Store answers in working memory for use in requirements and design stages.
+1. Write structured questions to `.aidlc/inception/questions/requirements-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags)
+2. Inform user: "I've created requirements-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: — let me know when done."
+3. Wait for user completion
+4. Read answers and run **contradiction detection** (see `question-format-guide.md`):
+   - Check for logically inconsistent answers
+   - Check for ambiguous responses ("depends", "maybe", "not sure")
+   - If contradictions found: create `requirements-clarification-questions.md`, inform user, wait for resolution
+5. Only proceed when all answers are clear and consistent
+
+**Overconfidence check:** If intent.md seems comprehensive, STILL write at least 3 verification questions to confirm assumptions. Better to confirm than to assume.
+
+Store validated answers for use in requirements and design stages.
 </step>
 
 <step name="research">

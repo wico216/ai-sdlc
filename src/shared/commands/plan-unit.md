@@ -19,6 +19,11 @@ allowed-tools:
 @__SDLC_REFS__/principles.md
 @__SDLC_REFS__/gates.md
 @__SDLC_REFS__/planning-config.md
+@__SDLC_REFS__/question-format-guide.md
+@__SDLC_REFS__/overconfidence-prevention.md
+@__SDLC_REFS__/error-handling.md
+@__SDLC_REFS__/content-validation.md
+@__SDLC_REFS__/depth-levels.md
 @__SDLC_TEMPLATES__/bolt-plan.md
 @__SDLC_TEMPLATES__/research.md
 @__SDLC_TEMPLATES__/design.md
@@ -32,6 +37,13 @@ Create executable bolt plans for a unit with integrated research and verificatio
 **Orchestrator role:** Parse arguments, validate unit, ensure construction directory exists, research domain (unless skipped or exists), spawn sdlc-bolt-planner agent, verify plans with sdlc-plan-checker, iterate until plans pass or max iterations reached, present results.
 
 **Why subagents:** Research and planning burn context fast. Verification uses fresh context. User sees the flow between agents in main context.
+
+**Cross-cutting rules:** All agents spawned by this command must follow:
+- `question-format-guide.md` — Write planning questions to `unit-NNN/questions/` as structured files
+- `overconfidence-prevention.md` — Present options when multiple approaches exist, never pick silently
+- `error-handling.md` — Log errors to audit.md, escalate to user when blocked
+- `content-validation.md` — Validate diagrams and complex content before writing
+- `depth-levels.md` — Calibrate bolt detail based on risk level
 
 **Key difference from old plan-phase.md:**
 - Plans target UNITS (not phases)
