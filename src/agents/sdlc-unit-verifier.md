@@ -507,7 +507,134 @@ Some things can't be verified programmatically:
 score = (verified_truths / total_truths)
 ```
 
-## Step 10: Structure Gap Output (If Gaps Found)
+## Step 10: Generate Test Instructions
+
+After verification is complete (regardless of status), produce a test instructions file that documents how to build, test, and validate this unit. This file complements VERIFICATION.md by providing actionable, reproducible instructions for any developer or CI system.
+
+Create `.aidlc/construction/unit-NNN/test-instructions.md`:
+
+```markdown
+---
+unit: unit-NNN
+generated: YYYY-MM-DDTHH:MM:SSZ
+verification_status: passed | gaps_found | human_needed
+---
+
+# Unit {NNN}: {Name} — Test Instructions
+
+## Build Instructions
+
+### Prerequisites
+- **Runtime:** {Node.js 18+, Python 3.11+, etc.}
+- **Package manager:** {npm, yarn, pip, etc.}
+- **Required services:** {Database, Redis, external APIs — if any}
+
+### Install Dependencies
+\`\`\`bash
+{Command to install dependencies — e.g., npm install, pip install -r requirements.txt}
+\`\`\`
+
+### Build Steps
+\`\`\`bash
+{Command to build — e.g., npm run build, tsc, make}
+\`\`\`
+
+### Verify Build Success
+- **Expected output:** {Describe what a successful build looks like}
+- **Build artifacts:** {List generated files/dirs}
+
+### Troubleshooting
+- **Dependency errors:** {Common fix — e.g., rm -rf node_modules && npm install}
+- **Build errors:** {Common fix — check tsconfig, missing env vars, etc.}
+
+## Unit Test Execution
+
+### Run Unit Tests
+\`\`\`bash
+{Command to run unit tests — e.g., npm test, pytest tests/unit}
+\`\`\`
+
+### Expected Results
+- **Total tests:** {N}
+- **Expected pass rate:** 100%
+- **Coverage target:** {X% if applicable}
+- **Test report location:** {Path to test output/reports}
+
+### If Tests Fail
+1. Review test output for specific failures
+2. Check that build completed successfully
+3. Verify environment variables / test config
+4. Fix code issues and rerun
+
+## Integration Test Instructions
+
+{If this unit interacts with other units or external services:}
+
+### Setup
+\`\`\`bash
+{Commands to start dependent services — e.g., docker-compose up -d, start test DB}
+\`\`\`
+
+### Run Integration Tests
+\`\`\`bash
+{Command to run integration tests — e.g., npm run test:integration, pytest tests/integration}
+\`\`\`
+
+### Verify Interactions
+- **Tested interactions:** {List unit-to-unit or unit-to-service connections verified}
+- **Expected results:** {What successful integration looks like}
+
+### Cleanup
+\`\`\`bash
+{Commands to tear down test environment — e.g., docker-compose down}
+\`\`\`
+
+{If no integration points: "N/A — this unit has no external integration points."}
+
+## Performance Test Instructions
+
+{If NFR / performance requirements exist for this unit:}
+
+### Performance Requirements
+- **Response time:** {< Xms for Y% of requests}
+- **Throughput:** {X requests/second}
+- **Concurrent users:** {X}
+
+### Run Performance Tests
+\`\`\`bash
+{Command to run load/perf tests — e.g., k6 run tests/perf/unit-NNN.js}
+\`\`\`
+
+### Analyze Results
+- **Response time:** {Actual vs target}
+- **Throughput:** {Actual vs target}
+- **Bottlenecks:** {Any identified}
+
+{If no NFR requirements: "N/A — no performance requirements defined for this unit."}
+
+## Test Summary
+
+| Category | Status | Notes |
+|----------|--------|-------|
+| Build | {Pass/Fail} | {Brief note} |
+| Unit Tests | {Pass/Fail/N/A} | {X/Y passed} |
+| Integration Tests | {Pass/Fail/N/A} | {Brief note} |
+| Performance Tests | {Pass/Fail/N/A} | {Brief note} |
+
+**Overall:** {Ready for gate / Gaps must be resolved first}
+
+---
+*Generated: {timestamp}*
+*Source: VERIFICATION.md from sdlc-unit-verifier*
+```
+
+**Generation rules:**
+- Populate build/test commands from bolt-plan.md and bolt-summary.md artifacts (look for `tech_stack`, `dependencies`, `test_commands` in frontmatter or body).
+- If specific commands aren't discoverable, use reasonable defaults for the detected tech stack and mark with `{CUSTOMIZE}` placeholder.
+- Mark integration and performance sections as "N/A" when the unit has no integration points or NFR requirements.
+- The test summary table must reflect the VERIFICATION.md status — if verification found gaps, test summary should note which categories are affected.
+
+## Step 11: Structure Gap Output (If Gaps Found)
 
 When gaps are found, structure them for consumption by `__CMD_PREFIX__plan-unit --gaps`.
 
@@ -558,7 +685,7 @@ The planner (`__CMD_PREFIX__plan-unit --gaps`) reads this gap analysis and creat
 
 <output>
 
-## Create VERIFICATION.md
+## Create VERIFICATION.md and test-instructions.md
 
 Create `.aidlc/construction/unit-NNN/VERIFICATION.md` with:
 
@@ -647,7 +774,7 @@ _Verifier: Claude (sdlc-unit-verifier)_
 
 ## Return to Orchestrator
 
-**DO NOT COMMIT.** The orchestrator bundles VERIFICATION.md with other unit artifacts.
+**DO NOT COMMIT.** The orchestrator bundles VERIFICATION.md and test-instructions.md with other unit artifacts.
 
 Return with:
 
@@ -657,6 +784,7 @@ Return with:
 **Status:** {passed | gaps_found | human_needed}
 **Score:** {N}/{M} must-haves verified
 **Report:** .aidlc/construction/unit-NNN/VERIFICATION.md
+**Test Instructions:** .aidlc/construction/unit-NNN/test-instructions.md
 
 {If passed:}
 All must-haves verified. Unit goal achieved. Gate 4 (UNIT COMPLETE) ready to close.
@@ -798,5 +926,6 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] Gaps structured in YAML frontmatter (if gaps_found)
 - [ ] Re-verification metadata included (if previous existed)
 - [ ] VERIFICATION.md created with complete report
+- [ ] test-instructions.md created with build, unit test, integration test, performance test, and summary sections
 - [ ] Results returned to orchestrator (NOT committed)
 </success_criteria>

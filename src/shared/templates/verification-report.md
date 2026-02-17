@@ -144,6 +144,19 @@ None — all verifiable items checked programmatically.
 
 ---
 
+## Test Instructions
+
+Build and test instructions for this unit are documented in the companion file:
+
+**Location:** `.aidlc/construction/unit-{NNN}/test-instructions.md`
+
+This file contains:
+- **Build Instructions** — prerequisites, dependencies, build commands, troubleshooting
+- **Unit Test Execution** — how to run unit tests, expected results
+- **Integration Test Instructions** — setup, execution, and cleanup for integration tests (if applicable)
+- **Performance Test Instructions** — load/perf test execution (if NFR requirements exist)
+- **Test Summary** — pass/fail status for each test category
+
 ## Verification Metadata
 
 **Verification approach:** Goal-backward (derived from unit acceptance criteria)
