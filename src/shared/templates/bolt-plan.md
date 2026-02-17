@@ -48,6 +48,15 @@ must_haves:
 
 {How this bolt addresses applicable NFRs, or "N/A — no NFR impact"}
 
+## Functional Design Notes
+<!-- Include when unit has complex business logic. Reference: inception/units/UNIT-NNN.md -->
+
+## NFR Design Notes
+<!-- Include when performance/security/scalability requirements apply. Reference: inception/nfr.md -->
+
+## Infrastructure Notes
+<!-- Include when cloud resources or external services need setup -->
+
 ## Tasks
 
 <task id="1" name="{Task name}" depends_on="">

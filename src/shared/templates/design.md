@@ -96,6 +96,13 @@ Skip sections that don't apply to this unit.}
 ### Scalability
 - {How the design scales if needed}
 
+## Security Considerations
+
+- **Authentication:** {How users/services authenticate for this unit}
+- **Authorization:** {Access control rules}
+- **Input Validation:** {What inputs are validated and how}
+- **Data Protection:** {Encryption, PII handling, data classification}
+
 ## Test Strategy
 
 | Test Type | What's Tested | Approach |

@@ -29,7 +29,7 @@ Output ONLY the reference content below. Do NOT add:
 6. `__CMD_PREFIX__build-unit 1` - Execute bolts for Unit 1
 7. `__CMD_PREFIX__verify-unit 1` - UAT for Unit 1
 8. `__CMD_PREFIX__approve-unit 1 --complete` - Gate 4 approval
-9. `__CMD_PREFIX__deploy` - Run Operations phase
+9. `__CMD_PREFIX__operations` - Run Operations phase
 10. `__CMD_PREFIX__approve-release` - Gate 5 approval
 
 ## Core Workflow (3 Phases)
@@ -37,7 +37,7 @@ Output ONLY the reference content below. Do NOT add:
 ```
 INCEPTION:     __CMD_PREFIX__new-project → __CMD_PREFIX__elaborate → __CMD_PREFIX__approve-inception
 CONSTRUCTION:  __CMD_PREFIX__plan-unit → __CMD_PREFIX__approve-unit --design → __CMD_PREFIX__build-unit → __CMD_PREFIX__verify-unit → __CMD_PREFIX__approve-unit --complete (repeat per unit)
-OPERATIONS:    __CMD_PREFIX__deploy → __CMD_PREFIX__approve-release
+OPERATIONS:    __CMD_PREFIX__operations → __CMD_PREFIX__approve-release
 ```
 
 ### 5 Gates (Proof over Prose)
@@ -182,7 +182,7 @@ Usage: `__CMD_PREFIX__approve-unit 1 --complete`
 
 ### Operations Phase
 
-**`__CMD_PREFIX__deploy`**
+**`__CMD_PREFIX__operations`**
 Run the Operations phase — deployment plan, runbooks, and readiness checks.
 
 - Verifies all units are complete
@@ -191,7 +191,7 @@ Run the Operations phase — deployment plan, runbooks, and readiness checks.
 - Sets up observability configuration
 - Completes the Golden Thread: Intent → Code → Deployment
 
-Usage: `__CMD_PREFIX__deploy`
+Usage: `__CMD_PREFIX__operations`
 
 **`__CMD_PREFIX__approve-release [version]`**
 Gate 5 approval — PRODUCTION READY.
@@ -207,8 +207,8 @@ Usage: `__CMD_PREFIX__approve-release 1.0.0`
 
 ### Progress Tracking
 
-**`__CMD_PREFIX__progress`**
-Check project status and intelligently route to next action.
+**`__CMD_PREFIX__status`**
+Check project status, gate statuses, and next action.
 
 - Shows visual progress bar and completion percentage
 - Summarizes recent work from summary files
@@ -217,7 +217,7 @@ Check project status and intelligently route to next action.
 - Offers to execute next action or create it if missing
 - Detects unit/project completion
 
-Usage: `__CMD_PREFIX__progress`
+Usage: `__CMD_PREFIX__status`
 
 ### Quick Mode
 
@@ -378,12 +378,17 @@ Usage: `__CMD_PREFIX__community`
 ├── state.md               # Project memory & context
 ├── config.json            # Workflow mode & gates
 ├── audit.md               # Append-only decision log
-├── risk-register.md       # Identified risks with mitigations
+├── guardrails.md          # Project-specific guardrails
 ├── inception/             # Inception artifacts
 │   ├── requirements.md    # Scoped requirements with REQ-IDs
+│   ├── risk-register.md   # Identified risks with mitigations
 │   ├── user-stories.md    # User stories from requirements
 │   ├── application-design.md  # Architecture and design
 │   ├── execution-plan.md  # Units, dependencies, build order
+│   ├── units/             # Unit definitions (DDD-aligned)
+│   │   ├── UNIT-001.md    # Unit definition + acceptance criteria
+│   │   ├── UNIT-001-design.md # Architecture for this unit
+│   │   └── ...
 │   └── research/          # Domain research (optional)
 ├── construction/          # Construction artifacts
 │   └── unit-NNN/          # Per-unit directory
@@ -392,6 +397,13 @@ Usage: `__CMD_PREFIX__community`
 │       ├── bolt-NN-summary.md # Bolt execution results
 │       ├── VERIFICATION.md    # Verification results
 │       └── UAT.md             # User acceptance tests
+├── operations/            # Operations phase artifacts
+│   ├── deployment-plan.md # How to deploy
+│   ├── runbooks/          # Operational playbooks
+│   ├── observability.md   # Monitoring setup
+│   └── cost.md            # Cost analysis
+├── retros/                # Retrospective reports
+│   └── RETRO-{scope}.md
 ├── todos/                 # Captured ideas and tasks
 │   ├── pending/           # Todos waiting to be worked on
 │   └── done/              # Completed todos
@@ -478,14 +490,14 @@ __CMD_PREFIX__approve-unit 1 --complete # GATE 4: UNIT COMPLETE
 __CMD_PREFIX__plan-unit 2             # CONSTRUCTION: next unit...
 # ... repeat for all units ...
 /clear
-__CMD_PREFIX__deploy                  # OPERATIONS: deployment plan → runbooks
+__CMD_PREFIX__operations              # OPERATIONS: deployment plan → runbooks
 __CMD_PREFIX__approve-release 1.0.0   # GATE 5: PRODUCTION READY
 ```
 
 **Resuming work after a break:**
 
 ```
-__CMD_PREFIX__progress  # See where you left off and continue
+__CMD_PREFIX__status  # See where you left off and continue
 ```
 
 **Capturing ideas during work:**
@@ -517,5 +529,5 @@ __CMD_PREFIX__retro UNIT-001  # Review guardrails, identify improvements
 - Read `.aidlc/intent.md` for project vision
 - Read `.aidlc/state.md` for current context
 - Check `.aidlc/inception/execution-plan.md` for unit status
-- Run `__CMD_PREFIX__progress` to check where you're up to
+- Run `__CMD_PREFIX__status` to check where you're up to
   </reference>

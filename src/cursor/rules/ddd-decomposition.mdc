@@ -1,7 +1,7 @@
 ---
 description: DDD-based unit decomposition protocol for AI-SDLC inception phase.
 globs:
-  - .aidlc/units/**
+  - .aidlc/inception/units/**
   - .aidlc/REQUIREMENTS.md
 ---
 
@@ -46,7 +46,7 @@ Transform aggregates into implementable units:
 
 ## Output
 
-Each unit gets a file in `.aidlc/units/unit-{N}-{name}.md` with:
+Each unit gets a file in `.aidlc/inception/units/unit-{N}-{name}.md` with:
 - Name, description, bounded context
 - `traces_to: [REQ-IDs]`
 - Acceptance criteria (testable, specific)

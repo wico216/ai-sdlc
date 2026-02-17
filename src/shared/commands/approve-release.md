@@ -17,7 +17,7 @@ allowed-tools:
 Approve the final gate in the AI-SDLC pipeline. Gate 5 — Production Ready — confirms the project is deployable, observable, and rollbackable.
 
 **When to use:**
-- After `__CMD_PREFIX__deploy` creates deployment plan, runbooks, and observability config
+- After `__CMD_PREFIX__operations` creates deployment plan, runbooks, and observability config
 - After all units complete (all Gate 4s passed)
 - When ready to tag a release and/or merge branches
 
@@ -146,9 +146,9 @@ Check Gate 5: Production Ready.
 Project state: @.aidlc/state.md
 Requirements: @.aidlc/requirements.md
 Execution plan: @.aidlc/execution-plan.md
-Deployment plan: @.aidlc/deployment-plan.md (if exists)
-Observability: @.aidlc/observability-config.md (if exists)
-Runbooks: .aidlc/runbooks/ (if exists)
+Deployment plan: @.aidlc/operations/deployment-plan.md (if exists)
+Observability: @.aidlc/operations/observability.md (if exists)
+Runbooks: .aidlc/operations/runbooks/ (if exists)
 All unit verifications: .aidlc/construction/unit-*/VERIFICATION.md
 
 Run all prerequisite checks for Gate 5 and return the structured checklist result.
@@ -194,7 +194,7 @@ Append to audit.md **Gate Records** section:
 - **Phase:** Operations
 - **Context:** Gate 5 — PRODUCTION READY for v{version}
 - **Decision:** Release approved.{" Conditions: " + conditions if applicable}
-- **Evidence:** .aidlc/deployment-plan.md, .aidlc/runbooks/, .aidlc/observability-config.md, all VERIFICATION.md files
+- **Evidence:** .aidlc/operations/deployment-plan.md, .aidlc/operations/runbooks/, .aidlc/operations/observability.md, all VERIFICATION.md files
 - **Traces to:** All UNIT-IDs, all MUST requirements
 ```
 
@@ -334,9 +334,9 @@ Intent → Requirements → Units → Design → Code → Tests → Deployment
 | Execution Plan | `.aidlc/execution-plan.md` |
 | Unit Designs | `.aidlc/construction/unit-*/design.md` |
 | Verifications | `.aidlc/construction/unit-*/VERIFICATION.md` |
-| Deployment Plan | `.aidlc/deployment-plan.md` |
-| Runbooks | `.aidlc/runbooks/` |
-| Observability | `.aidlc/observability-config.md` |
+| Deployment Plan | `.aidlc/operations/deployment-plan.md` |
+| Runbooks | `.aidlc/operations/runbooks/` |
+| Observability | `.aidlc/operations/observability.md` |
 | Full Audit Trail | `.aidlc/audit.md` |
 
 **Tag:** v{version}
@@ -346,7 +346,7 @@ Intent → Requirements → Units → Design → Code → Tests → Deployment
 
 ## ▶ Next
 
-`__CMD_PREFIX__retro milestone` — Guardrail Retro on the full project (recommended)
+`__CMD_PREFIX__retro release` — Guardrail Retro on the full project (recommended)
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -354,7 +354,7 @@ Intent → Requirements → Units → Design → Code → Tests → Deployment
 
 **Also available:**
 - `__CMD_PREFIX__new-project` — start a new project
-- `__CMD_PREFIX__progress` — view final project summary
+- `__CMD_PREFIX__status` — view final project summary
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -379,7 +379,7 @@ Gate 5 rejected. What needs to change before the release can be approved?
 ```
 
 Wait for user input. Route to appropriate fix action:
-- Missing deployment plan -> `__CMD_PREFIX__deploy`
+- Missing deployment plan -> `__CMD_PREFIX__operations`
 - Failing verifications -> `__CMD_PREFIX__build-unit {unit}` or `__CMD_PREFIX__verify-unit`
 - Other issues -> address specifically
 
@@ -419,7 +419,7 @@ Gate 5: PRODUCTION READY — BLOCKED
 - [ ] Git tag created with version (if commit_docs = true)
 - [ ] User offered to push tag
 - [ ] Final completion banner with all artifacts listed
-- [ ] User knows next step (retro milestone recommended)
+- [ ] User knows next step (retro release recommended)
 
 **Proof over Prose:** Final gate aggregates evidence from the entire pipeline.
 

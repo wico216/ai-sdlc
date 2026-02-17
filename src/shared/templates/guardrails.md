@@ -31,11 +31,30 @@ updated: "{YYYY-MM-DD}"
 - **Thorough review triggers:** [security-sensitive, data model changes, public API]
 - **Auto-approve threshold:** [test-only changes, documentation, formatting]
 
-## AI Behavior
+## Known Pitfalls
+
+- [Patterns that caused bugs or rework on this project]
+- [Common mistakes the AI or team made that should be avoided]
+- [Edge cases discovered during construction]
+
+## Team Conventions
 
 - [Patterns the AI should always follow on this project]
 - [Patterns the AI should never do on this project]
 - [Level of autonomy for different task types]
+- [Preferred commit message format]
+- [Branch naming conventions]
+
+## Auto-Approve Thresholds
+
+Changes that can be auto-approved without human gate review:
+- [test-only changes, documentation, formatting]
+- [Dependency version bumps (patch only)]
+- [Type-only changes with no runtime effect]
+
+Changes that always require human review:
+- [Security-sensitive code, auth, data model changes]
+- [Public API changes, breaking changes]
 
 ## Testing Expectations
 
@@ -49,13 +68,13 @@ updated: "{YYYY-MM-DD}"
 - [When to checkpoint vs. continue autonomously]
 - [Preferred commit granularity]
 
-## Learned Lessons
+## Evolution Log
 
 <!-- Added by __CMD_PREFIX__retro after each unit completion -->
 
-| Unit | Lesson | Action Taken |
-|------|--------|-------------|
-| - | - | - |
+| Date | Unit | Change | Rationale |
+|------|------|--------|-----------|
+| - | - | - | - |
 
 ---
 *Last updated: {date} via __CMD_PREFIX__retro*
@@ -77,7 +96,7 @@ GUARDRAILS.md captures project-specific AI collaboration preferences that emerge
 
 <lifecycle>
 
-**Creation:** During `__CMD_PREFIX__new-project`, after PROJECT.md
+**Creation:** During `__CMD_PREFIX__new-project`, after intent.md
 - Initialize with project-appropriate defaults
 - Populate code style from detected tech stack
 - Set review depth based on project complexity

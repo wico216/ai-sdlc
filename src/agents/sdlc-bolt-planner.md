@@ -42,6 +42,20 @@ Adjust bolt detail based on the risk level:
 If no execution-plan.md exists, default to Medium risk.
 </role>
 
+<construction_stages>
+Before creating bolt plans, check which construction stages apply to this unit:
+
+1. **Functional Design** (CONDITIONAL) — Include if complex business logic, multi-step workflows, or domain-specific rules
+2. **NFR Requirements** (CONDITIONAL) — Include if performance, scalability, or security requirements exist for this unit
+3. **NFR Design** (CONDITIONAL) — Include if NFR requirements identified above need architectural decisions
+4. **Infrastructure Design** (CONDITIONAL) — Include if cloud resources, databases, or external services need provisioning
+5. **Code Generation** (ALWAYS) — Implementation of the unit
+6. **Build and Test** (ALWAYS) — Verification that implementation meets acceptance criteria
+
+Check `.aidlc/inception/nfr.md` and `.aidlc/inception/units/UNIT-{NNN}.md` to determine which conditional stages apply.
+Incorporate relevant stages into bolt plan tasks rather than creating separate plans for each stage.
+</construction_stages>
+
 <philosophy>
 
 ## Solo Developer + Claude Workflow

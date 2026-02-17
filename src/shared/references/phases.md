@@ -27,7 +27,7 @@ The AI-SDLC lifecycle consists of three macro-phases, each with specific goals, 
 **Artifacts:**
 - `intent.md` — The project's purpose and success criteria
 - `requirements.md` — Scoped requirements with IDs
-- `units/` — Parallel-deliverable work chunks
+- `inception/units/` — Parallel-deliverable work chunks
 - `risk-register.md` — Identified risks with mitigations
 - `execution-plan.md` — Which stages to run and in what order
 
@@ -78,9 +78,10 @@ The AI-SDLC lifecycle consists of three macro-phases, each with specific goals, 
 4. **Release** — Deploy with rollback capability
 
 **Artifacts:**
-- `deployment-plan.md` — Deployment strategy, rollback procedures
-- `runbooks/` — Operational playbooks
-- `observability-config.md` — Monitoring and alerting setup
+- `operations/deployment-plan.md` — Deployment strategy, rollback procedures
+- `operations/runbooks/` — Operational playbooks
+- `operations/observability.md` — Monitoring and alerting setup
+- `operations/cost.md` — Cost estimates (if applicable)
 
 **Gates:**
 - **PRODUCTION READY** — Deployable + observable + rollbackable

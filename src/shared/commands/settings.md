@@ -86,7 +86,7 @@ AskUserQuestion([
     options: [
       { label: "None (Recommended)", description: "Commit directly to current branch" },
       { label: "Per Unit", description: "Create branch for each unit (sdlc/unit-{NNN}-{name})" },
-      { label: "Per Milestone", description: "Create branch for entire milestone (sdlc/{version}-{name})" }
+      { label: "Per Release", description: "Create branch for entire release (sdlc/{version}-{name})" }
     ]
   }
 ])
@@ -108,7 +108,7 @@ Merge new settings into existing config.json:
     "verifier": true/false
   },
   "git": {
-    "branching_strategy": "none" | "unit" | "milestone"
+    "branching_strategy": "none" | "unit" | "release"
   }
 }
 ```
@@ -130,7 +130,7 @@ Display:
 | Plan Researcher      | {On/Off} |
 | Plan Checker         | {On/Off} |
 | Execution Verifier   | {On/Off} |
-| Git Branching        | {None/Per Unit/Per Milestone} |
+| Git Branching        | {None/Per Unit/Per Release} |
 
 These settings apply to future __CMD_PREFIX__plan-unit and __CMD_PREFIX__build-unit runs.
 

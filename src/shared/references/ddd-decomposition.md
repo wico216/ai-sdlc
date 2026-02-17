@@ -39,7 +39,7 @@ Transform aggregates into implementable units:
 - Units specify `traces_to: [REQ-IDs]` for traceability
 - Units are ordered by dependency (core entities first, then features that depend on them)
 
-**Output:** Unit definitions in `.aidlc/units/UNIT-NNN.md`.
+**Output:** Unit definitions in `.aidlc/inception/units/UNIT-NNN.md`.
 
 ## Step 5: Validate Coverage
 
@@ -51,7 +51,7 @@ Transform aggregates into implementable units:
 
 ## Unit File Structure
 
-Each unit gets a file in `.aidlc/units/UNIT-NNN-{name}.md` with:
+Each unit gets a file in `.aidlc/inception/units/UNIT-NNN-{name}.md` with:
 
 ```yaml
 ---

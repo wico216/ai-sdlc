@@ -339,7 +339,7 @@ Both inception gates passed. Construction can begin.
 ───────────────────────────────────────────────────────────────
 
 **Also available:**
-- `__CMD_PREFIX__progress` — view project status
+- `__CMD_PREFIX__status` — view project status
 - `__CMD_PREFIX__settings` — adjust project configuration
 
 ───────────────────────────────────────────────────────────────
@@ -388,6 +388,7 @@ Gate 2: INCEPTION EXIT — BLOCKED
 - [ ] State.md gate status table updated
 - [ ] Committed (if commit_docs = true)
 - [ ] User knows next step (`__CMD_PREFIX__plan-unit 001` after Gate 2)
+- [ ] Security considerations documented (threat model or explicit "N/A" for low-risk)
 
 **Proof over Prose:** Every gate shows evidence from the gate checker, not self-reported claims.
 

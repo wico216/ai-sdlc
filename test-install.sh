@@ -57,6 +57,12 @@ check "Claude commands use \$ARGUMENTS (>10): ${CLAUDE_ARGS}" "$([ "$CLAUDE_ARGS
 CURSOR_ARGS=$(grep -l '\$ARGUMENTS' "${SCRIPT_DIR}/src/cursor/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
 check "Cursor commands don't use \$ARGUMENTS: ${CURSOR_ARGS}" "$([ "$CURSOR_ARGS" -eq 0 ] && echo true || echo false)"
 
+# Check operations.md generated (not deploy.md)
+check "operations.md generated (not deploy)" "$([ -f "${SCRIPT_DIR}/src/claude/commands/operations.md" ] && [ ! -f "${SCRIPT_DIR}/src/claude/commands/deploy.md" ] && echo true || echo false)"
+
+# Check status.md generated (not progress.md)
+check "status.md generated (not progress)" "$([ -f "${SCRIPT_DIR}/src/claude/commands/status.md" ] && [ ! -f "${SCRIPT_DIR}/src/claude/commands/progress.md" ] && echo true || echo false)"
+
 # Check command prefixes
 CLAUDE_PREFIX=$(grep -l '/sdlc:' "${SCRIPT_DIR}/src/claude/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
 CURSOR_PREFIX=$(grep -l '/sdlc-' "${SCRIPT_DIR}/src/cursor/commands/"*.md 2>/dev/null | wc -l | tr -d ' ')
@@ -142,6 +148,44 @@ APPROVE_UNIT_REF=$(grep -c "sdlc-gate-checker" "${SCRIPT_DIR}/src/shared/command
 check "approve-unit.md exists and references sdlc-gate-checker" "$([ "$APPROVE_UNIT_REF" -ge 1 ] && echo true || echo false)"
 
 check "approve-release.md exists" "$([ -f "${SCRIPT_DIR}/src/shared/commands/approve-release.md" ] && echo true || echo false)"
+
+# operations command exists (not deploy)
+check "operations.md exists (not deploy)" "$([ -f "${SCRIPT_DIR}/src/shared/commands/operations.md" ] && [ ! -f "${SCRIPT_DIR}/src/shared/commands/deploy.md" ] && echo true || echo false)"
+
+# status command exists (not progress)
+check "status.md exists (not progress)" "$([ -f "${SCRIPT_DIR}/src/shared/commands/status.md" ] && [ ! -f "${SCRIPT_DIR}/src/shared/commands/progress.md" ] && echo true || echo false)"
+
+# guardrails template exists
+check "guardrails.md template exists" "$([ -f "${SCRIPT_DIR}/src/shared/templates/guardrails.md" ] && echo true || echo false)"
+
+# inception/units/ path referenced (not root units/)
+INCEPTION_UNITS=$(grep -rl 'inception/units/' "${SCRIPT_DIR}/src/shared/" 2>/dev/null | wc -l | tr -d ' ')
+check "inception/units/ path referenced (>=3): ${INCEPTION_UNITS}" "$([ "$INCEPTION_UNITS" -ge 3 ] && echo true || echo false)"
+
+# operations/ subdirectory referenced
+OPS_SUBDIR=$(grep -rl 'operations/' "${SCRIPT_DIR}/src/shared/commands/operations.md" 2>/dev/null | wc -l | tr -d ' ')
+check "operations/ subdirectory in operations command" "$([ "$OPS_SUBDIR" -ge 1 ] && echo true || echo false)"
+
+# All 5 gates in gate-checker
+GATE_COUNT=$(grep -c 'Gate [1-5]' "${SCRIPT_DIR}/src/agents/sdlc-gate-checker.md" 2>/dev/null || echo 0)
+check "All 5 gates in gate-checker (>=5): ${GATE_COUNT}" "$([ "$GATE_COUNT" -ge 5 ] && echo true || echo false)"
+
+# Security in gate checker
+SECURITY_GATES=$(grep -c 'security\|Security' "${SCRIPT_DIR}/src/agents/sdlc-gate-checker.md" 2>/dev/null || echo 0)
+check "Security touchpoints in gate-checker (>=3): ${SECURITY_GATES}" "$([ "$SECURITY_GATES" -ge 3 ] && echo true || echo false)"
+
+# NFR template
+check "nfr.md template exists" "$([ -f "${SCRIPT_DIR}/src/shared/templates/nfr.md" ] && echo true || echo false)"
+
+# User stories template
+check "user-stories.md template exists" "$([ -f "${SCRIPT_DIR}/src/shared/templates/user-stories.md" ] && echo true || echo false)"
+
+# Application design template
+check "application-design.md template exists" "$([ -f "${SCRIPT_DIR}/src/shared/templates/application-design.md" ] && echo true || echo false)"
+
+# No hidden Unicode (excluding expected emoji in certain files)
+UNICODE_FILES=$(grep -rPl '[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x80-\x9F\x200B-\x200F\x2028-\x202F\xFEFF]' "${SCRIPT_DIR}/src/" 2>/dev/null | wc -l | tr -d ' ')
+check "No hidden Unicode characters: ${UNICODE_FILES}" "$([ "$UNICODE_FILES" -eq 0 ] && echo true || echo false)"
 
 echo ""
 

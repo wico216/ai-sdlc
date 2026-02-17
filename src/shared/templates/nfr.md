@@ -47,3 +47,9 @@ traces_to: ["REQ-IDs"]
 | Standard/Regulation | Applicability | Requirements |
 |---------------------|--------------|--------------|
 | | | |
+
+## Data Retention
+| Data Category | Retention Period | Deletion Policy | Legal Basis |
+|---------------|-----------------|-----------------|-------------|
+| | | | |
+| | | | |

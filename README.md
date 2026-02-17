@@ -80,7 +80,7 @@ This installs commands, agents, and templates into your `~/.claude/` directory. 
 3. Run `/sdlc:elaborate` to decompose into units
 4. Run `/sdlc:approve-inception` to approve gates
 5. Run `/sdlc:build-unit 1` to build the first unit
-6. Run `/sdlc:deploy` when ready for production
+6. Run `/sdlc:operations` when ready for production
 
 ## Three Phases — Step by Step
 
@@ -97,7 +97,7 @@ Convert intent into testable, decomposed work. This is the most important phase 
 | Requirements Analysis | Scope what's in v1 vs v2 vs out, assign REQ-IDs | `/sdlc:elaborate` | `inception/requirements.md` |
 | Workflow Planning | Determine which stages to run based on complexity (Adaptive Depth) | `/sdlc:elaborate` | `execution-plan.md` |
 | User Stories | Define personas and user journeys (if UI/users involved) | `/sdlc:elaborate` | Stories in `inception/requirements.md` |
-| Unit Decomposition | Break into parallel-deliverable chunks using DDD bounded contexts | `/sdlc:elaborate` | `units/UNIT-001.md`, `UNIT-002.md`, ... |
+| Unit Decomposition | Break into parallel-deliverable chunks using DDD bounded contexts | `/sdlc:elaborate` | `inception/units/UNIT-001.md`, `UNIT-002.md`, ... |
 | Risk Assessment | Identify risks, assign mitigations and owners | `/sdlc:elaborate` | `inception/risk-register.md` |
 | **Gate: Requirements Approved** | Evidence: intent + requirements + success criteria reviewed | `/sdlc:approve-inception` | `audit.md` entry |
 | **Gate: INCEPTION EXIT** | Evidence: all units defined, risks identified, human approves | `/sdlc:approve-inception` | `audit.md` entry |
@@ -108,7 +108,7 @@ Build units with proof via Bolts — rapid iterations of AI generation + human v
 
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
-| Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `units/UNIT-NNN-design.md` |
+| Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `inception/units/UNIT-NNN-design.md` |
 | **Gate: Design Approved** | Evidence: design document reviewed, no conflicts with other units | `/sdlc:approve-unit <unit>` | `audit.md` entry |
 | Plan Bolt | Break unit work into small plans (2-3 tasks each) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/bolt-NN-plan.md` |
 | Execute Bolt | AI generates code, human reviews, tests run | `/sdlc:build-unit <unit>` | `construction/unit-NNN/bolt-NN-summary.md` |
@@ -122,9 +122,9 @@ Productionize with safety and observability.
 
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
-| Deployment Planning | Strategy, pre-deployment checklist, rollback procedure | `/sdlc:deploy` (Stage 1) | `deployment-plan.md` |
-| Runbook Generation | Operational playbooks for incidents, scaling, maintenance | `/sdlc:deploy` (Stage 2) | `runbooks/` |
-| Observability Setup | Logging, metrics, alerting, tracing configuration | `/sdlc:deploy` (Stage 3) | `observability-config.md` |
+| Deployment Planning | Strategy, pre-deployment checklist, rollback procedure | `/sdlc:operations` (Stage 1) | `operations/deployment-plan.md` |
+| Runbook Generation | Operational playbooks for incidents, scaling, maintenance | `/sdlc:operations` (Stage 2) | `operations/runbooks/` |
+| Observability Setup | Logging, metrics, alerting, tracing configuration | `/sdlc:operations` (Stage 3) | `operations/observability.md` |
 | **Gate: PRODUCTION READY** | Evidence: deployable + observable + rollbackable | `/sdlc:approve-release` | `audit.md` entry |
 
 ## The Golden Thread
@@ -140,11 +140,11 @@ Requirements (inception/requirements.md)
   └── REQ-001, REQ-002... — scoped, testable, with IDs
        │
        ▼
-Units (units/UNIT-001.md)
+Units (inception/units/UNIT-001.md)
   └── Parallel work chunks aligned to domain boundaries
        │
        ▼
-Design (units/UNIT-001-design.md)
+Design (inception/units/UNIT-001-design.md)
   └── Architecture, data models, interfaces per unit
        │
        ▼
@@ -156,7 +156,7 @@ Tests (validation-report.md)
   └── Evidence that acceptance criteria are met
        │
        ▼
-Deployment (deployment-plan.md)
+Deployment (operations/deployment-plan.md)
   └── How it reaches production safely
 ```
 
@@ -219,9 +219,9 @@ Gates are the "Proof over Prose" mechanism. Each gate requires evidence before p
 | `/sdlc:build-unit <unit>` | Construction | Execute bolts with wave-based parallel agents |
 | `/sdlc:verify-unit <unit>` | Construction | Verify deliverables through conversational UAT |
 | `/sdlc:approve-unit <unit>` | Construction | Approve Design (Gate 3) and Unit Complete (Gate 4) |
-| `/sdlc:deploy` | Operations | Deployment plan, runbooks, observability |
+| `/sdlc:operations` | Operations | Operations phase — deployment plan, runbooks, observability |
 | `/sdlc:approve-release` | Operations | Approve Production Ready (Gate 5) |
-| `/sdlc:progress` | Any | Check project status and route to next action |
+| `/sdlc:status` | Any | Check project status, gate statuses, and next action |
 | `/sdlc:quick` | Any | Quick task execution (skip full ceremony) |
 | `/sdlc:debug` | Any | Systematic bug investigation with persistent state |
 | `/sdlc:map-codebase` | Any | Analyze codebase with parallel mapper agents |
@@ -247,20 +247,20 @@ your-project/
 │   ├── state.md                   # Project memory (current position)
 │   ├── execution-plan.md          # Unit structure and execution order
 │   ├── audit.md                   # Append-only decision log
+│   ├── guardrails.md              # Project-specific guardrails
 │   │
 │   ├── inception/                 # Inception phase artifacts
 │   │   ├── requirements.md        # Scoped requirements with REQ-IDs
 │   │   ├── risk-register.md       # Identified risks with mitigations
+│   │   ├── units/                 # Unit definitions (DDD-aligned)
+│   │   │   ├── UNIT-001.md        # Unit definition + acceptance criteria
+│   │   │   ├── UNIT-001-design.md # Architecture for this unit
+│   │   │   └── ...
 │   │   └── research/              # Domain research (optional)
 │   │       ├── STACK.md
 │   │       ├── FEATURES.md
 │   │       ├── ARCHITECTURE.md
 │   │       └── PITFALLS.md
-│   │
-│   ├── units/                     # Unit definitions (DDD-aligned)
-│   │   ├── UNIT-001.md            # Unit definition + acceptance criteria
-│   │   ├── UNIT-001-design.md     # Architecture for this unit
-│   │   └── ...
 │   │
 │   ├── construction/              # Bolt plans and summaries
 │   │   ├── unit-001/
@@ -270,9 +270,14 @@ your-project/
 │   │   └── unit-002/
 │   │       └── ...
 │   │
-│   ├── deployment-plan.md         # Operations: how to deploy
-│   ├── runbooks/                  # Operations: playbooks
-│   └── observability-config.md    # Operations: monitoring setup
+│   ├── operations/                # Operations phase artifacts
+│   │   ├── deployment-plan.md     # How to deploy
+│   │   ├── runbooks/              # Operational playbooks
+│   │   ├── observability.md       # Monitoring setup
+│   │   └── cost.md                # Cost analysis
+│   │
+│   └── retros/                    # Retrospective reports
+│       └── RETRO-{scope}.md
 │
 └── (your source code)
 ```

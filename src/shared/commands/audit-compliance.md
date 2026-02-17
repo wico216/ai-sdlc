@@ -65,7 +65,7 @@ Verify each link in the traceability chain:
 - Report units with no execution evidence
 
 **Code → Deployment:**
-- Check `.aidlc/deployment-plan.md` exists (if Operations phase reached)
+- Check `.aidlc/operations/deployment-plan.md` exists (if Operations phase reached)
 
 ## 3. Check Gates
 

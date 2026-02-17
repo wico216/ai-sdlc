@@ -421,7 +421,7 @@ Construction phase complete. Ready for Operations.
 
 **Deploy** — prepare for production (deployment plan, runbooks, observability)
 
-`__CMD_PREFIX__deploy`
+`__CMD_PREFIX__operations`
 
 **Or approve release directly:**
 
@@ -433,7 +433,7 @@ Construction phase complete. Ready for Operations.
 
 **Also available:**
 - `__CMD_PREFIX__retro {NNN}` — retro on this unit first (recommended)
-- `__CMD_PREFIX__retro milestone` — retro on the full project
+- `__CMD_PREFIX__retro release` — retro on the full project
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -476,6 +476,7 @@ Gate 4: UNIT COMPLETE — BLOCKED for UNIT-{NNN}
 - [ ] Committed (if commit_docs = true)
 - [ ] User knows next step (build-unit after Gate 3, retro/next-unit/deploy after Gate 4)
 - [ ] All-units-complete check performed after Gate 4
+- [ ] Security review completed (SAST/DAST if applicable, or manual review)
 
 **Proof over Prose:** Every gate shows evidence from the gate checker, not self-reported claims.
 

@@ -26,7 +26,7 @@
 | 4 | Environment configuration ready | {pass/fail} | {description} |
 | 5 | Database migrations tested | {pass/fail/N-A} | {description} |
 | 6 | Rollback procedure tested | {pass/fail} | {description} |
-| 7 | Monitoring/alerting configured | {pass/fail} | {link to observability-config.md} |
+| 7 | Monitoring/alerting configured | {pass/fail} | {link to observability.md} |
 
 ## Environment Configuration
 

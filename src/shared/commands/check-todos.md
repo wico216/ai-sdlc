@@ -39,7 +39,7 @@ Todos are captured during work sessions with __CMD_PREFIX__add-todo.
 
 Would you like to:
 
-1. Continue with current unit (__CMD_PREFIX__progress)
+1. Continue with current unit (__CMD_PREFIX__status)
 2. Add a todo now (__CMD_PREFIX__add-todo)
 ```
 

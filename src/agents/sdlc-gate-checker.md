@@ -28,6 +28,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 4 | At least 1 MUST requirement defined | Count MUST occurrences >= 1 |
 | 5 | `.aidlc/execution-plan.md` exists with unit decomposition | File exists, contains "unit" or "UNIT" |
 | 6 | Each MUST requirement mapped to at least one unit | Cross-reference requirements to execution plan |
+| 7 | Security considerations documented | Grep for "security" or "threat" in inception artifacts; WARN if absent (not blocking for low-risk) |
 
 ### Gate 2: Inception Exit
 **Trigger:** `__CMD_PREFIX__approve-inception` (after Gate 1 passed)
@@ -39,6 +40,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 3 | Execution plan has risk levels per unit | Grep for risk/low/medium/high in execution-plan.md |
 | 4 | No pending inception research | No open TODOs/TBDs in inception artifacts |
 | 5 | `.aidlc/state.md` updated with inception results | state.md exists and has inception gate entries |
+| 6 | Security considerations carried forward from Gate 1 | Grep for "security" in nfr.md or risk-register.md; WARN if absent |
 
 ### Gate 3: Design Approved
 **Trigger:** `__CMD_PREFIX__approve-unit` (before building)
@@ -50,6 +52,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 3 | Acceptance criteria defined | Grep for "acceptance criteria" or checklist patterns |
 | 4 | Bolt decomposition present | Grep for "bolt" in design |
 | 5 | NFR compliance section present | Grep for "NFR" or "non-functional" in design |
+| 6 | Security Considerations section present in design | Grep for "Security Considerations" or "Authentication" in design.md; WARN if absent |
 
 ### Gate 4: Unit Complete
 **Trigger:** `__CMD_PREFIX__approve-unit` (after building)
@@ -61,6 +64,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 3 | No unresolved gaps in verification | No "gaps_found" or "FAILED" in VERIFICATION.md |
 | 4 | MUST requirements for this unit satisfied | Cross-reference verification with requirements |
 | 5 | state.md shows unit progress | state.md references this unit |
+| 6 | Security review completed | Grep for "security" in VERIFICATION.md or bolt summaries; WARN if absent |
 
 ### Gate 5: Production Ready
 **Trigger:** `__CMD_PREFIX__approve-release`
@@ -72,6 +76,7 @@ You are NOT a verifier (that's sdlc-unit-verifier). You check paperwork and arti
 | 3 | UAT completed (if required) | Check rigor level; if high, grep for UAT evidence |
 | 4 | Deployment plan exists (if required) | Check rigor level; if high, deployment artifact exists |
 | 5 | No critical issues in any VERIFICATION.md | No "FAILED" on critical items across verifications |
+| 6 | Security in deployment plan | Grep for "HTTPS" or "secrets" or "security" in deployment/operations artifacts; WARN if absent |
 
 </gates>
 

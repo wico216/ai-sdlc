@@ -40,7 +40,7 @@ This is the most leveraged moment in any project. Deep questioning here means be
 
 1. **Abort if project exists:**
    ```bash
-   [ -f .aidlc/intent.md ] && echo "ERROR: Project already initialized. Use __CMD_PREFIX__progress" && exit 1
+   [ -f .aidlc/intent.md ] && echo "ERROR: Project already initialized. Use __CMD_PREFIX__status" && exit 1
    ```
 
 2. **Initialize git repo in THIS directory** (required even if inside a parent repo):
@@ -180,6 +180,23 @@ git commit -m "$(cat <<'EOF'
 docs: initialize project intent
 
 [One-liner from intent.md Vision section]
+EOF
+)"
+```
+
+**Initialize GUARDRAILS.md:**
+
+Create `.aidlc/GUARDRAILS.md` using the template from `__SDLC_TEMPLATES__/guardrails.md`:
+- Populate **Code Style** from detected tech stack (if brownfield) or leave as defaults
+- Set **Review Depth** based on project complexity from questioning
+- Leave **Known Pitfalls**, **Team Conventions**, and **Evolution Log** empty (filled during retros)
+
+```bash
+git add .aidlc/GUARDRAILS.md
+git commit -m "$(cat <<'EOF'
+docs: initialize project guardrails
+
+Starting guardrails for AI collaboration preferences.
 EOF
 )"
 ```
@@ -339,6 +356,7 @@ Present completion with next steps:
 | Artifact       | Location                    |
 |----------------|-----------------------------|
 | Intent         | `.aidlc/intent.md`       |
+| Guardrails     | `.aidlc/GUARDRAILS.md`   |
 | Config         | `.aidlc/config.json`     |
 
 Ready for elaboration ✓
@@ -361,6 +379,7 @@ __CMD_PREFIX__elaborate — adaptive inception from intent
 <output>
 
 - `.aidlc/intent.md`
+- `.aidlc/GUARDRAILS.md`
 - `.aidlc/config.json`
 
 </output>
@@ -372,6 +391,7 @@ __CMD_PREFIX__elaborate — adaptive inception from intent
 - [ ] Brownfield detection completed
 - [ ] Deep questioning completed (threads followed, not rushed)
 - [ ] intent.md captures full context (problem, vision, scope, constraints) → **committed**
+- [ ] GUARDRAILS.md initialized with project defaults → **committed**
 - [ ] config.json has workflow mode, depth, parallelization → **committed**
 - [ ] User knows next step is `__CMD_PREFIX__elaborate`
 

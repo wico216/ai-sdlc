@@ -1,7 +1,7 @@
 # Observability Configuration
 
 > Template for the Operations phase. Defines logging, metrics, alerting, and tracing.
-> Traces to: deployment-plan.md, runbooks/
+> Traces to: operations/deployment-plan.md, operations/runbooks/
 
 ## Overview
 

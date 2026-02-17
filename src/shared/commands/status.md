@@ -1,6 +1,6 @@
 ---
-name: sdlc:progress
-description: Check project progress, show context, and route to next action (execute or plan)
+name: sdlc:status
+description: Check project status — current phase, stage, active unit, gate statuses, progress, next action
 allowed-tools:
   - Read
   - Bash
@@ -41,7 +41,7 @@ If missing state.md: suggest `__CMD_PREFIX__new-project`.
 
 **If execution-plan.md missing but intent.md exists:**
 
-This means a milestone was completed and archived. Go to **Route F** (between milestones).
+This means a release was completed and archived. Go to **Route F** (between releases).
 
 If missing both execution-plan.md and intent.md: suggest `__CMD_PREFIX__new-project`.
 </step>
@@ -242,22 +242,22 @@ UAT.md exists with gaps (diagnosed issues). User needs to plan fixes.
 
 ---
 
-**Step 3: Check milestone status (only when unit complete)**
+**Step 3: Check release status (only when unit complete)**
 
 Read execution-plan.md and identify:
 1. Current unit number
-2. All unit numbers in the current milestone section
+2. All unit numbers in the current release section
 
 Count total units and identify the highest unit number.
 
-State: "Current unit is {X}. Milestone has {N} units (highest: {Y})."
+State: "Current unit is {X}. Release has {N} units (highest: {Y})."
 
-**Route based on milestone status:**
+**Route based on release status:**
 
 | Condition | Meaning | Action |
 |-----------|---------|--------|
 | current unit < highest unit | More units remain | Go to **Route C** |
-| current unit = highest unit | Milestone complete | Go to **Route D** |
+| current unit = highest unit | Release complete | Go to **Route D** |
 
 ---
 
@@ -289,12 +289,12 @@ Read execution-plan.md to get the next unit's name and goal.
 
 ---
 
-**Route D: Milestone complete**
+**Route D: Release complete**
 
 ```
 ---
 
-## 🎉 Milestone Complete
+## 🎉 Release Complete
 
 All {N} units finished!
 
@@ -316,22 +316,22 @@ All {N} units finished!
 
 ---
 
-**Route F: Between milestones (execution-plan.md missing, intent.md exists)**
+**Route F: Between releases (execution-plan.md missing, intent.md exists)**
 
-A milestone was completed and archived. Ready to start the next milestone cycle.
+A release was completed and archived. Ready to start the next release cycle.
 
-Read MILESTONES.md to find the last completed milestone version.
+Read state.md to find the last completed release version.
 
 ```
 ---
 
-## ✓ Milestone v{X.Y} Complete
+## ✓ Release v{X.Y} Complete
 
-Ready to plan the next milestone.
+Ready to plan the next release.
 
 ## ▶ Next Up
 
-**Start Next Milestone** — elaborate → requirements → execution-plan
+**Start Next Release** — elaborate → requirements → execution-plan
 
 `__CMD_PREFIX__elaborate`
 
