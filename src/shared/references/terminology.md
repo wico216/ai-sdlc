@@ -4,6 +4,35 @@ Canonical glossary of all AI-SDLC terms. When agents or documents use these term
 
 ---
 
+## Core Definitions
+
+### AI-DLC (AI Development Lifecycle)
+The underlying methodology: a phased, gated approach to building software with AI as a constrained teammate. Defines the phases (Inception → Construction → Operations), the artifacts, the gates, and the evidence requirements. AI-DLC is the "what" — the lifecycle model.
+
+### AI-SDLC (AI Software Development Lifecycle)
+AI-DLC applied as an operating model for teams. Includes ways of working, team roles, rituals, engineering rails, and measurement on top of the AI-DLC lifecycle. AI-SDLC is the "how" — the full practice, not just the process.
+
+### When to Use Which Term
+- Talking about phases, gates, artifacts → AI-DLC
+- Talking about team workflow, adoption, measurement → AI-SDLC
+- In practice, most teams say "AI-SDLC" for everything — that's fine
+
+### What AI-SDLC Is NOT
+- A tooling rollout — it's a change in ways of working
+- A replacement for engineering judgment — AI is a teammate, not a replacement
+- An excuse to skip design — Inception is mandatory, not optional
+- A magic speed boost — speed comes from reduced rework, not skipped steps
+
+### Applicability
+AI-SDLC applies to any software delivery where:
+- AI agents are used in construction (code generation, testing, review)
+- Human accountability must be maintained
+- Traceability from intent to deployment is required
+
+It scales from solo developers to enterprise teams via Adaptive Depth (see depth-levels.md).
+
+---
+
 ## Phases
 
 The AI-SDLC lifecycle has three macro-phases, executed sequentially.
