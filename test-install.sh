@@ -194,9 +194,58 @@ echo -e "${YELLOW}Test 4: Dry Run Install${NC}"
 
 DRYRUN_OUTPUT=$(bash "${SCRIPT_DIR}/install.sh" --claude --dry-run 2>&1 || true)
 check "Dry run --claude completes" "$(echo "$DRYRUN_OUTPUT" | grep -q "dry-run\|installed successfully" && echo true || echo false)"
+check "Dry run --claude shows source dir" "$(echo "$DRYRUN_OUTPUT" | grep -q "Source:" && echo true || echo false)"
+check "Dry run --claude shows file counts" "$(echo "$DRYRUN_OUTPUT" | grep -q "Would install.*references" && echo true || echo false)"
+check "Dry run --claude shows no-write message" "$(echo "$DRYRUN_OUTPUT" | grep -q "No files were written" && echo true || echo false)"
 
 DRYRUN_CURSOR=$(bash "${SCRIPT_DIR}/install.sh" --cursor --dry-run 2>&1 || true)
 check "Dry run --cursor completes" "$(echo "$DRYRUN_CURSOR" | grep -q "dry-run\|installed successfully" && echo true || echo false)"
+check "Dry run --cursor shows source dir" "$(echo "$DRYRUN_CURSOR" | grep -q "Source:" && echo true || echo false)"
+check "Dry run --cursor shows file counts" "$(echo "$DRYRUN_CURSOR" | grep -q "Would install.*references" && echo true || echo false)"
+
+# Verify dry-run doesn't require write permissions (skips build + permission checks)
+check "Dry run --claude skips build" "$(echo "$DRYRUN_OUTPUT" | grep -qv "Build failed" && echo true || echo false)"
+
+echo ""
+
+# ----- Test 5: Regression Guardrails -----
+echo -e "${YELLOW}Test 5: Regression — Legacy Pattern Detection${NC}"
+
+# Regression: no bare .aidlc/requirements.md (must be inception/requirements.md)
+BARE_REQ=$(grep -rn '\.aidlc/requirements\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | grep -v 'inception/requirements' | grep -v 'nfr-requirements' | grep -v 'nfr_requirements' | wc -l | tr -d ' ')
+check "No bare .aidlc/requirements.md path (should be inception/requirements.md): ${BARE_REQ}" "$([ "$BARE_REQ" -eq 0 ] && echo true || echo false)"
+
+# Regression: no bare .aidlc/application-design.md at root
+BARE_APPDESIGN=$(grep -rn '\.aidlc/application-design\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | grep -v 'inception/application-design' | grep -v '#' | wc -l | tr -d ' ')
+check "No bare .aidlc/application-design.md path: ${BARE_APPDESIGN}" "$([ "$BARE_APPDESIGN" -eq 0 ] && echo true || echo false)"
+
+# Regression: no .aidlc/phases/ directory references
+PHASES_REF=$(grep -rn '\.aidlc/phases/' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | wc -l | tr -d ' ')
+check "No .aidlc/phases/ references (should be construction/unit-NNN/): ${PHASES_REF}" "$([ "$PHASES_REF" -eq 0 ] && echo true || echo false)"
+
+# Regression: no *-PLAN.md legacy patterns
+LEGACY_PLAN=$(grep -rn '\-PLAN\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | grep -v 'bolt-.*-plan' | grep -v '#' | wc -l | tr -d ' ')
+check "No legacy *-PLAN.md pattern (should be bolt-NN-plan.md): ${LEGACY_PLAN}" "$([ "$LEGACY_PLAN" -eq 0 ] && echo true || echo false)"
+
+# Regression: no *-SUMMARY.md legacy patterns
+LEGACY_SUMMARY=$(grep -rn '\-SUMMARY\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | grep -v 'bolt-.*-summary' | grep -v '#' | wc -l | tr -d ' ')
+check "No legacy *-SUMMARY.md pattern (should be bolt-NN-summary.md): ${LEGACY_SUMMARY}" "$([ "$LEGACY_SUMMARY" -eq 0 ] && echo true || echo false)"
+
+# Regression: no VERIFICATION.md (should be validation-report.md)
+LEGACY_VERIFY=$(grep -rn 'VERIFICATION\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | grep -v 'validation-report' | grep -v '#' | wc -l | tr -d ' ')
+check "No VERIFICATION.md reference (should be validation-report.md): ${LEGACY_VERIFY}" "$([ "$LEGACY_VERIFY" -eq 0 ] && echo true || echo false)"
+
+# Regression: no legacy command references
+LEGACY_CMDS=0
+for cmd in '/sdlc:inception[^_]' '/sdlc:bolt[^-]' '/sdlc:discuss-phase' '/sdlc:plan-phase' '/sdlc:execute-phase' '/sdlc:verify-work' '/sdlc:deploy[^m]'; do
+    hits=$(grep -rn "$cmd" "${SCRIPT_DIR}/src/" 2>/dev/null | wc -l | tr -d ' ')
+    LEGACY_CMDS=$((LEGACY_CMDS + hits))
+done
+check "No legacy command references (/sdlc:inception, /sdlc:bolt, etc.): ${LEGACY_CMDS}" "$([ "$LEGACY_CMDS" -eq 0 ] && echo true || echo false)"
+
+# Regression: no ROADMAP.md references in agents/commands
+ROADMAP_REF=$(grep -rn 'ROADMAP\.md' "${SCRIPT_DIR}/src/shared/commands/" "${SCRIPT_DIR}/src/agents/" 2>/dev/null | wc -l | tr -d ' ')
+check "No ROADMAP.md references (legacy): ${ROADMAP_REF}" "$([ "$ROADMAP_REF" -eq 0 ] && echo true || echo false)"
 
 echo ""
 
