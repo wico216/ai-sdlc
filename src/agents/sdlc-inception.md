@@ -281,14 +281,57 @@ Incorporate feedback and update the file.
 
 Using the user stories template, create `.aidlc/inception/user-stories.md`.
 
+**Structured Questions (MANDATORY before generating stories):**
+
+Before generating stories, write clarifying questions to `.aidlc/inception/questions/stories-questions.md` using the format from `question-format-guide.md` (multiple-choice with [Answer]: tags).
+
+**Question categories to evaluate (evaluate ALL — skip only with explicit justification per `overconfidence-prevention.md`):**
+- **Persona definition** — Who are the distinct user types? What are their demographics, goals, pain points?
+- **Story granularity** — What level of detail is appropriate? Should stories be feature-level or task-level?
+- **Acceptance criteria depth** — How specific should Given/When/Then criteria be? Testing approach?
+- **User journeys** — What are the key end-to-end workflows? Happy paths and error paths?
+- **Business context** — What business goals drive these stories? Success metrics?
+- **Priority rationale** — What determines MUST vs SHOULD vs MAY for each story?
+- **Edge cases** — What boundary conditions or exception flows should stories cover?
+
+Inform user: "I've created stories-questions.md with {N} questions. Please answer each by filling in the letter after [Answer]: — let me know when done."
+
+Wait for user completion.
+
+**Contradiction Detection (MANDATORY):**
+
+After collecting answers, run contradiction detection per `question-format-guide.md`:
+- Check for logically inconsistent answers (e.g., "simple app" but "10+ persona types")
+- Check for ambiguous responses ("depends", "maybe", "not sure", "mix of")
+- Check for answers that conflict with requirements.md
+- If contradictions found: create `stories-clarification-questions.md` in the same `questions/` directory, inform user, wait for resolution
+- Apply `overconfidence-prevention.md` — if uncertain about a story decision, ASK rather than assume
+
+Only proceed to story generation when all answers are clear and consistent.
+
 **Process:**
 
-1. Define personas from intent.md stakeholders and questioning answers
+1. Define personas with full definitions from intent.md stakeholders and questioning answers:
+   - Role, Goal, Context (existing)
+   - Demographics (age range, technical proficiency, domain experience)
+   - Pain Points (current frustrations, unmet needs, workflow bottlenecks)
+   - Success Criteria (what "success" looks like for this persona)
 2. Write stories in As-a / I-want / So-that format
 3. Add acceptance criteria in Given/When/Then format (testable)
 4. Map each story to REQ-IDs from requirements.md
-5. Build story map table (persona x priority)
-6. Build coverage table (story -> requirements -> unit placeholder)
+5. **INVEST validation (MANDATORY):** Before presenting stories, validate each against INVEST criteria:
+   - **Independent** — Can be developed without depending on another story
+   - **Negotiable** — Details can be discussed; not a rigid contract
+   - **Valuable** — Delivers clear value to user or business
+   - **Estimable** — Enough detail to estimate effort
+   - **Small** — Completable within a single unit or bolt
+   - **Testable** — Acceptance criteria are verifiable (Given/When/Then)
+   - Fill in the INVEST Validation table in the template
+   - Stories failing any criterion MUST be revised before presenting to user
+6. Build story map table (persona x priority)
+7. Build story-to-requirement traceability table (story -> REQ-IDs with descriptions)
+8. Build coverage table (story -> requirements -> unit placeholder)
+9. Verify traceability: flag requirements without stories and stories without requirements
 
 **Frontmatter:**
 ```yaml
@@ -308,7 +351,10 @@ traces_to:
 - Every MUST requirement has at least one story covering it
 - Acceptance criteria are specific enough for automated testing
 - Personas are distinct (not just "User Type A" and "User Type B")
+- Personas include demographics, pain points, and success criteria
 - Story count is manageable: 5-15 for most projects
+- All stories pass INVEST validation (check the validation table)
+- Story-to-requirement traceability table is complete with no orphans
 
 Present to user for review. Incorporate feedback.
 </step>
@@ -424,14 +470,33 @@ Create `.aidlc/inception/execution-plan.md`.
 2. For each unit define:
    - Name and goal
    - Which requirements it covers (REQ-IDs)
+   - Which user stories it implements (STORY-IDs, if user-stories.md exists)
    - Acceptance criteria (derived from requirement tests)
    - Risk level (Low / Medium / High)
    - Estimated bolts (rough sizing)
    - Dependencies on other units
 3. Build unit dependency graph
-4. Create rigor levels table:
+4. **Generate unit dependency matrix** — create `.aidlc/inception/unit-dependency-matrix.md`:
+   - Table showing unit-to-unit dependencies (rows depend on columns)
+   - Dependency types: `BLOCKS` (hard dependency), `INFORMS` (soft/data dependency), `-` (none)
+   - Critical path identification (longest chain of BLOCKS dependencies)
+   - Recommended build order derived from the matrix
+   - Example format:
+     ```
+     | Unit \ Depends On | UNIT-001 | UNIT-002 | UNIT-003 |
+     |--------------------|----------|----------|----------|
+     | UNIT-001           | -        | -        | -        |
+     | UNIT-002           | BLOCKS   | -        | -        |
+     | UNIT-003           | -        | INFORMS  | -        |
+     ```
+5. **Story-to-unit mapping** (if user-stories.md exists):
+   - In each unit definition, list the STORY-IDs that the unit implements
+   - Update user-stories.md Coverage table with unit assignments
+   - Verify every story maps to at least one unit
+   - Flag unmapped stories as warnings
+6. Create rigor levels table:
    | Unit | Risk | Gate Rigor | Testing Depth | Notes |
-5. Define construction approach (bolt sizing, parallelization, gate rigor)
+7. Define construction approach (bolt sizing, parallelization, gate rigor)
 
 **Frontmatter:**
 ```yaml
@@ -451,13 +516,16 @@ After creating the execution plan, go back and update requirements.md:
 - Update coverage statistics
 - Flag any unmapped requirements as warnings
 
-If user-stories.md exists, update its Coverage table with unit mappings too.
+If user-stories.md exists, update its Coverage table and Story-to-Requirement Traceability table with unit mappings too.
 
 **Quality checks:**
 - Every MUST requirement maps to at least one unit
 - No unit is a catch-all (each has focused scope)
 - Dependencies form a DAG (no circular dependencies)
 - Risk levels are justified, not uniform
+- Unit dependency matrix is complete (all unit pairs evaluated)
+- If stories exist: every story maps to at least one unit, no orphaned stories
+- Critical path is identified in the dependency matrix
 
 Present to user for review.
 </step>
@@ -506,7 +574,9 @@ git add .aidlc/inception/execution-plan.md
 # Conditionally add optional artifacts
 git add .aidlc/inception/user-stories.md 2>/dev/null
 git add .aidlc/inception/application-design.md 2>/dev/null
+git add .aidlc/inception/unit-dependency-matrix.md 2>/dev/null
 git add .aidlc/inception/research/ 2>/dev/null
+git add .aidlc/inception/questions/ 2>/dev/null
 git add .aidlc/state.md
 git add .aidlc/audit.md
 
@@ -538,6 +608,7 @@ Quick reference for what each stage produces and where it lives.
 | User Stories | `.aidlc/inception/user-stories.md` | `user-stories.md` template | draft -> reviewed -> approved |
 | Application Design | `.aidlc/inception/application-design.md` | `application-design.md` template | draft -> reviewed -> approved |
 | Execution Plan | `.aidlc/inception/execution-plan.md` | `execution-plan.md` template | N/A (always current) |
+| Unit Dependency Matrix | `.aidlc/inception/unit-dependency-matrix.md` | (generated with execution plan) | N/A |
 
 ## Artifact Dependencies
 
@@ -555,13 +626,15 @@ intent.md (input, already exists)
     |                   |
     v                   v
 [User Stories] --> user-stories.md (optional, traces to requirements)
-    |
+    |               + INVEST validation table
+    |               + story-to-requirement traceability
     v
 [App Design] --> application-design.md (optional, traces to requirements)
     |
     v
 [Execution Plan] --> execution-plan.md (traces to requirements)
-    |
+    |                + unit-dependency-matrix.md (unit-to-unit dependencies)
+    |                + story-to-unit mapping (if stories exist)
     v
 [Back-fill] --> requirements.md updated with unit traceability
              --> user-stories.md updated with unit coverage (if exists)
@@ -708,9 +781,10 @@ Inception elaboration is complete when:
 - [ ] Research completed and documented (if stage was needed)
 - [ ] requirements.md created with MUST/SHOULD/MAY classification
 - [ ] Every requirement has a unique ID and testable description
-- [ ] user-stories.md created with personas and Given/When/Then criteria (if needed)
+- [ ] user-stories.md created with personas (incl. demographics/pain points), Given/When/Then criteria, INVEST validation, and story-to-requirement traceability (if needed)
 - [ ] application-design.md created with architecture and component breakdown (if needed)
-- [ ] execution-plan.md created with unit decomposition
+- [ ] execution-plan.md created with unit decomposition and story-to-unit mapping
+- [ ] unit-dependency-matrix.md created with unit-to-unit dependencies and critical path
 - [ ] Golden thread established: requirements <-> units bidirectional traceability
 - [ ] All unmapped requirements flagged
 - [ ] Gate 1 checkpoint presented to user
