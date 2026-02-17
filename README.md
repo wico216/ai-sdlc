@@ -37,7 +37,9 @@ INCEPTION (WHAT + WHY)          CONSTRUCTION (HOW)           OPERATIONS (WHERE/W
 | **Bolts** | The smallest iteration. Hours to days, not weeks. Replaces Sprints. Each bolt plans, executes, and validates a piece of a unit. |
 | **Units** | Parallel-deliverable work chunks aligned to DDD bounded contexts. Each unit has acceptance criteria and can be built independently. |
 | **Audit Trail** | Append-only decision log. Every gate approval, every design choice, every scope change is recorded. Never deleted, never modified. |
-| **Adaptive Depth** | Rigor scales to risk. A simple bug fix gets a brief spec. A regulated system gets formal verification. Context determines workflow. |
+| **Adaptive Depth** | Three levels — Minimal, Standard, Comprehensive — scale rigor to risk. A simple bug fix gets a brief spec. A regulated system gets formal verification. |
+| **Structured Questions** | Elaboration and planning stages use file-based questions with `[Answer]:` tags, contradiction detection, and clarification loops. Intent discovery stays conversational. |
+| **Overconfidence Prevention** | AI must present options with trade-offs rather than assuming answers. When in doubt, ask the question. |
 
 ### Who Does What
 
@@ -68,7 +70,7 @@ This installs commands, agents, and templates into your `~/.claude/` directory. 
 
 | Location | What | Count |
 |---|---|---|
-| `~/.claude/ai-sdlc/` | References, templates, workflows | ~50 files |
+| `~/.claude/ai-sdlc/` | References, templates, workflows | ~60 files |
 | `~/.claude/commands/sdlc/` | User-facing commands | 23 commands |
 | `~/.claude/agents/` | Specialized AI agents | 11 agents |
 | `~/.claude/hooks/` | Status line integration | 2 hooks |
@@ -109,12 +111,17 @@ Build units with proof via Bolts — rapid iterations of AI generation + human v
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
 | Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `inception/units/UNIT-NNN-design.md` |
+| NFR Requirements | Performance, security, scalability constraints (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/nfr-requirements.md` |
+| NFR Design | Map NFR requirements to design patterns (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/nfr-design.md` |
+| Infrastructure Design | Map logical components to cloud services (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/infrastructure-design.md` |
 | **Gate: Design Approved** | Evidence: design document reviewed, no conflicts with other units | `/sdlc:approve-unit <unit>` | `audit.md` entry |
 | Plan Bolt | Break unit work into small plans (2-3 tasks each) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/bolt-NN-plan.md` |
 | Execute Bolt | AI generates code, human reviews, tests run | `/sdlc:build-unit <unit>` | `construction/unit-NNN/bolt-NN-summary.md` |
-| Validate | Automated tests + manual verification | `/sdlc:verify-unit <unit>` | Verification report |
+| Validate | Automated tests + manual verification | `/sdlc:verify-unit <unit>` | Verification + test instructions |
 | **Gate: UNIT COMPLETE** | Evidence: all acceptance criteria met, tests passing | `/sdlc:approve-unit <unit>` | `audit.md` entry |
 | Repeat | Run another bolt if unit needs more work | `/sdlc:build-unit <unit>` | — |
+
+Construction stages (NFR Requirements, NFR Design, Infrastructure Design) are **conditional** — they execute only when signals are detected in the unit spec (e.g., performance targets, security requirements, cloud deployment needs). Simple units skip them entirely.
 
 ### Phase 3: Operations (WHERE/WHEN)
 
@@ -179,15 +186,15 @@ The `audit.md` file records every transition between these stages. If someone as
 
 ## Adaptive Depth
 
-The framework doesn't treat every task the same. Rigor scales to risk:
+The framework doesn't treat every task the same. Three depth levels scale rigor to risk:
 
-| Risk Level | Inception | Construction | Operations |
-|---|---|---|---|
-| **Low** (bug fix, small feature) | Brief intent + requirements | Quick bolts, light gates | Basic deploy plan |
-| **Medium** (new feature, integration) | Full inception + units | Standard bolts + design review | Deploy + runbooks |
-| **High** (regulated, distributed, critical) | Full inception + stories + risk register | Formal gates + verification | Full ops readiness + observability |
+| Depth Level | When to use | Inception | Construction | Operations |
+|---|---|---|---|---|
+| **Minimal** | Bug fix, small feature, low risk | Brief intent + requirements | Quick bolts, light gates | Basic deploy plan |
+| **Standard** | New feature, integration, medium risk | Full inception + units | Standard bolts + design review + conditional NFR/infra stages | Deploy + runbooks |
+| **Comprehensive** | Regulated, distributed, critical, high risk | Full inception + stories + risk register + application design | Formal gates + NFR design + infrastructure design + full verification | Full ops readiness + observability |
 
-The execution plan created during Inception determines the depth. You can also use `/sdlc:quick` to skip the full ceremony for truly simple tasks.
+High-risk projects cannot use Minimal depth. The execution plan created during Inception determines the depth. You can also use `/sdlc:quick` to skip the full ceremony for truly simple tasks.
 
 ## 5 Gates
 
@@ -262,11 +269,15 @@ your-project/
 │   │       ├── ARCHITECTURE.md
 │   │       └── PITFALLS.md
 │   │
-│   ├── construction/              # Bolt plans and summaries
+│   ├── construction/              # Bolt plans, summaries, and design artifacts
 │   │   ├── unit-001/
-│   │   │   ├── bolt-01-plan.md    # Bolt plan (2-3 tasks)
-│   │   │   ├── bolt-01-summary.md # What was built
-│   │   │   └── ...
+│   │   │   ├── nfr-requirements.md  # NFR constraints (conditional)
+│   │   │   ├── nfr-design.md        # NFR design patterns (conditional)
+│   │   │   ├── infrastructure-design.md # Infra mapping (conditional)
+│   │   │   ├── bolt-01-plan.md      # Bolt plan (2-3 tasks)
+│   │   │   ├── bolt-01-summary.md   # What was built
+│   │   │   ├── test-instructions.md # Build + test instructions
+│   │   │   └── questions/           # Structured questions per stage
 │   │   └── unit-002/
 │   │       └── ...
 │   │
@@ -281,6 +292,21 @@ your-project/
 │
 └── (your source code)
 ```
+
+## Cross-Cutting Rules
+
+These rules apply across all phases and agents:
+
+| Rule | What it does |
+|---|---|
+| **Structured Questions** | File-based questions with `[Answer]:` tags during elaboration and planning. Contradiction detection flags conflicting answers. Intent discovery stays conversational. |
+| **Overconfidence Prevention** | AI presents options with trade-offs instead of assuming. Confidence levels (High/Medium/Low) on proposals. At least 3 verification questions even when intent seems clear. |
+| **Error Handling** | 4 severity levels (Critical/High/Medium/Low) with phase-specific recovery procedures. Session resumption handles partial artifacts and corrupted state. |
+| **Content Validation** | ASCII diagram validation, Mermaid fallback, markdown structure checks, YAML frontmatter validation. |
+| **Depth Levels** | Stage selection (EXECUTE/SKIP) and detail level (Minimal/Standard/Comprehensive) adapt to project risk and complexity. |
+| **Workflow Changes** | Mid-project requirement, design, or scope changes are supported with impact assessment, blast-radius analysis, and golden thread traceability. |
+
+Reference docs live in `src/shared/references/`. A full terminology glossary is at `src/shared/references/terminology.md`.
 
 ## Audit Trail
 
