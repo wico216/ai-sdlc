@@ -66,6 +66,11 @@ cd ai-sdlc
 
 This installs commands, agents, and templates into your `~/.claude/` directory. No npm required.
 
+Preview what would be installed without writing anything:
+```bash
+./install.sh --dry-run
+```
+
 ### What gets installed
 
 | Location | What | Count |
@@ -110,7 +115,7 @@ Build units with proof via Bolts — rapid iterations of AI generation + human v
 
 | Step | What AI-SDLC requires | Framework command | Artifact produced |
 |---|---|---|---|
-| Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `inception/units/UNIT-NNN-design.md` |
+| Design Review | Architecture and data model for each unit | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/design.md` |
 | NFR Requirements | Performance, security, scalability constraints (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/nfr-requirements.md` |
 | NFR Design | Map NFR requirements to design patterns (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/nfr-design.md` |
 | Infrastructure Design | Map logical components to cloud services (conditional) | `/sdlc:plan-unit <unit>` | `construction/unit-NNN/infrastructure-design.md` |
@@ -151,7 +156,7 @@ Units (inception/units/UNIT-001.md)
   └── Parallel work chunks aligned to domain boundaries
        │
        ▼
-Design (inception/units/UNIT-001-design.md)
+Design (construction/unit-001/design.md)
   └── Architecture, data models, interfaces per unit
        │
        ▼
@@ -159,7 +164,7 @@ Code (via /sdlc:build-unit)
   └── Implementation with atomic commits per task
        │
        ▼
-Tests (validation-report.md)
+Verification (construction/unit-001/validation-report.md)
   └── Evidence that acceptance criteria are met
        │
        ▼
@@ -210,10 +215,13 @@ Gates are the "Proof over Prose" mechanism. Each gate requires evidence before p
 
 **How gates work in the framework:**
 1. AI collects evidence and presents it as a checklist
-2. Human reviews the evidence
-3. Human approves or rejects the gate
-4. Decision is logged in `audit.md` (approve or reject with reason)
-5. If rejected: AI surfaces gaps, routes back to the right stage
+2. Gate checker verifies artifact existence, content substance (non-empty, contains expected patterns), and traceability (REQ-IDs present, acceptance criteria covered)
+3. Human reviews the evidence
+4. Human approves or rejects the gate
+5. Decision is logged in `audit.md` (approve or reject with reason)
+6. If rejected: AI surfaces gaps, routes back to the right stage
+
+**High-risk enforcement:** For units flagged as high-risk in the risk register, security checks escalate from warnings to hard failures — security sections in design docs and validation reports are required, not optional.
 
 ## All Commands
 
@@ -259,10 +267,13 @@ your-project/
 │   ├── inception/                 # Inception phase artifacts
 │   │   ├── requirements.md        # Scoped requirements with REQ-IDs
 │   │   ├── risk-register.md       # Identified risks with mitigations
+│   │   ├── nfr.md                 # Non-functional requirements
+│   │   ├── user-stories.md        # Personas and user journeys
+│   │   ├── application-design.md  # Component design (conditional)
 │   │   ├── units/                 # Unit definitions (DDD-aligned)
 │   │   │   ├── UNIT-001.md        # Unit definition + acceptance criteria
-│   │   │   ├── UNIT-001-design.md # Architecture for this unit
 │   │   │   └── ...
+│   │   ├── questions/             # Structured questions from elaboration
 │   │   └── research/              # Domain research (optional)
 │   │       ├── STACK.md
 │   │       ├── FEATURES.md
@@ -271,11 +282,14 @@ your-project/
 │   │
 │   ├── construction/              # Bolt plans, summaries, and design artifacts
 │   │   ├── unit-001/
+│   │   │   ├── design.md            # Architecture for this unit
+│   │   │   ├── CONTEXT.md           # User decisions (locked/discretion/deferred)
 │   │   │   ├── nfr-requirements.md  # NFR constraints (conditional)
 │   │   │   ├── nfr-design.md        # NFR design patterns (conditional)
 │   │   │   ├── infrastructure-design.md # Infra mapping (conditional)
 │   │   │   ├── bolt-01-plan.md      # Bolt plan (2-3 tasks)
 │   │   │   ├── bolt-01-summary.md   # What was built
+│   │   │   ├── validation-report.md # Verification evidence
 │   │   │   ├── test-instructions.md # Build + test instructions
 │   │   │   └── questions/           # Structured questions per stage
 │   │   └── unit-002/
@@ -305,6 +319,7 @@ These rules apply across all phases and agents:
 | **Content Validation** | ASCII diagram validation, Mermaid fallback, markdown structure checks, YAML frontmatter validation. |
 | **Depth Levels** | Stage selection (EXECUTE/SKIP) and detail level (Minimal/Standard/Comprehensive) adapt to project risk and complexity. |
 | **Workflow Changes** | Mid-project requirement, design, or scope changes are supported with impact assessment, blast-radius analysis, and golden thread traceability. |
+| **Path Contract** | Enforced canonical paths: inception artifacts in `inception/`, construction artifacts in `construction/unit-NNN/`, cross-phase files (`state.md`, `execution-plan.md`, `audit.md`) at `.aidlc/` root. Regression tests prevent drift. |
 
 Reference docs live in `src/shared/references/`. A full terminology glossary is at `src/shared/references/terminology.md`.
 
