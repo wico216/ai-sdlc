@@ -1,6 +1,6 @@
 ---
 name: sdlc-unit-verifier
-description: Verifies unit goal achievement through goal-backward analysis. Checks codebase delivers what unit promised, not just that tasks completed. Creates VERIFICATION.md report.
+description: Verifies unit goal achievement through goal-backward analysis. Checks codebase delivers what unit promised, not just that tasks completed. Creates validation-report.md report.
 tools: Read, Bash, Grep, Glob
 color: green
 ---
@@ -48,15 +48,15 @@ Then verify each level against the actual codebase.
 
 ## Step 0: Check for Previous Verification
 
-Before starting fresh, check if a previous VERIFICATION.md exists:
+Before starting fresh, check if a previous validation-report.md exists:
 
 ```bash
-cat "$UNIT_DIR"/VERIFICATION.md 2>/dev/null
+cat "$UNIT_DIR"/validation-report.md 2>/dev/null
 ```
 
 **If previous verification exists with `gaps:` section → RE-VERIFICATION MODE:**
 
-1. Parse previous VERIFICATION.md frontmatter
+1. Parse previous validation-report.md frontmatter
 2. Extract `must_haves` (truths, artifacts, key_links)
 3. Extract `gaps` (items that failed)
 4. Set `is_re_verification = true`
@@ -81,7 +81,7 @@ ls "$UNIT_DIR"/bolt-*-summary.md 2>/dev/null
 grep -A 5 "Unit $UNIT_NUM" .aidlc/execution-plan.md
 
 # Requirements mapped to this unit
-grep -E "^| $UNIT_NUM" .aidlc/requirements.md 2>/dev/null
+grep -E "^| $UNIT_NUM" .aidlc/inception/requirements.md 2>/dev/null
 ```
 
 Extract unit goal from execution-plan.md. This is the outcome to verify, not the tasks.
@@ -389,7 +389,7 @@ verify_state_render_link() {
 If requirements.md exists and has requirements mapped to this unit:
 
 ```bash
-grep -E "Unit $UNIT_NUM" .aidlc/requirements.md 2>/dev/null
+grep -E "Unit $UNIT_NUM" .aidlc/inception/requirements.md 2>/dev/null
 ```
 
 For each requirement:
@@ -401,7 +401,7 @@ For each requirement:
 Also check acceptance criteria from design.md:
 
 ```bash
-grep -A 10 "acceptance" .aidlc/design.md 2>/dev/null
+grep -A 10 "acceptance" "$UNIT_DIR"/design.md 2>/dev/null
 ```
 
 **Requirement status:**
@@ -509,7 +509,7 @@ score = (verified_truths / total_truths)
 
 ## Step 10: Generate Test Instructions
 
-After verification is complete (regardless of status), produce a test instructions file that documents how to build, test, and validate this unit. This file complements VERIFICATION.md by providing actionable, reproducible instructions for any developer or CI system.
+After verification is complete (regardless of status), produce a test instructions file that documents how to build, test, and validate this unit. This file complements validation-report.md by providing actionable, reproducible instructions for any developer or CI system.
 
 Create `.aidlc/construction/unit-NNN/test-instructions.md`:
 
@@ -625,14 +625,14 @@ verification_status: passed | gaps_found | human_needed
 
 ---
 *Generated: {timestamp}*
-*Source: VERIFICATION.md from sdlc-unit-verifier*
+*Source: validation-report.md from sdlc-unit-verifier*
 ```
 
 **Generation rules:**
 - Populate build/test commands from bolt-plan.md and bolt-summary.md artifacts (look for `tech_stack`, `dependencies`, `test_commands` in frontmatter or body).
 - If specific commands aren't discoverable, use reasonable defaults for the detected tech stack and mark with `{CUSTOMIZE}` placeholder.
 - Mark integration and performance sections as "N/A" when the unit has no integration points or NFR requirements.
-- The test summary table must reflect the VERIFICATION.md status — if verification found gaps, test summary should note which categories are affected.
+- The test summary table must reflect the validation-report.md status — if verification found gaps, test summary should note which categories are affected.
 
 ## Step 11: Structure Gap Output (If Gaps Found)
 
@@ -685,9 +685,9 @@ The planner (`__CMD_PREFIX__plan-unit --gaps`) reads this gap analysis and creat
 
 <output>
 
-## Create VERIFICATION.md and test-instructions.md
+## Create validation-report.md and test-instructions.md
 
-Create `.aidlc/construction/unit-NNN/VERIFICATION.md` with:
+Create `.aidlc/construction/unit-NNN/validation-report.md` with:
 
 ```markdown
 ---
@@ -695,7 +695,7 @@ unit: unit-NNN
 verified: YYYY-MM-DDTHH:MM:SSZ
 status: passed | gaps_found | human_needed
 score: N/M must-haves verified
-re_verification: # Only include if previous VERIFICATION.md existed
+re_verification: # Only include if previous validation-report.md existed
   previous_status: gaps_found
   previous_score: 2/5
   gaps_closed:
@@ -774,7 +774,7 @@ _Verifier: Claude (sdlc-unit-verifier)_
 
 ## Return to Orchestrator
 
-**DO NOT COMMIT.** The orchestrator bundles VERIFICATION.md and test-instructions.md with other unit artifacts.
+**DO NOT COMMIT.** The orchestrator bundles validation-report.md and test-instructions.md with other unit artifacts.
 
 Return with:
 
@@ -783,7 +783,7 @@ Return with:
 
 **Status:** {passed | gaps_found | human_needed}
 **Score:** {N}/{M} must-haves verified
-**Report:** .aidlc/construction/unit-NNN/VERIFICATION.md
+**Report:** .aidlc/construction/unit-NNN/validation-report.md
 **Test Instructions:** .aidlc/construction/unit-NNN/test-instructions.md
 
 {If passed:}
@@ -800,7 +800,7 @@ All must-haves verified. Unit goal achieved. Gate 4 (UNIT COMPLETE) ready to clo
 2. **{Truth 2}** — {reason}
    - Missing: {what needs to be added}
 
-Structured gaps in VERIFICATION.md frontmatter for `__CMD_PREFIX__plan-unit --gaps`.
+Structured gaps in validation-report.md frontmatter for `__CMD_PREFIX__plan-unit --gaps`.
 
 {If human_needed:}
 
@@ -832,7 +832,7 @@ Automated checks passed. Awaiting human verification.
 
 **DO keep verification fast.** Use grep/file checks, not running the app. Goal is structural verification, not functional testing.
 
-**DO NOT commit.** Create VERIFICATION.md but leave committing to the orchestrator.
+**DO NOT commit.** Create validation-report.md but leave committing to the orchestrator.
 
 </critical_rules>
 
@@ -913,7 +913,7 @@ return <div>No messages</div>  // Always shows "no messages"
 
 <success_criteria>
 
-- [ ] Previous VERIFICATION.md checked (Step 0)
+- [ ] Previous validation-report.md checked (Step 0)
 - [ ] If re-verification: must-haves loaded from previous, focus on failed items
 - [ ] If initial: must-haves established (from frontmatter or derived)
 - [ ] All truths verified with status and evidence
@@ -925,7 +925,7 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] Overall status determined
 - [ ] Gaps structured in YAML frontmatter (if gaps_found)
 - [ ] Re-verification metadata included (if previous existed)
-- [ ] VERIFICATION.md created with complete report
+- [ ] validation-report.md created with complete report
 - [ ] test-instructions.md created with build, unit test, integration test, performance test, and summary sections
 - [ ] Results returned to orchestrator (NOT committed)
 </success_criteria>

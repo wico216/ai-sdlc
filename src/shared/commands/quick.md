@@ -161,7 +161,7 @@ Task(
 </constraints>
 
 <output>
-Write plan to: ${QUICK_DIR}/${next_num}-PLAN.md
+Write plan to: ${QUICK_DIR}/${next_num}-plan.md
 Return: ## PLANNING COMPLETE with plan path
 </output>
 ",
@@ -172,11 +172,11 @@ Return: ## PLANNING COMPLETE with plan path
 ```
 
 After planner returns:
-1. Verify plan exists at `${QUICK_DIR}/${next_num}-PLAN.md`
+1. Verify plan exists at `${QUICK_DIR}/${next_num}-plan.md`
 2. Extract plan count (typically 1 for quick tasks)
-3. Report: "Plan created: ${QUICK_DIR}/${next_num}-PLAN.md"
+3. Report: "Plan created: ${QUICK_DIR}/${next_num}-plan.md"
 
-If plan not found, error: "Planner failed to create ${next_num}-PLAN.md"
+If plan not found, error: "Planner failed to create ${next_num}-plan.md"
 
 ---
 
@@ -189,13 +189,13 @@ Task(
   prompt="
 Execute quick task ${next_num}.
 
-Plan: @${QUICK_DIR}/${next_num}-PLAN.md
+Plan: @${QUICK_DIR}/${next_num}-plan.md
 Project state: @.aidlc/state.md
 
 <constraints>
 - Execute all tasks in the plan
 - Commit each task atomically
-- Create summary at: ${QUICK_DIR}/${next_num}-SUMMARY.md
+- Create summary at: ${QUICK_DIR}/${next_num}-summary.md
 - Do NOT update execution-plan.md (quick tasks are separate from planned units)
 </constraints>
 ",
@@ -206,11 +206,11 @@ Project state: @.aidlc/state.md
 ```
 
 After executor returns:
-1. Verify summary exists at `${QUICK_DIR}/${next_num}-SUMMARY.md`
+1. Verify summary exists at `${QUICK_DIR}/${next_num}-summary.md`
 2. Extract commit hash from executor output
 3. Report completion status
 
-If summary not found, error: "Executor failed to create ${next_num}-SUMMARY.md"
+If summary not found, error: "Executor failed to create ${next_num}-summary.md"
 
 Note: For quick tasks producing multiple plans (rare), spawn executors in parallel waves per build-unit patterns.
 
@@ -258,8 +258,8 @@ Stage and commit quick task artifacts:
 
 ```bash
 # Stage quick task artifacts
-git add ${QUICK_DIR}/${next_num}-PLAN.md
-git add ${QUICK_DIR}/${next_num}-SUMMARY.md
+git add ${QUICK_DIR}/${next_num}-plan.md
+git add ${QUICK_DIR}/${next_num}-summary.md
 git add .aidlc/state.md
 
 # Commit with quick task format
@@ -286,7 +286,7 @@ AI-SDLC > QUICK TASK COMPLETE
 
 Quick Task ${next_num}: ${DESCRIPTION}
 
-Summary: ${QUICK_DIR}/${next_num}-SUMMARY.md
+Summary: ${QUICK_DIR}/${next_num}-summary.md
 Commit: ${commit_hash}
 
 ---
@@ -302,8 +302,8 @@ Ready for next task: __CMD_PREFIX__quick
 - [ ] Slug generated (lowercase, hyphens, max 40 chars)
 - [ ] Next number calculated (001, 002, 003...)
 - [ ] Directory created at `.aidlc/quick/NNN-slug/`
-- [ ] `${next_num}-PLAN.md` created by planner
-- [ ] `${next_num}-SUMMARY.md` created by executor
+- [ ] `${next_num}-plan.md` created by planner
+- [ ] `${next_num}-summary.md` created by executor
 - [ ] state.md updated with quick task row
 - [ ] Artifacts committed
 </success_criteria>

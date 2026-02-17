@@ -94,7 +94,7 @@ Verify the audit trail has entries for:
 
 ## 5. Check Risk Register
 
-- `.aidlc/risk-register.md` exists
+- `.aidlc/inception/risk-register.md` exists
 - At least one risk identified
 - Each risk has: ID, category, impact, likelihood, mitigation, owner
 

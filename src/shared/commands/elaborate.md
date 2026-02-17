@@ -61,9 +61,11 @@ Spawns the `sdlc-inception` agent which adaptively detects what elaboration is n
 
 **Creates/updates (in `.aidlc/`):**
 - `execution-plan.md` — Which stages to run, adaptive depth, construction approach
-- `risk-register.md` — Identified risks with mitigations
 - `state.md` — Phase tracking
 - `audit.md` — Append-only decision log
+
+**Creates/updates (in `.aidlc/inception/`):**
+- `risk-register.md` — Identified risks with mitigations
 
 **After this command:** Run `__CMD_PREFIX__approve-inception` to pass gates 1 and 2.
 
@@ -122,7 +124,7 @@ Normalize arguments in step 1 before any operations.
    [ -f .aidlc/inception/user-stories.md ] && echo "STORIES: exists" || echo "STORIES: none"
    [ -f .aidlc/inception/application-design.md ] && echo "DESIGN: exists" || echo "DESIGN: none"
    [ -f .aidlc/execution-plan.md ] && echo "EXEC-PLAN: exists" || echo "EXEC-PLAN: none"
-   [ -f .aidlc/risk-register.md ] && echo "RISK-REG: exists" || echo "RISK-REG: none"
+   [ -f .aidlc/inception/risk-register.md ] && echo "RISK-REG: exists" || echo "RISK-REG: none"
    ```
 
 4. **Handle --resume flag:**
@@ -183,7 +185,7 @@ REQUIREMENTS_CONTENT=$(cat .aidlc/inception/requirements.md 2>/dev/null)
 STORIES_CONTENT=$(cat .aidlc/inception/user-stories.md 2>/dev/null)
 DESIGN_CONTENT=$(cat .aidlc/inception/application-design.md 2>/dev/null)
 EXEC_PLAN_CONTENT=$(cat .aidlc/execution-plan.md 2>/dev/null)
-RISK_REG_CONTENT=$(cat .aidlc/risk-register.md 2>/dev/null)
+RISK_REG_CONTENT=$(cat .aidlc/inception/risk-register.md 2>/dev/null)
 ```
 
 **Also detect workspace type:**
@@ -337,7 +339,7 @@ Display artifact summary:
 | Application Design | `.aidlc/inception/application-design.md` | {✓ / ○ / N/A} |
 | Units | `.aidlc/inception/units/` ({N} units) | {✓ / ○} |
 | Execution Plan | `.aidlc/execution-plan.md` | {✓ / ○} |
-| Risk Register | `.aidlc/risk-register.md` | {✓ / ○} |
+| Risk Register | `.aidlc/inception/risk-register.md` | {✓ / ○} |
 
 **Units:** {N} | **Estimated Bolts:** {N} | **Risks:** {N}
 **Requirements Coverage:** {X}/{Y} v1 requirements mapped (100%)
@@ -381,7 +383,7 @@ Output this markdown directly (not as a code block):
 - `.aidlc/inception/application-design.md` — High-level architecture (if applicable)
 - `.aidlc/inception/units/UNIT-NNN.md` — Parallel-deliverable work chunks
 - `.aidlc/execution-plan.md` — Which stages run, adaptive depth, construction approach
-- `.aidlc/risk-register.md` — Identified risks with mitigations
+- `.aidlc/inception/risk-register.md` — Identified risks with mitigations
 - `.aidlc/audit.md` — Append-only decision log (initialized or appended)
 - Updated `.aidlc/state.md` — Reflects inception completion status
 

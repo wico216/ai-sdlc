@@ -18,7 +18,7 @@ Run a Guardrail Retro after completing a unit or release. This is how the team g
 **Purpose:** Review what the AI did well/poorly, which guardrails helped/were missing, and produce concrete improvement actions for the next unit.
 
 **When to run:**
-- After `__CMD_PREFIX__bolt` completes a unit (Unit Complete gate passed)
+- After `__CMD_PREFIX__build-unit` completes a unit (Unit Complete gate passed)
 - After `__CMD_PREFIX__approve-release`
 - Anytime the team wants to reflect on completed work
 
@@ -88,9 +88,9 @@ Read all relevant artifacts:
 - `.aidlc/inception/units/{UNIT-ID}.md` — acceptance criteria
 - `.aidlc/inception/units/{UNIT-ID}-design.md` — design decisions
 - `.aidlc/audit.md` — filter entries related to this unit
-- `.aidlc/construction/{unit-dir}/*-SUMMARY.md` — what was built
-- `.aidlc/construction/{unit-dir}/*-VERIFICATION.md` — what passed/failed
-- `.aidlc/risk-register.md` — risks related to this unit
+- `.aidlc/construction/{unit-dir}/bolt-*-summary.md` — what was built
+- `.aidlc/construction/{unit-dir}/*-validation-report.md` — what passed/failed
+- `.aidlc/inception/risk-register.md` — risks related to this unit
 - `.aidlc/GUARDRAILS.md` — current guardrails (if exists)
 
 **For release retro:**
@@ -252,7 +252,7 @@ If `.aidlc/GUARDRAILS.md` does not exist, ask: "Should I create a GUARDRAILS.md 
 
 Ask: "Should I add these new risks to the risk register for the next unit?"
 
-If yes, append new RISK-IDs to `.aidlc/risk-register.md`.
+If yes, append new RISK-IDs to `.aidlc/inception/risk-register.md`.
 
 ## 7. Completion
 

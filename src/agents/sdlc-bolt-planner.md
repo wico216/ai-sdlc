@@ -909,8 +909,8 @@ Triggered by `--gaps` flag. Creates bolts to address verification or UAT failure
 PADDED_UNIT=$(printf "%03d" $UNIT_ARG 2>/dev/null || echo "$UNIT_ARG")
 UNIT_DIR=$(ls -d .aidlc/construction/$PADDED_UNIT-* .aidlc/construction/$UNIT_ARG-* 2>/dev/null | head -1)
 
-# Check for VERIFICATION.md (code verification gaps)
-ls "$UNIT_DIR"/*-VERIFICATION.md 2>/dev/null
+# Check for validation-report.md (code verification gaps)
+ls "$UNIT_DIR"/*-validation-report.md 2>/dev/null
 
 # Check for UAT.md with diagnosed status (user testing gaps)
 grep -l "status: diagnosed" "$UNIT_DIR"/*-UAT.md 2>/dev/null
@@ -1471,7 +1471,7 @@ Unit planning complete when:
 ## Gap Closure Mode
 
 Planning complete when:
-- [ ] VERIFICATION.md or UAT.md loaded and gaps parsed
+- [ ] validation-report.md or UAT.md loaded and gaps parsed
 - [ ] Existing summaries read for context
 - [ ] Gaps clustered into focused bolts
 - [ ] Bolt numbers sequential after existing (04, 05...)

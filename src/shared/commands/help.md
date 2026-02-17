@@ -163,7 +163,7 @@ Validate built features through conversational UAT for a specific unit.
 - Ready for re-execution if issues found
 
 Creates `.aidlc/construction/unit-NNN/` artifacts:
-- `VERIFICATION.md` — verification results
+- `validation-report.md` — verification results
 - `UAT.md` — user acceptance test results
 
 Usage: `__CMD_PREFIX__verify-unit UNIT-001`
@@ -395,7 +395,7 @@ Usage: `__CMD_PREFIX__community`
 │       ├── design.md      # Unit architecture
 │       ├── bolt-NN-plan.md    # Bolt execution plans
 │       ├── bolt-NN-summary.md # Bolt execution results
-│       ├── VERIFICATION.md    # Verification results
+│       ├── validation-report.md    # Verification results
 │       └── UAT.md             # User acceptance tests
 ├── operations/            # Operations phase artifacts
 │   ├── deployment-plan.md # How to deploy
@@ -528,6 +528,6 @@ __CMD_PREFIX__retro UNIT-001  # Review guardrails, identify improvements
 
 - Read `.aidlc/intent.md` for project vision
 - Read `.aidlc/state.md` for current context
-- Check `.aidlc/inception/execution-plan.md` for unit status
+- Check `.aidlc/execution-plan.md` for unit status
 - Run `__CMD_PREFIX__status` to check where you're up to
   </reference>

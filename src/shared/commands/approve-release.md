@@ -144,12 +144,12 @@ First, read __AGENTS_DIR__/sdlc-gate-checker.md for your role and instructions.
 Check Gate 5: Production Ready.
 
 Project state: @.aidlc/state.md
-Requirements: @.aidlc/requirements.md
+Requirements: @.aidlc/inception/requirements.md
 Execution plan: @.aidlc/execution-plan.md
 Deployment plan: @.aidlc/operations/deployment-plan.md (if exists)
 Observability: @.aidlc/operations/observability.md (if exists)
 Runbooks: .aidlc/operations/runbooks/ (if exists)
-All unit verifications: .aidlc/construction/unit-*/VERIFICATION.md
+All unit verifications: .aidlc/construction/unit-*/validation-report.md
 
 Run all prerequisite checks for Gate 5 and return the structured checklist result.
 ", subagent_type="sdlc-gate-checker", model="{gate_checker_model}", description="Gate 5 check: Production Ready")
@@ -194,7 +194,7 @@ Append to audit.md **Gate Records** section:
 - **Phase:** Operations
 - **Context:** Gate 5 — PRODUCTION READY for v{version}
 - **Decision:** Release approved.{" Conditions: " + conditions if applicable}
-- **Evidence:** .aidlc/operations/deployment-plan.md, .aidlc/operations/runbooks/, .aidlc/operations/observability.md, all VERIFICATION.md files
+- **Evidence:** .aidlc/operations/deployment-plan.md, .aidlc/operations/runbooks/, .aidlc/operations/observability.md, all validation-report.md files
 - **Traces to:** All UNIT-IDs, all MUST requirements
 ```
 
@@ -330,10 +330,10 @@ Intent → Requirements → Units → Design → Code → Tests → Deployment
 | Artifact | Location |
 |----------|----------|
 | Intent | `.aidlc/intent.md` |
-| Requirements | `.aidlc/requirements.md` |
+| Requirements | `.aidlc/inception/requirements.md` |
 | Execution Plan | `.aidlc/execution-plan.md` |
 | Unit Designs | `.aidlc/construction/unit-*/design.md` |
-| Verifications | `.aidlc/construction/unit-*/VERIFICATION.md` |
+| Verifications | `.aidlc/construction/unit-*/validation-report.md` |
 | Deployment Plan | `.aidlc/operations/deployment-plan.md` |
 | Runbooks | `.aidlc/operations/runbooks/` |
 | Observability | `.aidlc/operations/observability.md` |

@@ -21,8 +21,8 @@
 | # | Check | Status | Evidence |
 |---|---|---|---|
 | 1 | All unit tests passing | {pass/fail} | {link to test output} |
-| 2 | All acceptance criteria verified | {pass/fail} | {link to VERIFICATION.md} |
-| 3 | No critical risks unmitigated | {pass/fail} | {link to risk-register.md} |
+| 2 | All acceptance criteria verified | {pass/fail} | {link to validation-report.md} |
+| 3 | No critical risks unmitigated | {pass/fail} | {link to inception/risk-register.md} |
 | 4 | Environment configuration ready | {pass/fail} | {description} |
 | 5 | Database migrations tested | {pass/fail/N-A} | {description} |
 | 6 | Rollback procedure tested | {pass/fail} | {description} |

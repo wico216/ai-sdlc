@@ -79,7 +79,7 @@ test -f .aidlc/inception/requirements.md && echo "REQUIREMENTS: exists" || echo 
 test -d .aidlc/inception/units && echo "UNITS: exist ($(ls .aidlc/inception/units/*.md 2>/dev/null | wc -l) files)" || echo "UNITS: none"
 test -f .aidlc/inception/user-stories.md && echo "STORIES: exists" || echo "STORIES: none"
 test -f .aidlc/inception/application-design.md && echo "DESIGN: exists" || echo "DESIGN: none"
-test -f .aidlc/risk-register.md && echo "RISK-REG: exists" || echo "RISK-REG: none"
+test -f .aidlc/inception/risk-register.md && echo "RISK-REG: exists" || echo "RISK-REG: none"
 
 # Detect construction artifacts
 ls .aidlc/construction/unit-*/bolt-*-plan.md 2>/dev/null | head -20
@@ -139,7 +139,7 @@ Based on the detected phase and stage, load the relevant context. This follows t
 - `.aidlc/inception/user-stories.md` — If exists
 - `.aidlc/inception/application-design.md` — If exists
 - `.aidlc/execution-plan.md` — If exists
-- `.aidlc/risk-register.md` — If exists
+- `.aidlc/inception/risk-register.md` — If exists
 - `.aidlc/inception/units/UNIT-*.md` — If any exist
 
 **If ready for gate review:**
